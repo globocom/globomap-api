@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+
+.DS_Store
+.coverage
+.env
+*.log
+*.egg-info/
+*.egg
+
+.coverage
+.cache
+coverage.xml
+
+.vscode/
