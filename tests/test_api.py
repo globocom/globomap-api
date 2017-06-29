@@ -12,3 +12,6 @@ class TestAPI(unittest.TestCase):
 
     def tearDown(self):
         self.context.pop()
+
+    def test_get_vips(self):
+        pass
