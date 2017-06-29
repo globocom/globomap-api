@@ -1,3 +1,4 @@
+from os import environ
 from api.app import create_app
 
 
