@@ -30,7 +30,7 @@ services:
         env_file:
             - globomap.env
         volumes:
-            - .:/code
+            - .:/app
         networks:
             - globomap_net
         command: make run

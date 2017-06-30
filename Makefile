@@ -20,3 +20,7 @@ tests: clean pep8 ## Run all tests with coverage
 
 run: ## Run a development web server
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 api/run.py
+
+docker: ## Run a development web server
+	@docker-compose build
+	@docker-compose up -d

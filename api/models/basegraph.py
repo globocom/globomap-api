@@ -5,11 +5,11 @@ from pyArango.graph import Graph
 class BaseGraph(Graph):
 
     _edgeDefinitions = (
-        EdgeDefinition('port',
-                       fromCollections=['vip'],
-                       toCollections=['pool']),
-        EdgeDefinition('poolcompunit',
-                       fromCollections=['pool'],
-                       toCollections=['compunit']),
+        EdgeDefinition('Port',
+                       fromCollections=['Vip'],
+                       toCollections=['Pool']),
+        EdgeDefinition('PoolCompUnit',
+                       fromCollections=['Pool'],
+                       toCollections=['CompUnit']),
     )
     _orphanedCollections = []

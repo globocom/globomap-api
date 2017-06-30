@@ -1,14 +1,15 @@
 import os
 
-from models.basegraph import BaseGraph
-from models.compunit import CompUnit
-from models.pool import Pool
-from models.poolcompunit import PoolCompUnit
-from models.port import Port
-from models.vip import Vip
 from pyArango.collection import Collection
 from pyArango.connection import Connection
 from pyArango.graph import Graph
+
+from api.models.basegraph import BaseGraph
+from api.models.compunit import CompUnit
+from api.models.pool import Pool
+from api.models.poolcompunit import PoolCompUnit
+from api.models.port import Port
+from api.models.vip import Vip
 
 
 class Setup(object):
