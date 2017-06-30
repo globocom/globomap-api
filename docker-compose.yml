@@ -33,6 +33,7 @@ services:
             - .:/code
         networks:
             - globomap_net
+        command: make run
         depends_on:
             - db
             - queue

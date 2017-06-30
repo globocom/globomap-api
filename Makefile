@@ -19,4 +19,4 @@ tests: clean pep8 ## Run all tests with coverage
 	@py.test --cov-config .coveragerc --cov $(PROJECT_HOME) --cov-report term-missing
 
 run: ## Run a development web server
-	@PYTHONPATH=`pwd`:$PYTHONPATH python api/run.py
+	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 api/run.py
