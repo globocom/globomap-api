@@ -1,4 +1,4 @@
--r requiments.txt
+-r requirements.txt
 
 coverage==4.4.1
 ipdb==0.10
