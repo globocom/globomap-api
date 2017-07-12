@@ -1,0 +1,27 @@
+{
+  "graphs": [
+    {
+      "name": "basegraph",
+      "links": [
+        {
+          "edge": "port",
+          "from_collections": [
+            "vip"
+          ],
+          "to_collections": [
+            "pool"
+          ]
+        },
+        {
+          "edge": "poolcompunit",
+          "from_collections": [
+            "pool"
+          ],
+          "to_collections": [
+            "compunit"
+          ]
+        }
+      ]
+    }
+  ]
+}

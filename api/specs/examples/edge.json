@@ -1,0 +1,28 @@
+{
+  "edges": [
+    {
+      "collection": "port",
+      "from": {
+        "collection":"vip",
+        "provider": "napi",
+        "id": "2"
+      },
+      "to": {
+        "collection":"pool",
+        "provider": "napi",
+        "id": "2"
+      },
+      "content": {
+        "id": "2",
+        "name": "2",
+        "provider": "napi",
+        "properties": [
+          {
+            "key": "key",
+            "value": "value"
+          }
+        ]
+      }
+    }
+  ]
+}

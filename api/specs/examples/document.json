@@ -1,0 +1,32 @@
+{
+  "documents": [
+    {
+      "collection": "vip",
+      "content": {
+        "id": "2",
+        "name": "2",
+        "provider":"napi",
+        "properties": [
+          {
+            "key": "key",
+            "value": "value"
+          }
+        ]
+      }
+    },
+    {
+      "collection": "pool",
+      "content": {
+        "id": "2",
+        "name": "2",
+        "provider":"napi",
+        "properties": [
+          {
+            "key": "key",
+            "value": "value"
+          }
+        ]
+      }
+    }
+  ]
+}

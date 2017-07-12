@@ -1,0 +1,24 @@
+{
+  "collections": [
+    {
+      "name": "vip",
+      "type": "collection"
+    },
+    {
+      "name": "port",
+      "type": "edges"
+    },
+    {
+      "name": "pool",
+      "type": "collection"
+    },
+    {
+      "name": "poolcompunit",
+      "type": "edges"
+    },
+    {
+      "name": "compunit",
+      "type": "collection"
+    }
+  ]
+}
