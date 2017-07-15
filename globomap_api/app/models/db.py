@@ -2,6 +2,7 @@ import os
 
 from arango import ArangoClient
 from arango import exceptions
+from flask import current_app as app
 
 
 class DB(object):
@@ -16,15 +17,15 @@ class DB(object):
     def __init__(self):
 
         self._connection()
-        self.get_db(os.getenv('DB'))
+        self.get_db(app.config['ARANGO_DB'])
 
     def _connection(self):
 
-        self.username = os.getenv('USERNAME')
-        self.password = os.getenv('PASSWORD')
-        self.arango_protocol = os.getenv('ARANGOPROTOCOL')
-        self.arango_host = os.getenv('ARANGOHOST')
-        self.arango_port = os.getenv('ARANGOPORT')
+        self.username = app.config['ARANGO_USERNAME']
+        self.password = app.config['ARANGO_PASSWORD']
+        self.arango_protocol = app.config['ARANGO_PROTOCOL']
+        self.arango_host = app.config['ARANGO_HOST']
+        self.arango_port = app.config['ARANGO_PORT']
 
         self._conn = ArangoClient(
             protocol=self.arango_protocol,

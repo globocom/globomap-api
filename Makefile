@@ -1,5 +1,8 @@
 .PHONY: help setup clean pep8 tests run
 
+# Version package
+VERSION=$(shell python -c 'import globomap_api; print globomap_api.VERSION')
+
 PROJECT_HOME = "`pwd`"
 
 help:
@@ -9,8 +12,8 @@ setup: ## Install project dependencies
 	@pip install -r $(PROJECT_HOME)/requirements_test.txt
 
 clean: ## Clear *.pyc files, etc
-	@find . -name "*.pyc" -delete
-	@find . -name "*.~" -delete
+	@rm -rf build dist *.egg-info
+	@find . \( -name '*.pyc' -o -name '**/*.pyc' -o -name '*~' \) -delete
 
 pep8: ## Check source-code for PEP8 compliance
 	@-pep8 $(PROJECT_HOME)
@@ -19,8 +22,20 @@ tests: clean pep8 ## Run all tests with coverage
 	@py.test --cov-config .coveragerc --cov $(PROJECT_HOME) --cov-report term-missing
 
 run: ## Run a development web server
-	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 api/run.py
+	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
 
 docker: ## Run a development web server
 	@docker-compose build
 	@docker-compose up -d
+
+setup: requirements.txt
+	$(PIP) install -r $^
+
+dist: clean
+	@python setup.py sdist
+
+publish: clean dist
+	@echo 'Ready to release version ${VERSION}? (ctrl+c to abort)' && read
+	twine upload dist/*
+	@git tag ${VERSION}
+	@git push --tags

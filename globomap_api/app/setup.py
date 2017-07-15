@@ -1,7 +1,9 @@
 import json
 
+import ptvsd
 from models.constructor import Constructor
 from models.document import Document
+ptvsd.enable_attach('', address=('0.0.0.0', 3000))
 
 # Create Colls
 with open('api/specs/load/collections_start.json', 'r') as fp:
