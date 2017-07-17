@@ -1,5 +1,6 @@
 from arango import exceptions
-from errors import errors
+
+from ..errors import errors
 
 
 class Document:

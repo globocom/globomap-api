@@ -1,8 +1,7 @@
 from os import environ
 
-import app
-
+from app import create_app
 
 if __name__ == '__main__':
-    app.app.config.from_object('config')
-    app.app.run('0.0.0.0', int(environ.get('PORT', '5000')))
+    application = create_app('config')
+    application.run('0.0.0.0', int(environ.get('PORT', '5000')))
