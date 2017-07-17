@@ -21,3 +21,19 @@ class Document:
             else:
                 raise Exception(
                     errors.get(0).format(document['_key'], err.message))
+
+    def upsert_document(self, document):
+        """Create Document"""
+
+        try:
+            document = self.collection.update(document)
+        except exceptions.DocumentUpdateError as err:
+            if err.error_code == 1202:
+                self.create_document(document)
+
+            elif errors.get(err.error_code):
+                raise Exception(
+                    errors.get(err.error_code).format(document['_key']))
+            else:
+                raise Exception(
+                    errors.get(0).format(document['_key'], err.message))

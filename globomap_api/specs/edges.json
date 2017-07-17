@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-06/schema#",
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -27,7 +27,7 @@
               }
             },
             "required": [
-              "name",
+              "collection",
               "id",
               "provider"
             ]
@@ -47,7 +47,7 @@
               }
             },
             "required": [
-              "name",
+              "collection",
               "id",
               "provider"
             ]
@@ -60,6 +60,9 @@
                 "type": "string"
               },
               "name": {
+                "type": "string"
+              },
+              "provider": {
                 "type": "string"
               },
               "properties": {
@@ -79,6 +82,7 @@
               }
             },
             "required": [
+              "provider",
               "name",
               "id"
             ]

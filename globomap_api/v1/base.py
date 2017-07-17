@@ -1,30 +1,85 @@
+import json
+
+from flask import current_app as app
+from flask import request
+from jsonspec.validators.exceptions import ValidationError
+
 from . import api
 from ..decorators import json_response
+from ..models.constructor import Constructor
 from ..models.db import DB
+from ..models.document import Document
+from ..util import json_validate
+from ..util import validate
 
 
-@api.route('/graphs', methods=['GET'])
+@api.route('/graphs', methods=['GET', 'POST'])
 @json_response
 def list_graphs():
     """List all graphs from DB."""
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        try:
+            json_validate(app.config['SPECS'].get('graphs')).validate(data)
 
-    db_inst = DB()
-    graphs = db_inst.database.graphs()
-    return graphs, 200
+        except ValidationError as error:
+            res = validate(error)
+            return res, 400
+
+        else:
+            errs = []
+            for graph in data['graphs']:
+                try:
+                    graph['type'] = 'graph'
+                    constructor = Constructor(graph)
+                    constructor.factory(True)
+                except Exception as err:
+                    errs.append(str(err))
+            if errs:
+                return errs, 400
+
+            return {}, 200
+    else:
+
+        db_inst = DB()
+        graphs = db_inst.database.graphs()
+        return graphs, 200
 
 
-@api.route('/collections/', methods=['GET'])
+@api.route('/collections', methods=['GET', 'POST'])
 @json_response
 def list_collections():
     """List all collections from DB."""
+    if request.method == 'POST':
+        data = json.loads(request.data)
+        try:
+            json_validate(app.config['SPECS'].get(
+                'collections')).validate(data)
 
-    db_inst = DB()
-    colls = [coll for coll in db_inst.database.collections()
-             if coll['system'] is False and coll['type'] == 'document']
-    return colls, 200
+        except ValidationError as error:
+            res = validate(error)
+            return res, 400
+
+        else:
+            errs = []
+            for collection in data['collections']:
+                try:
+                    constructor = Constructor(collection)
+                    constructor.factory(True)
+                except Exception as err:
+                    errs.append(str(err))
+            if errs:
+                return errs, 400
+
+            return {}, 200
+    else:
+        db_inst = DB()
+        colls = [coll for coll in db_inst.database.collections()
+                 if coll['system'] is False and coll['type'] == 'document']
+        return colls, 200
 
 
-@api.route('/edges/', methods=['GET'])
+@api.route('/edges', methods=['GET'])
 @json_response
 def list_edges():
     """List all collections from DB."""
@@ -34,6 +89,131 @@ def list_edges():
              if coll['system'] is False and coll['type'] == 'edge']
 
     return colls, 200
+
+
+@api.route('/traversal', methods=['GET'])
+@json_response
+def traversal():
+    """List all collections from DB."""
+    graph_name = request.args.get('graph')
+    start_vertex = request.args.get('start_vertex')
+    direction = request.args.get('direction', 'any')
+    min_depth = request.args.get('min_depth', None)
+    strategy = request.args.get('strategy', None)
+
+    try:
+        db_inst = DB()
+        graph = db_inst.get_graph(graph_name)
+        traversal_results = graph.traverse(
+            start_vertex=start_vertex,
+            strategy=strategy,
+            direction=direction,
+            min_depth=min_depth
+        )
+    except Exception as err:
+        return str(err), 400
+    else:
+        return traversal_results, 200
+
+
+@api.route('/documens', methods=['GET', 'POST'])
+@json_response
+def documents():
+    """Insert document in DB."""
+    if request.method == 'POST':
+        docs = json.loads(request.data)
+        try:
+            json_validate(app.config['SPECS'].get('documents')).validate(docs)
+
+        except ValidationError as error:
+            res = validate(error)
+            return res, 400
+
+        else:
+            for document in docs['documents']:
+
+                constructor = Constructor({
+                    'type': 'collection',
+                    'name': document['collection']
+                })
+                collection = constructor.factory()
+                document['content']['_key'] = '{}_{}'.format(
+                    document['content']['provider'],
+                    document['content']['id']
+                )
+
+                try:
+                    doc = Document(collection)
+                    doc.upsert_document(document['content'])
+                except Exception as err:
+                    return str(err), 400
+
+    return {}, 200
+
+
+@api.route('/edges', methods=['GET', 'POST'])
+@json_response
+def edges():
+    """Insert edge in DB."""
+    if request.method == 'POST':
+        docs = json.loads(request.data)
+        try:
+            json_validate(app.config['SPECS'].get('edges')).validate(docs)
+
+        except ValidationError as error:
+            res = validate(error)
+            return res, 400
+
+        for document in docs['edges']:
+
+            constructor = Constructor({
+                'type': 'edges',
+                'name': document['collection']
+            })
+            collection = constructor.factory()
+            document['content']['_key'] = '{}_{}'.format(
+                document['content']['provider'],
+                document['content']['id']
+            )
+            document['content']['_to'] = '{}/{}_{}'.format(
+                document['to']['collection'],
+                document['to']['provider'],
+                document['to']['id']
+            )
+            document['content']['_from'] = '{}/{}_{}'.format(
+                document['from']['collection'],
+                document['from']['provider'],
+                document['from']['id']
+            )
+
+            try:
+                doc = Document(collection)
+                doc.upsert_document(document['content'])
+            except Exception as err:
+                return str(err), 400
+    return {}, 200
+
+# @api.route('/egde/', methods=['GET'])
+# @json_response
+# def egde():
+#     """List all collections from DB."""
+#     graph = {
+#         'type': 'collection',
+#         'name': document['collection']
+#     }
+
+#     constructor = Constructor(graph)
+#     collection = constructor.factory()
+#     document['content']['_key'] = '{}_{}'.format(
+#         document['content']['provider'],
+#         document['content']['id']
+#     )
+
+#     try:
+#         doc = Document(collection)
+#         doc.create_document(document['content'])
+#     except Exception as e:
+#         raise Exception(e)
 
 # @api.route('/search/', methods=['GET'])
 # @json_response
