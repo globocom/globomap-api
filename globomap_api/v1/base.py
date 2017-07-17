@@ -97,18 +97,40 @@ def traversal():
     """List all collections from DB."""
     graph_name = request.args.get('graph')
     start_vertex = request.args.get('start_vertex')
-    direction = request.args.get('direction', 'any')
-    min_depth = request.args.get('min_depth', None)
+    direction = request.args.get('direction', 'outbound')
+    item_order = request.args.get('item_order', 'forward')
     strategy = request.args.get('strategy', None)
+    order = request.args.get('order', None)
+    edge_uniqueness = request.args.get('edge_uniqueness', None)
+    vertex_uniqueness = request.args.get('vertex_uniqueness', None)
+    max_iter = request.args.get('max_iter', None)
+    min_depth = request.args.get('min_depth', None)
+    max_depth = request.args.get('max_depth', None)
+    init_func = request.args.get('init_func', None)
+    sort_func = request.args.get('sort_func', None)
+    filter_func = request.args.get('filter_func', None)
+    visitor_func = request.args.get('visitor_func', None)
+    expander_func = request.args.get('expander_func', None)
 
     try:
         db_inst = DB()
         graph = db_inst.get_graph(graph_name)
         traversal_results = graph.traverse(
             start_vertex=start_vertex,
-            strategy=strategy,
             direction=direction,
-            min_depth=min_depth
+            item_order=item_order,
+            strategy=strategy,
+            order=order,
+            edge_uniqueness=edge_uniqueness,
+            vertex_uniqueness=vertex_uniqueness,
+            max_iter=max_iter,
+            min_depth=min_depth,
+            max_depth=max_depth,
+            init_func=init_func,
+            sort_func=sort_func,
+            filter_func=filter_func,
+            visitor_func=visitor_func,
+            expander_func=expander_func
         )
     except Exception as err:
         return str(err), 400
