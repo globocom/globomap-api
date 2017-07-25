@@ -1,0 +1,18 @@
+{
+  "graphs": [
+    {
+      "name": "abc",
+      "links": [
+        {
+          "edge": "edge1",
+          "from_collections": [
+            "coll1"
+          ],
+          "to_collections": [
+            "coll2"
+          ]
+        }
+      ]
+    }
+  ]
+}

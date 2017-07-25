@@ -16,10 +16,10 @@ clean: ## Clear *.pyc files, etc
 	@find . \( -name '*.pyc' -o -name '**/*.pyc' -o -name '*~' \) -delete
 
 pep8: ## Check source-code for PEP8 compliance
-	@-pep8 $(PROJECT_HOME)
+	@-pep8 globomap_api
 
 tests: clean pep8 ## Run all tests with coverage
-	@py.test --cov-config .coveragerc --cov $(PROJECT_HOME) --cov-report term-missing
+	@run --source=globomap_api -m unittest2 discover -s tests/; coverage report -m
 
 run: ## Run a development web server
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
@@ -27,9 +27,6 @@ run: ## Run a development web server
 docker: ## Run a development web server
 	@docker-compose build
 	@docker-compose up -d
-
-setup: requirements.txt
-	$(PIP) install -r $^
 
 dist: clean
 	@python setup.py sdist

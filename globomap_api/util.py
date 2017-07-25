@@ -36,3 +36,22 @@ def validate(error):
     }
 
     return res
+
+
+def filter_transversal(data):
+    edges = []
+    nodes = []
+    for p in data.get('paths'):
+        edges += p.get('edges', [])
+        nodes += p.get('vertices', [])
+    for v in data.get('vertices'):
+        nodes += v.get('vertices', [])
+
+    nodes = list({node['_id']: node for node in nodes}.values())
+    edges = list({edge['_id']: edge for edge in edges}.values())
+
+    data = {
+        'nodes': nodes,
+        'edges': edges
+    }
+    return data

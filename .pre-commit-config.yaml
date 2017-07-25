@@ -12,9 +12,6 @@
     -   id: check-added-large-files
     -   id: check-yaml
     -   id: debug-statements
-    -   id: name-tests-test
-        args:
-        - --autofix
     -   id: requirements-txt-fixer
     -   id: double-quote-string-fixer
     -   id: check-merge-conflict

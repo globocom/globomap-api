@@ -1,5 +1,7 @@
 import string
 
+from flask import current_app as app
+
 from .db import DB
 
 
@@ -30,26 +32,29 @@ class Constructor(object):
     def _class_collection_factory(self, create=False):
 
         db_inst = DB()
+        db_inst.get_db()
         if create:
-            col = db_inst.create_colletion(name=self.name, edge=False)
+            col = db_inst.create_collection(name=self.name, edge=False)
         else:
-            col = db_inst.get_colletion(self.name)
+            col = db_inst.get_collection(self.name)
 
         return col
 
     def _class_edge_factory(self, create=False):
 
         db_inst = DB()
+        db_inst.get_db()
         if create:
-            col = db_inst.create_colletion(name=self.name, edge=True)
+            col = db_inst.create_collection(name=self.name, edge=True)
         else:
-            col = db_inst.get_colletion(self.name)
+            col = db_inst.get_collection(self.name)
 
         return col
 
     def _class_graph_factory(self, create=False):
 
         db_inst = DB()
+        db_inst.get_db()
         if create:
             graph = db_inst.create_graph(self.name, self.links)
         else:

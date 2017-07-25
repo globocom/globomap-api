@@ -1,0 +1,32 @@
+{
+  "documents": [
+    {
+      "collection": "coll1",
+      "content": {
+        "id": "1",
+        "name": "yyy",
+        "provider": "xxx",
+        "properties": [
+          {
+            "key": "key",
+            "value": "value"
+          }
+        ]
+      }
+    },
+    {
+      "collection": "coll2",
+      "content": {
+        "id": "1",
+        "name": "yyy",
+        "provider": "xxx",
+        "properties": [
+          {
+            "key": "key",
+            "value": "value"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -9,6 +9,7 @@ from ..decorators import json_response
 from ..models.constructor import Constructor
 from ..models.db import DB
 from ..models.document import Document
+from ..util import filter_transversal
 from ..util import json_validate
 from ..util import validate
 
@@ -42,6 +43,7 @@ def list_graphs():
     else:
 
         db_inst = DB()
+        db_inst.get_db()
         graphs = db_inst.database.graphs()
         return graphs, 200
 
@@ -74,6 +76,7 @@ def list_collections():
             return {}, 200
     else:
         db_inst = DB()
+        db_inst.get_db()
         colls = [coll for coll in db_inst.database.collections()
                  if coll['system'] is False and coll['type'] == 'document']
         return colls, 200
@@ -85,6 +88,7 @@ def list_edges():
     """List all collections from DB."""
 
     db_inst = DB()
+    db_inst.get_db()
     colls = [coll for coll in db_inst.database.collections()
              if coll['system'] is False and coll['type'] == 'edge']
 
@@ -114,6 +118,7 @@ def traversal():
 
     try:
         db_inst = DB()
+        db_inst.get_db()
         graph = db_inst.get_graph(graph_name)
         traversal_results = graph.traverse(
             start_vertex=start_vertex,
@@ -135,6 +140,7 @@ def traversal():
     except Exception as err:
         return str(err), 400
     else:
+        traversal_results = filter_transversal(traversal_results)
         return traversal_results, 200
 
 
@@ -215,27 +221,26 @@ def edges():
                 return str(err), 400
     return {}, 200
 
-# @api.route('/egde/', methods=['GET'])
-# @json_response
-# def egde():
-#     """List all collections from DB."""
-#     graph = {
-#         'type': 'collection',
-#         'name': document['collection']
-#     }
 
-#     constructor = Constructor(graph)
-#     collection = constructor.factory()
-#     document['content']['_key'] = '{}_{}'.format(
-#         document['content']['provider'],
-#         document['content']['id']
-#     )
+@api.route('/search', methods=['GET'])
+@json_response
+def egde():
+    """List all collections from DB."""
+    collection = request.args.get('collection')
+    query = request.args.get('query')
 
-#     try:
-#         doc = Document(collection)
-#         doc.create_document(document['content'])
-#     except Exception as e:
-#         raise Exception(e)
+    constructor = Constructor(graph)
+    collection = constructor.factory()
+    document['content']['_key'] = '{}_{}'.format(
+        document['content']['provider'],
+        document['content']['id']
+    )
+
+    try:
+        doc = Document(collection)
+        doc.create_document(document['content'])
+    except Exception as e:
+        raise Exception(e)
 
 # @api.route('/search/', methods=['GET'])
 # @json_response

@@ -2,6 +2,7 @@ import os
 
 from arango import ArangoClient
 from arango import exceptions
+from arango.aql import AQL
 from flask import current_app as app
 
 
@@ -9,7 +10,7 @@ class DB(object):
 
     """DB"""
 
-    colletion = None
+    collection = None
     database = None
     graph = None
     conn = None
@@ -17,7 +18,6 @@ class DB(object):
     def __init__(self):
 
         self._connection()
-        self.get_db(app.config['ARANGO_DB'])
 
     def _connection(self):
 
@@ -78,6 +78,9 @@ class DB(object):
     def get_db(self, name=''):
         """Return database"""
 
+        if not name:
+            name = app.config['ARANGO_DB']
+
         if self.has_database(name):
             self.database = self._conn.database(name)
 
@@ -86,16 +89,16 @@ class DB(object):
 
         return self.database
 
-    def get_colletion(self, name=''):
+    def get_collection(self, name=''):
         """Return collection"""
 
         if self.has_collection(name):
-            self.colletion = self.database.collection(name)
+            self.collection = self.database.collection(name)
 
         else:
             raise Exception('There no Collection with name {}'.format(name))
 
-        return self.colletion
+        return self.collection
 
     def get_graph(self, name=''):
         """Return graph"""
@@ -144,15 +147,59 @@ class DB(object):
 
         return self.graph
 
-    def create_colletion(self, name='', edge=False):
+    def create_collection(self, name='', edge=False):
         """Create Collection or Edge"""
 
         try:
-            self.colletion = self.database.create_collection(
+            self.collection = self.database.create_collection(
                 name=name, edge=edge)
 
         except Exception:
             raise Exception(
                 'There\'s already a collection with name {}.'.format(name))
+        return self.collection
 
-        return self.colletion
+    def delete_db(self, name=''):
+        """Delete DB"""
+
+        try:
+            self.database = self._conn.delete_database(name)
+
+        except Exception:
+            raise Exception(
+                'There no a database with name {}.'.format(name))
+
+    def delete_graph(self, name=''):
+        """Delete Graph"""
+
+        try:
+            self.database.delete_graph(name)
+
+        except Exception:
+            raise Exception(
+                'There no a graph with name {}.'.format(name))
+
+    def delete_collection(self, name=''):
+        """Delete Collection or Edge"""
+
+        try:
+            self.collection = self.database.delete_collection(name=name)
+
+        except Exception:
+            raise Exception(
+                'There no a collection with name {}.'.format(name))
+
+    def search_document(self, collection, field, value):
+        """Search Document"""
+
+        result = self.database.aql.execute(
+            '''FOR doc IN {}
+                FILTER doc.`{}` like "%{}%"
+                RETURN doc'''.format(collection, field, value),
+            count=True,
+            batch_size=1,
+            ttl=10,
+            optimizer_rules=['+all']
+        )
+
+        return result
