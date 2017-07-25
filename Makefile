@@ -18,8 +18,12 @@ clean: ## Clear *.pyc files, etc
 pep8: ## Check source-code for PEP8 compliance
 	@-pep8 globomap_api
 
-tests: clean pep8 ## Run all tests with coverage
-	@run --source=globomap_api -m unittest2 discover -s tests/; coverage report -m
+exec_tests: clean pep8 ## Run all tests with coverage
+	@python3.6 -m unittest discover -s tests/
+	#@run --source=globomap_api -m unittest2 discover -s tests/; coverage report -m
+
+tests:
+	@docker exec -it globomap_api make exec_tests
 
 run: ## Run a development web server
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
