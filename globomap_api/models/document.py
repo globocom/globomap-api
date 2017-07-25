@@ -12,7 +12,7 @@ class Document:
         """Create Document"""
 
         try:
-            document = self.collection.insert(document)
+            self.collection.insert(document)
 
         except exceptions.DocumentInsertError as err:
             if errors.get(err.error_code):

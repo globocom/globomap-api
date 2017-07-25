@@ -36,11 +36,11 @@
                   "minItems": 1
                 }
               },
-            "required": [
-              "edge",
-              "from_collections",
-              "to_collections"
-            ]
+              "required": [
+                "edge",
+                "from_collections",
+                "to_collections"
+              ]
             }
           }
         }

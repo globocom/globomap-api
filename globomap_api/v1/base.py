@@ -144,7 +144,7 @@ def traversal():
         return traversal_results, 200
 
 
-@api.route('/documens', methods=['GET', 'POST'])
+@api.route('/documents', methods=['GET', 'POST'])
 @json_response
 def documents():
     """Insert document in DB."""
@@ -158,6 +158,7 @@ def documents():
             return res, 400
 
         else:
+
             for document in docs['documents']:
 
                 constructor = Constructor({

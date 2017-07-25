@@ -20,10 +20,10 @@
             ]
           }
         },
-            "required": [
-              "name",
-              "type"
-            ]
+        "required": [
+          "name",
+          "type"
+        ]
       }
     }
   }

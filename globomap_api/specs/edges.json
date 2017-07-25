@@ -65,6 +65,9 @@
               "provider": {
                 "type": "string"
               },
+              "timestamp": {
+                "type": "number"
+              },
               "properties": {
                 "type": "array",
                 "items": {
@@ -84,7 +87,8 @@
             "required": [
               "provider",
               "name",
-              "id"
+              "id",
+              "timestamp"
             ]
           }
         }
