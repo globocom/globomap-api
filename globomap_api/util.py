@@ -15,24 +15,19 @@ def json_validate(json_file):
 
 def validate(error):
     msg = list()
-
     if error.flatten():
         for pointer, reasons in error.flatten().items():
-            valor = resolve(
-                error[1], pointer) if pointer != '#/' else ''
             msg.append({
                 'error_pointer': pointer,
-                'received_value': valor,
                 'error_reasons': list(reasons)
             })
     else:
         msg.append({
             'error_pointer': error[0],
-            'received_value': None,
             'error_reasons': list(error[1])
         })
     res = {
-        'errors': msg
+        'data': msg
     }
 
     return res

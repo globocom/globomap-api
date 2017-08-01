@@ -1,32 +1,14 @@
 {
-  "documents": [
-    {
-      "collection": "coll1",
-      "content": {
-        "id": "1",
-        "name": "yyy",
-        "provider": "xxx",
-        "properties": [
-          {
-            "key": "key",
-            "value": "value"
-          }
-        ]
+  "content": {
+    "id": "1",
+    "name": "yyy",
+    "provider": "xxx",
+    "timestamp": 1501543772,
+    "properties": [
+      {
+        "key": "key",
+        "value": "value"
       }
-    },
-    {
-      "collection": "coll2",
-      "content": {
-        "id": "1",
-        "name": "yyy",
-        "provider": "xxx",
-        "properties": [
-          {
-            "key": "key",
-            "value": "value"
-          }
-        ]
-      }
-    }
-  ]
+    ]
+  }
 }

@@ -3,60 +3,47 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "documents": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "collection": {
-            "type": "string"
-          },
-          "content": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "timestamp": {
-                "type": "number"
-              },
-              "properties": {
-                "type": "array",
-                "items": {
-                  "additionalProperties": false,
-                  "type": "object",
-                  "properties": {
-                    "key": {
-                      "type": "string"
-                    },
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            },
-            "required": [
-              "name",
-              "id",
-              "provider",
-              "timestamp"
-            ]
-          }
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
         },
-        "required": [
-          "collection",
-          "content"
-        ]
-      }
+        "name": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "number"
+        },
+        "properties": {
+          "type": "array",
+          "items": {
+            "additionalProperties": false,
+            "type": "object",
+            "properties": {
+              "key": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "provider",
+        "timestamp"
+      ]
     }
-  }
+  },
+  "required": [
+    "content"
+  ]
 }

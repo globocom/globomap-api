@@ -1,28 +1,24 @@
 {
-  "edges": [
-    {
-      "collection": "edge1",
-      "from": {
-        "collection":"coll1",
-        "provider": "xxx",
-        "id": "1"
-      },
-      "to": {
-        "collection":"coll2",
-        "provider": "xxx",
-        "id": "1"
-      },
-      "content": {
-        "id": "1",
-        "name": "yyy",
-        "provider": "xxx",
-        "properties": [
-          {
-            "key": "key",
-            "value": "value"
-          }
-        ]
+  "from": {
+    "collection":"coll1",
+    "provider": "xxx",
+    "id": "1"
+  },
+  "to": {
+    "collection":"coll2",
+    "provider": "xxx",
+    "id": "1"
+  },
+  "content": {
+    "id": "1",
+    "name": "yyy",
+    "provider": "xxx",
+    "timestamp": 1501543772,
+    "properties": [
+      {
+        "key": "key",
+        "value": "value"
       }
-    }
-  ]
+    ]
+  }
 }

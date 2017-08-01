@@ -2,26 +2,30 @@ import os
 
 import unittest2
 
+from globomap_api import exceptions as gmap_exceptions
 from globomap_api.app import create_app
 from globomap_api.models.db import DB
 
 graphs = ['test_graph_db']
 
 
-class TestStringMethods(unittest2.TestCase):
+class TestGraph(unittest2.TestCase):
 
     def setUp(self):
         self.app = create_app('tests.config')
+        self.db_name = self.app.config['ARANGO_DB']
         with self.app.app_context():
             self.db_inst = DB()
-            self.db_inst.get_db()
+            self._cleanup()
+            self.db_inst.get_database()
 
-    def tearDown(self):
-        for graph in graphs:
-            try:
-                self.db_inst.delete_graph(graph)
-            except Exception:
-                pass
+    def _cleanup(self):
+        try:
+            self.db_inst.delete_database(self.db_name)
+        except Exception:
+            pass
+        finally:
+            self.db_inst.create_database(self.db_name)
 
     def test_get_graph(self):
         """Test get graph"""
@@ -77,14 +81,14 @@ class TestStringMethods(unittest2.TestCase):
         graph_name = 'test_graph_db'
         self.db_inst.create_graph(graph_name)
         self.db_inst.delete_graph(graph_name)
-        with self.assertRaises(Exception):
+        with self.assertRaises(gmap_exceptions.GraphNotExist):
             self.db_inst.get_graph(graph_name)
 
     def test_get_graph_not_exists(self):
         """Test if get graph that not exists"""
 
         graph_name = 'test_graph_db_2'
-        with self.assertRaises(Exception):
+        with self.assertRaises(gmap_exceptions.GraphNotExist):
             self.db_inst.get_graph(graph_name)
 
     def test_create_graph_duplicated(self):
@@ -92,14 +96,14 @@ class TestStringMethods(unittest2.TestCase):
 
         graph_name = 'test_graph_db'
         self.db_inst.create_graph(graph_name)
-        with self.assertRaises(Exception):
+        with self.assertRaises(gmap_exceptions.GraphAlreadyExist):
             self.db_inst.create_graph(graph_name)
 
     def test_delete_graph_not_exists(self):
         """Test if delete graph that not exists"""
 
         graph_name = 'test_graph_db_2'
-        with self.assertRaises(Exception):
+        with self.assertRaises(gmap_exceptions.GraphNotExist):
             self.db_inst.delete_graph(graph_name)
 
 

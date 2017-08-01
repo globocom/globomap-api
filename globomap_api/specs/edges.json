@@ -3,96 +3,89 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "edges": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
+    "from": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "collection": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "collection",
+        "id",
+        "provider"
+      ]
+    },
+    "to": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "collection": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "collection",
+        "id",
+        "provider"
+      ]
+    },
+    "content": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "provider": {
+          "type": "string"
+        },
+        "timestamp": {
+          "type": "number"
+        },
         "properties": {
-          "collection": {
-            "type": "string"
-          },
-          "from": {
-            "type": "object",
+          "type": "array",
+          "items": {
             "additionalProperties": false,
+            "type": "object",
             "properties": {
-              "collection": {
+              "key": {
                 "type": "string"
               },
-              "id": {
-                "type": "string"
-              },
-              "provider": {
+              "value": {
                 "type": "string"
               }
-            },
-            "required": [
-              "collection",
-              "id",
-              "provider"
-            ]
-          },
-          "to": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "collection": {
-                "type": "string"
-              },
-              "id": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              }
-            },
-            "required": [
-              "collection",
-              "id",
-              "provider"
-            ]
-          },
-          "content": {
-            "type": "object",
-            "additionalProperties": false,
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "name": {
-                "type": "string"
-              },
-              "provider": {
-                "type": "string"
-              },
-              "timestamp": {
-                "type": "number"
-              },
-              "properties": {
-                "type": "array",
-                "items": {
-                  "additionalProperties": false,
-                  "type": "object",
-                  "properties": {
-                    "key": {
-                      "type": "string"
-                    },
-                    "value": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            },
-            "required": [
-              "provider",
-              "name",
-              "id",
-              "timestamp"
-            ]
+            }
           }
         }
-      }
+      },
+      "required": [
+        "provider",
+        "name",
+        "id",
+        "timestamp"
+      ]
     }
-  }
+  },
+  "required": [
+    "content",
+    "from",
+    "to"
+  ]
 }
