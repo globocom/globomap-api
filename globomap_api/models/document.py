@@ -39,10 +39,6 @@ class Document:
                 msg = 'There no document with key {}'.format(document['_key'])
                 raise gmap_exceptions.DocumentNotExist(msg)
 
-            elif doc_err.get(err.error_code):
-                raise gmap_exceptions.DocumentException(
-                    doc_err.get(err.error_code).format(document['_key']))
-
             else:
                 raise gmap_exceptions.DocumentException(
                     doc_err.get(0).format(document['_key'], err.message))
@@ -88,9 +84,6 @@ class Document:
                 msg = 'There no document with key {}'.format(key)
                 raise gmap_exceptions.DocumentNotExist(msg)
 
-            elif doc_err.get(err.error_code):
-                raise gmap_exceptions.DocumentException(
-                    doc_err.get(err.error_code).format(key))
             else:
                 raise gmap_exceptions.DocumentException(
                     doc_err.get(0).format(key, err.message))
