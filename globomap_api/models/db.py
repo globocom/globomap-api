@@ -110,7 +110,7 @@ class DB(object):
             msg = db_err.get(0).format(name, err.message)
             raise gmap_exceptions.DatabaseException(msg)
 
-    def search_in_database(self, collection, field, value, offset, count):
+    def search_in_database(self, collection, field, value, offset=0, count=10):
         """Search Document"""
 
         try:
