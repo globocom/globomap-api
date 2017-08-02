@@ -1,16 +1,3 @@
 {
-  "collections": [
-    {
-      "name": "coll1",
-      "type": "collection"
-    },
-    {
-      "name": "edge1",
-      "type": "edges"
-    },
-    {
-      "name": "coll2",
-      "type": "collection"
-    }
-  ]
+  "name": "coll1"
 }

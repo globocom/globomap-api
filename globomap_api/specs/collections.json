@@ -3,28 +3,11 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "collections": {
-      "type": "array",
-      "items": {
-        "type": "object",
-        "additionalProperties": false,
-        "properties": {
-          "name": {
-            "type": "string"
-          },
-          "type": {
-            "type": "string",
-            "enum": [
-              "collection",
-              "edges"
-            ]
-          }
-        },
-        "required": [
-          "name",
-          "type"
-        ]
-      }
+    "name": {
+      "type": "string"
     }
-  }
+  },
+  "required": [
+    "name"
+  ]
 }

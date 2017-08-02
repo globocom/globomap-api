@@ -15,12 +15,6 @@ class Constructor(object):
     links = None
     create = False
 
-    def __init__(self, spec):
-
-        self.name = spec.get('name')
-        self.kind = string.capwords(spec.get('type', ''))
-        self.links = spec.get('links', [])
-
     def _treat_param(self, kwargs):
         for key in kwargs:
             setattr(self, key, kwargs[key])
@@ -36,7 +30,7 @@ class Constructor(object):
         elif self.kind == 'Graph':
             class_fact = self._class_graph_factory()
         else:
-            raise Exception('Kind invalid')
+            raise ConstructorException('Kind invalid')
         return class_fact
 
     def _class_collection_factory(self):

@@ -3,47 +3,38 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "graphs": {
+    "name": {
+      "type": "string"
+    },
+    "links": {
       "type": "array",
       "items": {
         "type": "object",
         "additionalProperties": false,
         "properties": {
-          "name": {
+          "edge": {
             "type": "string"
           },
-          "links": {
+          "from_collections": {
             "type": "array",
             "items": {
-              "type": "object",
-              "additionalProperties": false,
-              "properties": {
-                "edge": {
-                  "type": "string"
-                },
-                "from_collections": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minItems": 1
-                },
-                "to_collections": {
-                  "type": "array",
-                  "items": {
-                    "type": "string"
-                  },
-                  "minItems": 1
-                }
-              },
-              "required": [
-                "edge",
-                "from_collections",
-                "to_collections"
-              ]
-            }
+              "type": "string"
+            },
+            "minItems": 1
+          },
+          "to_collections": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "minItems": 1
           }
-        }
+        },
+        "required": [
+          "edge",
+          "from_collections",
+          "to_collections"
+        ]
       }
     }
   }

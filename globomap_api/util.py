@@ -3,6 +3,8 @@ import json
 from jsonspec.reference import resolve
 from jsonspec.validators import load
 
+from globomap_api.models.constructor import Constructor
+
 
 def json_validate(json_file):
 
@@ -27,7 +29,7 @@ def validate(error):
             'error_reasons': list(error[1])
         })
     res = {
-        'data': msg
+        'errors': msg
     }
 
     return res
@@ -50,3 +52,31 @@ def filter_transversal(data):
         'edges': edges
     }
     return data
+
+
+def filter_graphs(data):
+    graphs = [graph['name'] for graph in data]
+    return graphs
+
+
+def filter_collections(data, kind):
+    collections = [coll['name'] for coll in data
+                   if coll['system'] is False and coll['type'] == kind]
+    return collections
+
+
+def make_key(document):
+    key = '{}_{}'.format(
+        document['provider'],
+        document['id']
+    )
+    return key
+
+
+def make_key_way(document):
+    key = '{}/{}_{}'.format(
+        document['collection'],
+        document['provider'],
+        document['id']
+    )
+    return key

@@ -16,7 +16,11 @@ def json_response(f):
         if isinstance(status_or_headers, (dict, list)):
             headers, status_or_headers = status_or_headers, None
         if not isinstance(rv, dict):
-            rv = {'data': rv}
+            if rv is not None:
+                if status_or_headers != 200:
+                    rv = {'errors': rv}
+                else:
+                    rv = {'data': rv}
 
         rv = jsonify(rv)
         if status_or_headers is not None:

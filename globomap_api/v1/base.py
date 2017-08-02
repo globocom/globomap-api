@@ -6,357 +6,277 @@ from flask import request
 from jsonspec.validators.exceptions import ValidationError
 
 from . import api
-from ..decorators import json_response
-from ..exceptions import CollectionNotExist
-from ..exceptions import DocumentException
-from ..exceptions import DocumentNotExist
-from ..models.constructor import Constructor
-from ..models.db import DB
-from ..models.document import Document
-from ..util import filter_transversal
-from ..util import json_validate
-from ..util import validate
+from globomap_api import decorators
+from globomap_api import exceptions as gmap_exc
+from globomap_api.util import validate
+from globomap_api.v1 import facade
 
 
-@api.route('/graphs', methods=['GET', 'POST'])
-@json_response
+##########
+# Graphs #
+##########
+@api.route('/graphs', methods=['GET'])
+@decorators.json_response
 def list_graphs():
     """List all graphs from DB."""
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        try:
-            json_validate(app.config['SPECS'].get('graphs')).validate(data)
 
-        except ValidationError as error:
-            res = validate(error)
-            return res, 400
-
-        else:
-            errs = []
-            for graph in data['graphs']:
-                try:
-                    graph['type'] = 'graph'
-                    constructor = Constructor(graph)
-                    constructor.factory(True)
-                except Exception as err:
-                    errs.append(str(err))
-            if errs:
-                return errs, 400
-
-            return {}, 200
-    else:
-
-        db_inst = DB()
-        db_inst.get_db()
-        graphs = db_inst.database.graphs()
+    try:
+        graphs = facade.list_graphs()
         return graphs, 200
-
-
-@api.route('/collections', methods=['GET', 'POST'])
-@json_response
-def list_collections():
-    """List all collections from DB."""
-    if request.method == 'POST':
-        data = json.loads(request.data)
-        try:
-            json_validate(app.config['SPECS'].get(
-                'collections')).validate(data)
-
-        except ValidationError as error:
-            res = validate(error)
-            return res, 400
-
-        else:
-            errs = []
-            for collection in data['collections']:
-                try:
-                    constructor = Constructor(collection)
-                    constructor.factory(True)
-                except Exception as err:
-                    errs.append(str(err))
-            if errs:
-                return errs, 400
-
-            return {}, 200
-    else:
-        db_inst = DB()
-        db_inst.get_db()
-        colls = [coll for coll in db_inst.database.collections()
-                 if coll['system'] is False and coll['type'] == 'document']
-        return colls, 200
-
-
-@api.route('/edges', methods=['GET'])
-@json_response
-def list_edges():
-    """List all collections from DB."""
-
-    db_inst = DB()
-    db_inst.get_db()
-    colls = [coll for coll in db_inst.database.collections()
-             if coll['system'] is False and coll['type'] == 'edge']
-
-    return colls, 200
-
-
-@api.route('/traversal', methods=['GET'])
-@json_response
-def traversal():
-    """List all collections from DB."""
-    graph_name = request.args.get('graph')
-    start_vertex = request.args.get('start_vertex')
-    direction = request.args.get('direction', 'outbound')
-    item_order = request.args.get('item_order', 'forward')
-    strategy = request.args.get('strategy', None)
-    order = request.args.get('order', None)
-    edge_uniqueness = request.args.get('edge_uniqueness', None)
-    vertex_uniqueness = request.args.get('vertex_uniqueness', None)
-    max_iter = request.args.get('max_iter', None)
-    min_depth = request.args.get('min_depth', None)
-    max_depth = request.args.get('max_depth', None)
-    init_func = request.args.get('init_func', None)
-    sort_func = request.args.get('sort_func', None)
-    filter_func = request.args.get('filter_func', None)
-    visitor_func = request.args.get('visitor_func', None)
-    expander_func = request.args.get('expander_func', None)
-
-    try:
-        db_inst = DB()
-        db_inst.get_db()
-        graph = db_inst.get_graph(graph_name)
-        traversal_results = graph.traverse(
-            start_vertex=start_vertex,
-            direction=direction,
-            item_order=item_order,
-            strategy=strategy,
-            order=order,
-            edge_uniqueness=edge_uniqueness,
-            vertex_uniqueness=vertex_uniqueness,
-            max_iter=max_iter,
-            min_depth=min_depth,
-            max_depth=max_depth,
-            init_func=init_func,
-            sort_func=sort_func,
-            filter_func=filter_func,
-            visitor_func=visitor_func,
-            expander_func=expander_func
-        )
-    except Exception as err:
-        return str(err), 400
-    else:
-        traversal_results = filter_transversal(traversal_results)
-        return traversal_results, 200
-
-
-############
-# Document #
-############
-@api.route('/collections/<collection>/document/', methods=['POST'])
-@json_response
-def create_document(collection):
-    """Insert document in DB."""
-    try:
-        inst_coll = get_inst_collection('collection', collection)
-    except CollectionNotExist as err:
-        return str(err), 404
+    except gmap_exc.DatabaseNotExist as err:
+        return err, 400
     except Exception as err:
         return str(err), 500
 
+
+@api.route('/graphs', methods=['POST'])
+@decorators.json_response
+def create_graph():
+    """Create graph in DB."""
+
     try:
-        document = json.loads(request.data)
+        data = json.loads(request.data)
+        facade.create_graph(data)
+        return {}, 200
     except JSONDecodeError as err:
         return str(err), 400
-    except Exception as err:
-        return str(err), 500
-
-    try:
-        json_validate(app.config['SPECS'].get('documents')).validate(document)
     except ValidationError as error:
         res = validate(error)
         return res, 400
     except Exception as err:
         return str(err), 500
 
+
+#########
+# Edges #
+#########
+@api.route('/edges', methods=['GET'])
+@decorators.json_response
+def list_edges():
+    """List all collections of kind edge from DB."""
+
     try:
-        document = document['content']
-        document['_key'] = make_key(document)
-        doc = Document(inst_coll)
-        res = doc.upsert_document(document)
-    except DocumentException as err:
-        return str(err), 400
+        collections = facade.list_collections('edge')
+        return collections, 200
+    except gmap_exc.DatabaseNotExist as err:
+        return err.message, 400
     except Exception as err:
         return str(err), 500
-    else:
-        return res, 200
 
 
-@api.route('/collections/<collection>/document/<document>/', methods=['GET'])
-@json_response
-def get_document(collection, document):
-    """Get document by key."""
-    try:
-        inst_coll = get_inst_collection('collections', collection)
-    except CollectionNotExist as err:
-        return str(err), 404
+@api.route('/edges', methods=['POST'])
+@decorators.json_response
+def create_edge():
+    """Create collection of kind edge in DB."""
 
     try:
-        doc = Document(inst_coll)
-        res = doc.get_document(document)
-    except DocumentNotExist as err:
-        return str(err), 404
-    else:
-        return res, 200
+        data = json.loads(request.data)
+        facade.create_collection_edge(data)
+        return {}, 200
+    except JSONDecodeError as err:
+        return str(err), 400
+    except ValidationError as error:
+        res = validate(error)
+        return res, 400
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
 
 
-@api.route('/collections/<collection>/document/<document>/', methods=['DELETE'])
-@json_response
-def delete_document(edge, document):
-    return {}, 200
-
-########
-# Edge #
-########
-
-
-@api.route('/edges/<edge>/document/', methods=['POST'])
-@json_response
+@api.route('/edges/<edge>', methods=['POST'])
+@decorators.json_response
 def edges(edge):
     """Insert edge in DB."""
     try:
-        inst_edge = get_inst_collection('edges', edge)
-    except CollectionNotExist as err:
-        return str(err), 404
-    except Exception as err:
-        return str(err), 500
-
-    try:
-        document = json.loads(request.data)
+        data = json.loads(request.data)
+        res = facade.create_edge(edge, data)
+        return res, 200
+    except gmap_exc.EdgeNotExist as err:
+        return err.message, 404
     except JSONDecodeError as err:
-        return str(err), 400
-    except Exception as err:
-        return str(err), 500
-
-    try:
-        json_validate(app.config['SPECS'].get('edges')).validate(document)
+        return err.message, 400
     except ValidationError as error:
         res = validate(error)
         return res, 400
+    except gmap_exc.DocumentException as err:
+        return err.message, 400
     except Exception as err:
         return str(err), 500
 
-    try:
-        document['content']['_to'] = make_key_way(document['to'])
-        document['content']['_from'] = make_key_way(document['from'])
-        document['content']['_key'] = make_key(document['content'])
-        document = document['content']
-        doc = Document(inst_edge)
-        res = doc.upsert_document(document)
-    except DocumentException as err:
-        return str(err), 400
-    except Exception as err:
-        return str(err), 500
-    else:
-        return res, 200
 
-
-@api.route('/edges/<edge>/document/<document>/', methods=['GET'])
-@json_response
-def get_edge(edge, document):
+@api.route('/edges/<edge>/<key>', methods=['GET'])
+@decorators.json_response
+def get_edge(edge, key):
     """Get edge by key."""
-    try:
-        inst_coll = get_inst_collection('edges', edge)
-    except CollectionNotExist as err:
-        return str(err), 404
 
     try:
-        doc = Document(inst_coll)
-        res = doc.get_document(document)
-    except DocumentNotExist as err:
-        return str(err), 404
-    else:
+        res = facade.get_edge(edge, key)
         return res, 200
+    except gmap_exc.EdgeNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
 
 
-@api.route('/edges/<edge>/document/<document>/', methods=['DELETE'])
-@json_response
-def delete_edge(edge, document):
-    return {}, 200
+@api.route('/edges/<edge>/<key>', methods=['GET'])
+@decorators.json_response
+def delete_edge(edge, key):
+    """Get edge by key."""
+
+    try:
+        facade.delete_edge(edge, key)
+        return {}, 200
+    except gmap_exc.EdgeNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
 
 
-#########
-# Utils #
-#########
-def get_inst_collection(kind, collection):
-    constructor = Constructor({
-        'type': kind,
-        'name': collection
-    })
-    inst = constructor.factory()
-    return inst
+###############
+# Collections #
+###############
+@api.route('/collections', methods=['GET'])
+@decorators.json_response
+def list_collections():
+    """List all collections of kind document from DB."""
+
+    try:
+        collections = facade.list_collections(kind='document')
+        return collections, 200
+    except gmap_exc.DatabaseNotExist as err:
+        return err.message, 400
+    except Exception as err:
+        return str(err), 500
 
 
-def make_key(document):
-    key = '{}_{}'.format(
-        document['provider'],
-        document['id']
-    )
-    return key
+@api.route('/collections', methods=['POST'])
+@decorators.json_response
+def create_collection():
+    """Create collection of kind document in DB."""
+
+    try:
+        data = json.loads(request.data)
+        facade.create_collection_document(data)
+        return {}, 200
+    except JSONDecodeError as err:
+        return str(err), 400
+    except ValidationError as error:
+        res = validate(error)
+        return res, 400
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
 
 
-def make_key_way(document):
-    key = '{}/{}_{}'.format(
-        document['collection'],
-        document['provider'],
-        document['id']
-    )
-    return key
+@api.route('/collections/<collection>', methods=['POST'])
+@decorators.json_response
+def create_document(collection):
+    """Insert document in DB."""
+
+    try:
+        data = json.loads(request.data)
+        res = facade.create_document(collection, data)
+        return res, 200
+    except JSONDecodeError as err:
+        return err.message, 400
+    except ValidationError as error:
+        res = validate(error)
+        return res, 400
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentException as err:
+        return err.message, 400
+    except Exception as err:
+        return str(err), 500
 
 
-# @api.route('/search', methods=['GET'])
-# @json_response
-# def egde():
-#     """List all collections from DB."""
-#     collection = request.args.get('collection')
-#     query = request.args.get('query')
+@api.route('/collections/<collection>/<key>', methods=['GET'])
+@decorators.json_response
+def get_document(collection, key):
+    """Get document by key."""
 
-#     constructor = Constructor(graph)
-#     collection = constructor.factory()
-#     document['content']['_key'] = '{}_{}'.format(
-#         document['content']['provider'],
-#         document['content']['id']
-#     )
-
-#     try:
-#         doc = Document(collection)
-#         doc.create_document(document['content'])
-#     except Exception as e:
-#         raise Exception(e)
-
-# @api.route('/search/', methods=['GET'])
-# @json_response
-# def search_elements():
-#     return {}, 200
+    try:
+        res = facade.get_document(collection, key)
+        return res, 200
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
 
 
-# @api.route('/<name>/', methods=['GET'])
-# @json_response
-# def get_element(name):
-#     return {}, 200
+@api.route('/collections/<collection>/<key>', methods=['GET'])
+@decorators.json_response
+def delete_document(collection, key):
+    """Delete document by key."""
+
+    try:
+        facade.delete_document(collection, key)
+        return {}, 200
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
 
 
-# @api.route('/<name>/', methods=['POST'])
-# @json_response
-# def create_element(name):
-#     return {}, 201
+@api.route('/collections/<collection>/search', methods=['GET'])
+@decorators.json_response
+def search(collection):
+    """List all collections from DB."""
+    field = request.args.get('field')
+    value = request.args.get('value')
+    offset = request.args.get('offset', 0)
+    count = request.args.get('count', 10)
+
+    try:
+        res = facade.search_document(collection, field, value, offset, count)
+        return res, 200
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
 
 
-# @api.route('/<name>/<int:id>/', methods=['PUT'])
-# @json_response
-# def update_element(name, id):
-#     return {}, 200
+##########
+# Search #
+##########
+@api.route('/traversal', methods=['GET'])
+@decorators.json_response
+def traversal():
+    """Search traversal."""
 
+    try:
+        search_dict = {
+            'graph_name': request.args.get('graph'),
+            'start_vertex': request.args.get('start_vertex'),
+            'direction': request.args.get('direction', 'outbound'),
+            'item_order': request.args.get('item_order', 'forward'),
+            'strategy': request.args.get('strategy', None),
+            'order': request.args.get('order', None),
+            'edge_uniqueness': request.args.get('edge_uniqueness', None),
+            'vertex_uniqueness': request.args.get('vertex_uniqueness', None),
+            'max_iter': request.args.get('max_iter', None),
+            'min_depth': request.args.get('min_depth', None),
+            'max_depth': request.args.get('max_depth', None),
+            'init_func': request.args.get('init_func', None),
+            'sort_func': request.args.get('sort_func', None),
+            'filter_func': request.args.get('filter_func', None),
+            'visitor_func': request.args.get('visitor_func', None),
+            'expander_func': request.args.get('expander_func', None)
+        }
 
-# @api.route('/<name>/<int:id>/', methods=['DELETE'])
-# @json_response
-# def delete_element(name, id):
-#     return {}, 200
+        res = facade.search_traversal(**search_dict)
+        return res, 200
+    except gmap_exc.GraphNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500

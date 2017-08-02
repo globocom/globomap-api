@@ -110,20 +110,22 @@ class DB(object):
             msg = db_err.get(0).format(name, err.message)
             raise gmap_exceptions.DatabaseException(msg)
 
-    def search_in_database(self, collection, field, value):
+    def search_in_database(self, collection, field, value, offset, count):
         """Search Document"""
 
         try:
-            result = self.database.aql.execute(
+            cursor = self.database.aql.execute(
                 '''FOR doc IN {}
                     FILTER doc.`{}` like "%{}%"
-                    RETURN doc'''.format(collection, field, value),
+                    LIMIT {}, {}
+                    RETURN doc'''.format(
+                    collection, field, value, offset, count),
                 count=True,
                 batch_size=1,
                 ttl=10,
                 optimizer_rules=['+all']
             )
-            return result
+            return cursor
         except Exception as err:
             msg = db_err.get(1).format(err.message)
             raise gmap_exceptions.DatabaseException(msg)
