@@ -1,24 +1,14 @@
 {
-  "from": {
-    "collection":"coll1",
-    "provider": "xxx",
-    "id": "1"
-  },
-  "to": {
-    "collection":"coll2",
-    "provider": "xxx",
-    "id": "1"
-  },
-  "content": {
-    "id": "1",
-    "name": "yyy",
-    "provider": "xxx",
-    "timestamp": 1501543772,
-    "properties": [
-      {
-        "key": "key",
-        "value": "value"
-      }
-    ]
-  }
+  "from": "coll1/xxx_1",
+  "to": "coll2/xxx_1",
+  "id": "1",
+  "name": "yyy",
+  "provider": "xxx",
+  "timestamp": 1501543772,
+  "properties": [
+    {
+      "key": "key",
+      "value": "value"
+    }
+  ]
 }

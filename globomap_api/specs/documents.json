@@ -3,47 +3,38 @@
   "type": "object",
   "additionalProperties": false,
   "properties": {
-    "content": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "provider": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "number"
-        },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "number"
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "additionalProperties": false,
+        "type": "object",
         "properties": {
-          "type": "array",
-          "items": {
-            "additionalProperties": false,
-            "type": "object",
-            "properties": {
-              "key": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            }
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
           }
         }
-      },
-      "required": [
-        "id",
-        "name",
-        "provider",
-        "timestamp"
-      ]
+      }
     }
   },
   "required": [
-    "content"
+    "id",
+    "name",
+    "provider",
+    "timestamp"
   ]
 }

@@ -80,8 +80,15 @@ def create_document(name, data):
     constructor = Constructor()
     inst_coll = constructor.factory(kind='Collection', name=name)
 
-    document = data['content']
-    document['_key'] = util.make_key(document)
+    document = data
+    document = {
+        '_key': util.make_key(data),
+        'id': data['id'],
+        'name': data['name'],
+        'provider': data['provider'],
+        'timestamp': data['timestamp'],
+        'properties': data['properties']
+    }
 
     inst_doc = Document(inst_coll)
     doc = inst_doc.upsert_document(document)
@@ -97,11 +104,16 @@ def create_edge(name, data):
 
     constructor = Constructor()
     inst_edge = constructor.factory(kind='Edges', name=name)
-
-    document = data['content']
-    document['_to'] = util.make_key_way(data['to'])
-    document['_from'] = util.make_key_way(data['from'])
-    document['_key'] = util.make_key(data['content'])
+    document = {
+        '_key': util.make_key(data),
+        '_from': data['from'],
+        '_to': data['to'],
+        'id': data['id'],
+        'name': data['name'],
+        'provider': data['provider'],
+        'timestamp': data['timestamp'],
+        'properties': data['properties']
+    }
 
     inst_doc = Document(inst_edge)
     doc = inst_doc.upsert_document(document)
