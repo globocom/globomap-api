@@ -71,12 +71,3 @@ def make_key(document):
         document['id']
     )
     return key
-
-
-def make_key_way(document):
-    key = '{}/{}_{}'.format(
-        document['collection'],
-        document['provider'],
-        document['id']
-    )
-    return key

@@ -13,7 +13,7 @@ setup: ## Install project dependencies
 
 clean: ## Clear *.pyc files, etc
 	@rm -rf build dist *.egg-info
-	@find . \( -name '*.pyc' -o -name '**/*.pyc' -o -name '*~' \) -delete
+	@find . \( -name '*.pyc' -o  -name '__pycache__' -o -name '**/*.pyc' -o -name '*~' \) -delete
 
 pep8: ## Check source-code for PEP8 compliance
 	@-pep8 globomap_api

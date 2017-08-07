@@ -4,87 +4,44 @@
   "additionalProperties": false,
   "properties": {
     "from": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "collection": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "provider": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "collection",
-        "id",
-        "provider"
-      ]
+      "type": "string"
     },
     "to": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "collection": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "provider": {
-          "type": "string"
-        }
-      },
-      "required": [
-        "collection",
-        "id",
-        "provider"
-      ]
+      "type": "string"
     },
-    "content": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "id": {
-          "type": "string"
-        },
-        "name": {
-          "type": "string"
-        },
-        "provider": {
-          "type": "string"
-        },
-        "timestamp": {
-          "type": "number"
-        },
+    "id": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "provider": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "number"
+    },
+    "properties": {
+      "type": "array",
+      "items": {
+        "additionalProperties": false,
+        "type": "object",
         "properties": {
-          "type": "array",
-          "items": {
-            "additionalProperties": false,
-            "type": "object",
-            "properties": {
-              "key": {
-                "type": "string"
-              },
-              "value": {
-                "type": "string"
-              }
-            }
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
           }
         }
-      },
-      "required": [
-        "provider",
-        "name",
-        "id",
-        "timestamp"
-      ]
+      }
     }
   },
   "required": [
-    "content",
+    "id",
+    "name",
+    "provider",
+    "timestamp",
     "from",
     "to"
   ]
