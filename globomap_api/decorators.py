@@ -15,7 +15,7 @@ def json_response(f):
             rv, status_or_headers, headers = rv + (None,) * (3 - len(rv))
         if isinstance(status_or_headers, (dict, list)):
             headers, status_or_headers = status_or_headers, None
-        if not isinstance(rv, dict):
+        if not isinstance(rv, (dict, list)):
             if rv is not None:
                 if status_or_headers != 200:
                     rv = {'errors': rv}
