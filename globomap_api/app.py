@@ -10,7 +10,7 @@ def create_app(config_module=None):
     CORS(app)
     app.config.from_object(config_module or
                            os.environ.get('FLASK_CONFIG') or
-                           'config')
+                           'globomap_api.config')
 
     from globomap_api.v1 import api as api_blueprint
     app.register_blueprint(api_blueprint, url_prefix='/v1')
