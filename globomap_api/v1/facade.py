@@ -301,6 +301,8 @@ def search_traversal(**kwargs):
         visitor_func=kwargs.get('visitor_func'),
         expander_func=kwargs.get('expander_func')
     )
+
     traversal_results = util.filter_transversal(traversal_results)
+    traversal_results.update({'graph': kwargs.get('graph_name')})
 
     return traversal_results
