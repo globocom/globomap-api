@@ -145,6 +145,102 @@ def get_edge(name, key):
     return doc
 
 
+def update_edge(name, key, data):
+    """Update edge from Database"""
+
+    get_edge(name, key)
+
+    spec = app.config['SPECS'].get('edges')
+    util.json_validate(spec).validate(data)
+    document = {
+        '_key': util.make_key(data),
+        '_from': data['from'],
+        '_to': data['to'],
+        'id': data['id'],
+        'name': data['name'],
+        'provider': data['provider'],
+        'timestamp': data['timestamp'],
+        'properties': data['properties']
+    }
+
+    constructor = Constructor()
+    inst_edge = constructor.factory(kind='Edges', name=name)
+
+    inst_doc = Document(inst_edge)
+    doc = inst_doc.update_document(data)
+
+    return doc
+
+
+def update_document(name, key, data):
+    """Update document from Database"""
+
+    get_document(name, key)
+
+    spec = app.config['SPECS'].get('documents')
+    util.json_validate(spec).validate(data)
+    document = {
+        '_key': util.make_key(data),
+        'id': data['id'],
+        'name': data['name'],
+        'provider': data['provider'],
+        'timestamp': data['timestamp'],
+        'properties': data['properties']
+    }
+
+    constructor = Constructor()
+    inst_coll = constructor.factory(kind='Collection', name=name)
+
+    inst_doc = Document(inst_coll)
+    doc = inst_doc.update_document(data)
+
+    return doc
+
+
+def patch_edge(name, key, data):
+    """Partial update edge from Database"""
+
+    edge = get_edge(name, key)
+
+    spec = app.config['SPECS'].get('edges_partial')
+    util.json_validate(spec).validate(data)
+    for key in data:
+        if key == 'from':
+            edge['_from'] = data[key]
+        elif key == 'to':
+            edge['_to'] = data[key]
+        else:
+            edge[key] = data[key]
+
+    constructor = Constructor()
+    inst_edge = constructor.factory(kind='Edges', name=name)
+
+    inst_doc = Document(inst_edge)
+    doc = inst_doc.update_document(edge)
+
+    return doc
+
+
+def patch_document(name, key, data):
+    """Partial update document from Database"""
+
+    coll = get_document(name, key)
+
+    spec = app.config['SPECS'].get('documents_partial')
+    util.json_validate(spec).validate(data)
+
+    for key in data:
+        coll[key] = data[key]
+
+    constructor = Constructor()
+    inst_coll = constructor.factory(kind='Collection', name=name)
+
+    inst_doc = Document(inst_coll)
+    doc = inst_doc.update_document(coll)
+
+    return doc
+
+
 def delete_document(name, key):
     """Get document from Database"""
 

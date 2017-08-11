@@ -105,6 +105,50 @@ def edges(edge):
         return str(err), 500
 
 
+@api.route('/edges/<edge>/<key>', methods=['PUT'])
+@decorators.json_response
+def update_edge(edge, key):
+    """Update edge."""
+
+    try:
+        data = json.loads(request.data)
+        res = facade.update_edge(edge, key, data)
+        return res, 200
+    except JSONDecodeError as err:
+        return err.message, 400
+    except ValidationError as error:
+        res = validate(error)
+        return res, 400
+    except gmap_exc.EdgeNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
+
+
+@api.route('/edges/<edge>/<key>', methods=['PATCH'])
+@decorators.json_response
+def patch_edge(edge, key):
+    """Partial update edge."""
+
+    try:
+        data = json.loads(request.data)
+        res = facade.patch_edge(edge, key, data)
+        return res, 200
+    except JSONDecodeError as err:
+        return err.message, 400
+    except ValidationError as error:
+        res = validate(error)
+        return res, 400
+    except gmap_exc.EdgeNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
+
+
 @api.route('/edges/<edge>/<key>', methods=['GET'])
 @decorators.json_response
 def get_edge(edge, key):
@@ -121,7 +165,7 @@ def get_edge(edge, key):
         return str(err), 500
 
 
-@api.route('/edges/<edge>/<key>', methods=['GET'])
+@api.route('/edges/<edge>/<key>', methods=['DELETE'])
 @decorators.json_response
 def delete_edge(edge, key):
     """Get edge by key."""
@@ -196,6 +240,50 @@ def create_document(collection):
         return str(err), 500
 
 
+@api.route('/collections/<collection>/<key>', methods=['PUT'])
+@decorators.json_response
+def update_document(collection, key):
+    """Update document."""
+
+    try:
+        data = json.loads(request.data)
+        res = facade.update_document(collection, key, data)
+        return res, 200
+    except JSONDecodeError as err:
+        return err.message, 400
+    except ValidationError as error:
+        res = validate(error)
+        return res, 400
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
+
+
+@api.route('/collections/<collection>/<key>', methods=['PATCH'])
+@decorators.json_response
+def patch_document(collection, key):
+    """Partial update document."""
+
+    try:
+        data = json.loads(request.data)
+        res = facade.patch_document(collection, key, data)
+        return res, 200
+    except JSONDecodeError as err:
+        return err.message, 400
+    except ValidationError as error:
+        res = validate(error)
+        return res, 400
+    except gmap_exc.CollectionNotExist as err:
+        return err.message, 404
+    except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
+
+
 @api.route('/collections/<collection>/<key>', methods=['GET'])
 @decorators.json_response
 def get_document(collection, key):
@@ -212,7 +300,7 @@ def get_document(collection, key):
         return str(err), 500
 
 
-@api.route('/collections/<collection>/<key>', methods=['GET'])
+@api.route('/collections/<collection>/<key>', methods=['DELETE'])
 @decorators.json_response
 def delete_document(collection, key):
     """Delete document by key."""
