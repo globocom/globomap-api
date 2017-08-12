@@ -316,6 +316,7 @@ def delete_document(collection, key):
         return str(err), 500
 
 
+@api.route('/collections/<collection>', methods=['GET'])
 @api.route('/collections/<collection>/search', methods=['GET'])
 @decorators.json_response
 def search(collection):

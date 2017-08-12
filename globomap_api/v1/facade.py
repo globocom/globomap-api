@@ -87,11 +87,11 @@ def create_document(name, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data['properties']
+        'properties': data.get('properties', [])
     }
 
     inst_doc = Document(inst_coll)
-    doc = inst_doc.upsert_document(document)
+    doc = inst_doc.create_document(document)
 
     return doc
 
@@ -112,11 +112,11 @@ def create_edge(name, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data['properties']
+        'properties': data.get('properties', [])
     }
 
     inst_doc = Document(inst_edge)
-    doc = inst_doc.upsert_document(document)
+    doc = inst_doc.create_document(document)
 
     return doc
 
@@ -160,7 +160,7 @@ def update_edge(name, key, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data['properties']
+        'properties': data.get('properties', [])
     }
 
     constructor = Constructor()
@@ -185,7 +185,7 @@ def update_document(name, key, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data['properties']
+        'properties': data.get('properties', [])
     }
 
     constructor = Constructor()

@@ -25,7 +25,7 @@
             "type": "string"
           },
           "value": {
-            "type": "string"
+            "type": ["array","boolean","integer","string","number"]
           }
         }
       }
