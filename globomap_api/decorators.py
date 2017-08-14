@@ -1,6 +1,9 @@
 import functools
+import logging
 
 from flask import jsonify
+
+log = logging.getLogger(__name__)
 
 
 def json_response(f):
@@ -27,5 +30,6 @@ def json_response(f):
             rv.status_code = status_or_headers
         if headers is not None:
             rv.headers.extend(headers)
+        log.debug(rv)
         return rv
     return wrapped

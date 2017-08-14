@@ -112,14 +112,16 @@ class DB(object):
 
     def search_in_database(self, collection, field, value, offset=0, count=10):
         """Search Document"""
-
+        # TODO: To use a better way to search
         try:
-            cursor = self.database.aql.execute(
-                '''FOR doc IN {}
-                    FILTER doc.`{}` like "%{}%"
-                    LIMIT {}, {}
-                    RETURN doc'''.format(
-                    collection, field, value, offset, count),
+            if field and value:
+                where = 'FILTER doc.`{}` like "%{}%"'.format(field, value)
+            else:
+                where = ''
+
+            cursor = self.database.aql.execute('''
+                FOR doc IN {} {} LIMIT {}, {} RETURN doc'''.format(
+                collection, where, offset, count),
                 count=True,
                 batch_size=1,
                 ttl=10,

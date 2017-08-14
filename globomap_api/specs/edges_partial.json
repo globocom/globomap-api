@@ -30,8 +30,11 @@
           "key": {
             "type": "string"
           },
+          "description": {
+            "type": "string"
+          },
           "value": {
-            "type": ["array","boolean","integer","string","number"]
+            "type": ["array", "object", "boolean","integer","string","number"]
           }
         }
       }

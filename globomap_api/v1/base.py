@@ -95,7 +95,7 @@ def edges(edge):
     except gmap_exc.EdgeNotExist as err:
         return err.message, 404
     except JSONDecodeError as err:
-        return err.message, 400
+        return str(err), 400
     except ValidationError as error:
         res = validate(error)
         return res, 400
@@ -115,7 +115,7 @@ def update_edge(edge, key):
         res = facade.update_edge(edge, key, data)
         return res, 200
     except JSONDecodeError as err:
-        return err.message, 400
+        return str(err), 400
     except ValidationError as error:
         res = validate(error)
         return res, 400
@@ -137,7 +137,7 @@ def patch_edge(edge, key):
         res = facade.patch_edge(edge, key, data)
         return res, 200
     except JSONDecodeError as err:
-        return err.message, 400
+        return str(err), 400
     except ValidationError as error:
         res = validate(error)
         return res, 400
@@ -176,6 +176,25 @@ def delete_edge(edge, key):
     except gmap_exc.EdgeNotExist as err:
         return err.message, 404
     except gmap_exc.DocumentNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
+
+
+@api.route('/edges/<edge>', methods=['GET'])
+@api.route('/edges/<edge>/search', methods=['GET'])
+@decorators.json_response
+def search_in_edge(edge):
+    """List all edges from DB."""
+    field = request.args.get('field')
+    value = request.args.get('value')
+    offset = request.args.get('offset', 0)
+    count = request.args.get('count', 10)
+
+    try:
+        res = facade.search_document(edge, field, value, offset, count)
+        return res, 200
+    except gmap_exc.CollectionNotExist as err:
         return err.message, 404
     except Exception as err:
         return str(err), 500
@@ -228,7 +247,7 @@ def create_document(collection):
         res = facade.create_document(collection, data)
         return res, 200
     except JSONDecodeError as err:
-        return err.message, 400
+        return str(err), 400
     except ValidationError as error:
         res = validate(error)
         return res, 400
@@ -250,7 +269,7 @@ def update_document(collection, key):
         res = facade.update_document(collection, key, data)
         return res, 200
     except JSONDecodeError as err:
-        return err.message, 400
+        return str(err), 400
     except ValidationError as error:
         res = validate(error)
         return res, 400
@@ -272,7 +291,7 @@ def patch_document(collection, key):
         res = facade.patch_document(collection, key, data)
         return res, 200
     except JSONDecodeError as err:
-        return err.message, 400
+        return str(err), 400
     except ValidationError as error:
         res = validate(error)
         return res, 400
@@ -319,7 +338,7 @@ def delete_document(collection, key):
 @api.route('/collections/<collection>', methods=['GET'])
 @api.route('/collections/<collection>/search', methods=['GET'])
 @decorators.json_response
-def search(collection):
+def search_in_collection(collection):
     """List all collections from DB."""
     field = request.args.get('field')
     value = request.args.get('value')
