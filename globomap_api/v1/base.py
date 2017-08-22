@@ -88,6 +88,7 @@ def create_edge():
 @decorators.json_response
 def edges(edge):
     """Insert edge in DB."""
+
     try:
         data = json.loads(request.data)
         res = facade.create_edge(edge, data)

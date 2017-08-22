@@ -3,7 +3,7 @@ import logging
 
 from flask import jsonify
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 
 def json_response(f):
@@ -22,6 +22,7 @@ def json_response(f):
             if rv is not None:
                 if status_or_headers != 200:
                     rv = {'errors': rv}
+                    logger.error(rv)
                 else:
                     rv = {'data': rv}
 
@@ -30,6 +31,6 @@ def json_response(f):
             rv.status_code = status_or_headers
         if headers is not None:
             rv.headers.extend(headers)
-        log.debug(rv)
+        logger.debug(rv)
         return rv
     return wrapped

@@ -104,7 +104,7 @@ def create_edge(name, data):
 
     constructor = Constructor()
     inst_edge = constructor.factory(kind='Edges', name=name)
-    document = {
+    edge = {
         '_key': util.make_key(data),
         '_from': data['from'],
         '_to': data['to'],
@@ -116,7 +116,7 @@ def create_edge(name, data):
     }
 
     inst_doc = Document(inst_edge)
-    doc = inst_doc.create_document(document)
+    doc = inst_doc.create_document(edge)
 
     return doc
 
@@ -152,8 +152,8 @@ def update_edge(name, key, data):
 
     spec = app.config['SPECS'].get('edges')
     util.json_validate(spec).validate(data)
-    document = {
-        '_key': util.make_key(data),
+    edge = {
+        '_key': key,
         '_from': data['from'],
         '_to': data['to'],
         'id': data['id'],
@@ -167,7 +167,7 @@ def update_edge(name, key, data):
     inst_edge = constructor.factory(kind='Edges', name=name)
 
     inst_doc = Document(inst_edge)
-    doc = inst_doc.update_document(data)
+    doc = inst_doc.update_document(edge)
 
     return doc
 
@@ -180,7 +180,7 @@ def update_document(name, key, data):
     spec = app.config['SPECS'].get('documents')
     util.json_validate(spec).validate(data)
     document = {
-        '_key': util.make_key(data),
+        '_key': key,
         'id': data['id'],
         'name': data['name'],
         'provider': data['provider'],
@@ -192,7 +192,7 @@ def update_document(name, key, data):
     inst_coll = constructor.factory(kind='Collection', name=name)
 
     inst_doc = Document(inst_coll)
-    doc = inst_doc.update_document(data)
+    doc = inst_doc.update_document(document)
 
     return doc
 
@@ -209,6 +209,14 @@ def patch_edge(name, key, data):
             edge['_from'] = data[key]
         elif key == 'to':
             edge['_to'] = data[key]
+        elif key == 'properties':
+            keys_proper = [item['key'] for item in edge['properties']]
+            for idx, proper in enumerate(data[key]):
+                if proper['key'] in keys_proper:
+                    index = keys_proper.index(proper['key'])
+                    edge['properties'][index] = data[key][idx]
+                else:
+                    edge['properties'].append(data[key][idx])
         else:
             edge[key] = data[key]
 
@@ -224,19 +232,28 @@ def patch_edge(name, key, data):
 def patch_document(name, key, data):
     """Partial update document from Database"""
 
-    coll = get_document(name, key)
+    document = get_document(name, key)
 
     spec = app.config['SPECS'].get('documents_partial')
     util.json_validate(spec).validate(data)
 
     for key in data:
-        coll[key] = data[key]
+        if key == 'properties':
+            keys_proper = [item['key'] for item in document['properties']]
+            for idx, proper in enumerate(data[key]):
+                if proper['key'] in keys_proper:
+                    index = keys_proper.index(proper['key'])
+                    document['properties'][index] = data[key][idx]
+                else:
+                    document['properties'].append(data[key][idx])
+        else:
+            document[key] = data[key]
 
     constructor = Constructor()
     inst_coll = constructor.factory(kind='Collection', name=name)
 
     inst_doc = Document(inst_coll)
-    doc = inst_doc.update_document(coll)
+    doc = inst_doc.update_document(document)
 
     return doc
 

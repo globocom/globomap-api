@@ -28,7 +28,15 @@
             "type": "string"
           },
           "value": {
-            "type": ["array", "object", "boolean","integer","string","number"]
+            "type": [
+              "array",
+              "object",
+              "boolean",
+              "integer",
+              "string",
+              "number",
+              "null"
+            ]
           }
         }
       }
