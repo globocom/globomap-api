@@ -115,7 +115,8 @@ class DB(object):
         # TODO: To use a better way to search
         try:
             if field and value:
-                where = 'FILTER doc.`{}` like "%{}%"'.format(field, value)
+                where = 'FILTER LOWER(doc.`{}`) like "%{}%"'.format(
+                    field, value.lower())
             else:
                 where = ''
 
