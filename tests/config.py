@@ -1,7 +1,6 @@
 ARANGO_DB = 'globomap_test'
 ARANGO_USERNAME = 'root'
 ARANGO_PASSWORD = ''
-ARANGO_URL = 'http://globomap_db:8529'
 ARANGO_PROTOCOL = 'http'
 ARANGO_HOST = 'globomap_db'
 ARANGO_PORT = '8529'
