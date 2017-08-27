@@ -29,6 +29,39 @@ def list_graphs():
         return str(err), 500
 
 
+@api.route('/graphs/<graph>/traversal', methods=['GET'])
+@decorators.json_response
+def graph_traversal(graph):
+    """Search traversal."""
+
+    try:
+        search_dict = {
+            'graph_name': graph,
+            'start_vertex': request.args.get('start_vertex'),
+            'direction': request.args.get('direction', 'outbound'),
+            'item_order': request.args.get('item_order', 'forward'),
+            'strategy': request.args.get('strategy', None),
+            'order': request.args.get('order', None),
+            'edge_uniqueness': request.args.get('edge_uniqueness', None),
+            'vertex_uniqueness': request.args.get('vertex_uniqueness', None),
+            'max_iter': request.args.get('max_iter', None),
+            'min_depth': request.args.get('min_depth', None),
+            'max_depth': request.args.get('max_depth', None),
+            'init_func': request.args.get('init_func', None),
+            'sort_func': request.args.get('sort_func', None),
+            'filter_func': request.args.get('filter_func', None),
+            'visitor_func': request.args.get('visitor_func', None),
+            'expander_func': request.args.get('expander_func', None)
+        }
+
+        res = facade.search_traversal(**search_dict)
+        return res, 200
+    except gmap_exc.GraphNotExist as err:
+        return err.message, 404
+    except Exception as err:
+        return str(err), 500
+
+
 @api.route('/graphs', methods=['POST'])
 @decorators.json_response
 def create_graph():
