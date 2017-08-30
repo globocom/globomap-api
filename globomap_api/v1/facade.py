@@ -217,6 +217,9 @@ def patch_edge(name, key, data):
                     edge['properties'][index] = data[key][idx]
                 else:
                     edge['properties'].append(data[key][idx])
+        elif key == 'name':
+            if data[key]:
+                edge[key] = data[key]
         else:
             edge[key] = data[key]
 
@@ -246,6 +249,9 @@ def patch_document(name, key, data):
                     document['properties'][index] = data[key][idx]
                 else:
                     document['properties'].append(data[key][idx])
+        elif key == 'name':
+            if data[key]:
+                document[key] = data[key]
         else:
             document[key] = data[key]
 
