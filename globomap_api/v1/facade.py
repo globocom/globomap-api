@@ -87,7 +87,8 @@ def create_document(name, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data.get('properties', [])
+        'properties': data.get('properties'),
+        'metadata': data.get('metadata')
     }
 
     inst_doc = Document(inst_coll)
@@ -112,7 +113,8 @@ def create_edge(name, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data.get('properties', [])
+        'properties': data.get('properties'),
+        'metadata': data.get('metadata')
     }
 
     inst_doc = Document(inst_edge)
@@ -160,7 +162,8 @@ def update_edge(name, key, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data.get('properties', [])
+        'properties': data.get('properties'),
+        'metadata': data.get('metadata')
     }
 
     constructor = Constructor()
@@ -185,7 +188,8 @@ def update_document(name, key, data):
         'name': data['name'],
         'provider': data['provider'],
         'timestamp': data['timestamp'],
-        'properties': data.get('properties', [])
+        'properties': data.get('properties'),
+        'metadata': data.get('metadata')
     }
 
     constructor = Constructor()
@@ -210,13 +214,11 @@ def patch_edge(name, key, data):
         elif key == 'to':
             edge['_to'] = data[key]
         elif key == 'properties':
-            keys_proper = [item['key'] for item in edge['properties']]
-            for idx, proper in enumerate(data[key]):
-                if proper['key'] in keys_proper:
-                    index = keys_proper.index(proper['key'])
-                    edge['properties'][index] = data[key][idx]
-                else:
-                    edge['properties'].append(data[key][idx])
+            for idx in data[key]:
+                edge['properties'][idx] = data[key][idx]
+        elif key == 'properties_metadata':
+            for idx in data[key]:
+                edge['properties_metadata'][idx] = data[key][idx]
         elif key == 'name':
             if data[key]:
                 edge[key] = data[key]
@@ -242,13 +244,11 @@ def patch_document(name, key, data):
 
     for key in data:
         if key == 'properties':
-            keys_proper = [item['key'] for item in document['properties']]
-            for idx, proper in enumerate(data[key]):
-                if proper['key'] in keys_proper:
-                    index = keys_proper.index(proper['key'])
-                    document['properties'][index] = data[key][idx]
-                else:
-                    document['properties'].append(data[key][idx])
+            for idx in data[key]:
+                document['properties'][idx] = data[key][idx]
+        elif key == 'properties_metadata':
+            for idx in data[key]:
+                document['properties_metadata'][idx] = data[key][idx]
         elif key == 'name':
             if data[key]:
                 document[key] = data[key]

@@ -22,30 +22,10 @@
       "type": "number"
     },
     "properties": {
-      "type": "array",
-      "items": {
-        "additionalProperties": false,
-        "type": "object",
-        "properties": {
-          "key": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "value": {
-            "type": [
-              "array",
-              "object",
-              "boolean",
-              "integer",
-              "string",
-              "number",
-              "null"
-            ]
-          }
-        }
-      }
+      "type": "object"
+    },
+    "properties_metadata": {
+      "type": "object"
     }
   }
 }

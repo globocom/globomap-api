@@ -5,10 +5,7 @@
   "name": "yyy",
   "provider": "xxx",
   "timestamp": 1501543772,
-  "properties": [
-    {
-      "key": "key",
-      "value": "value"
-    }
-  ]
+  "properties": {
+    "key": "value"
+  }
 }
