@@ -11,10 +11,6 @@
 
   `GET`
 
-* **Data Params**
-
-  None
-
 * **Success Response:**
 
   * **Code:** 200 <br />
@@ -23,5 +19,5 @@
 * **Sample Call:**
 
   ```shell
-     curl http://localhost:8000/v1/graphs
+     curl http://localhost:5000/v1/graphs
   ```
