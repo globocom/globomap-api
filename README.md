@@ -1,15 +1,18 @@
 # Globo Map API
+
 Application responsible for reading and writing in ARANGODB. This application has a API RESTFul.
 
-
 ## Starting Project:
+
 ` make docker `
 
 ## Running Tests:
+
 ` make docker ` (When project not started yet.)<br>
 ` make tests `
 
 ## Plugin environment variables configuration
+
 All of the environment variables below must be set for the api to work properly.
 
 | Variable                    |  Description            | Example                    |
