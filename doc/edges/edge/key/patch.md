@@ -11,17 +11,22 @@
 
   `PATCH`
 
-* **Data Params** errado ate antes do notes
+* **Data Params**
 
-  `{"id":"2","name":"document-in-coll-updated","provider":"provider1","timestamp":1501543772,"properties":{"anykey":"anynewvalue","anynewkey":"newvalue"}}`
+  `{"from":"coll1/provider1_1","to":"coll1/provider1_2","id":"1","name":"link","provider":"provider1","timestamp":1501543772,"properties":{"anykey":"anyvalue"}}`
 
 * **Success Response:**
 
   * **Code:** 200
-  * **Content:** `{"_id":"coll1/provider1_1","_key":"provider1_1","_old_rev":"_VmA0x1K---","_rev":"_VmA2XLe---","sync":false}`
+  * **Content:** `{"_id":"edge1/provider1_1","_key":"provider1_1","_old_rev":"_VmCKRLK---","_rev":"_VmCLxme---","sync":false}`
  
 * **Error Response:**
+  
+  * **Code:**: 404
+  * **Content:**: `{"errors":"Edge edge1 not found."}`
 
+  OR
+  
   * **Code:**: 404
   * **Content:**: `{"errors":"There no document with key provider1_1"}`
   
@@ -33,7 +38,7 @@
 * **Sample Call:**
 
   ```shell
-     curl -H "Content-Type: application/json" -X PATCH -d '{"id":"2","name":"document-in-coll-updated","provider":"provider1","timestamp":1501543772,"properties":{"anykey":"anynewvalue","anynewkey":"newvalue"}}' http://localhost:5000/v1/collections/coll1
+     curl -H "Content-Type: application/json" -X PATCH -d '{"from":"coll1/provider1_1","to":"coll1/provider1_2","id":"1","name":"link","provider":"provider1","timestamp":1501543772,"properties":{"anykey":"anynewvalue", "newkey":"anyvalue"}}' http://localhost:5000/v1/edges/edge1/provider1_1
   ```
 
 * **Notes:**

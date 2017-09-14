@@ -14,7 +14,7 @@
 * **Success Response:**
 
   * **Code:** 200
-  * **Content:** `[{"_id":"coll1/provider1_2","_key":"provider1_2","_rev":"_VmA8DvC---","id":"2","metadata":null,"name":"document-in-coll2","properties":{"anykey2":"anyvalue2"},"provider":"provider1","timestamp":1501543772},{"_id":"coll1/provider1_1","_key":"provider1_1","_rev":"_VmA7wH----","id":"1","metadata":null,"name":"document-in-coll1","properties":{"anykey":"anyvalue"},"provider":"provider1","timestamp":1501543772}]`
+  * **Content:** `[{"_from":"coll1/provider1_1","_id":"edge1/provider1_1","_key":"provider1_1","_rev":"_VmCLxme---","_to":"coll1/provider1_2","id":"1","metadata":null,"name":"link1","properties":{"anykey":"anyvalue"},"provider":"provider1","timestamp":1501543772},{"_from":"coll2/provider1_1","_id":"edge2/provider1_1","_key":"provider1_2","_rev":"_VmCLxme---","_to":"coll2/provider1_2","id":"2","metadata":null,"name":"link2","properties":{"anykey":"anyvalue"},"provider":"provider1","timestamp":1501543772}]`
 
 * **Sample Call:**
 

@@ -22,6 +22,11 @@
  
 * **Error Response:**
 
+  * **Code:**: 404
+  * **Content:**: `{"errors":"Edge edge1 not found."}`
+
+  OR
+
   * **Code:**: 400
   * **Content:**: `{"errors":"Cannot create document provider2_1, document already created."}`
   
