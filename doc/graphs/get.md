@@ -13,8 +13,8 @@
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
-    **Content:** `[{"links": [{ "edge": "edge_1", "from_collections": ["collection_1"], "to_collections": ["collection_2"]}]}]`
+  * **Code:** 200
+  * **Content:** `[{"links":[{"edge":"edge1","from_collections":["coll1"],"to_collections":["coll2"]},{"edge":"edge2","from_collections":["coll2"],"to_collections":["coll3"]}],"name":"graph1"}]`
 
 * **Sample Call:**
 

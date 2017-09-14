@@ -31,8 +31,13 @@
 
 * **Success Response:**
 
-  * **Code:** 200 <br />
-    **Content:** `{"edges":[{"_from":"coll1/xxx_1","_id":"edge1/xxx_1","_key":"xxx_1","_rev":"_VldIjxC---","_to":"coll1/xxx_2","id":"1","metadata":null,"name":"yyy","properties":{"key":"value"},"provider":"xxx","timestamp":1501543772}],"graph":"abc","nodes":[{"_id":"coll1/xxx_1","_key":"xxx_1","_rev":"_Vlc2PCO---","id":"1","metadata":null,"name":"yyy","properties":{"key":"value"},"provider":"xxx","timestamp":1501543772},{"_id":"coll1/xxx_2","_key":"xxx_2","_rev":"_VldGaxu---","id":"2","metadata":null,"name":"yyy","properties":{"key":"value"},"provider":"xxx","timestamp":1501543772}]}]`
+  * **Code:** 200
+  * **Content:** `{"edges":[{"_from":"coll1/xxx_1","_id":"edge1/xxx_1","_key":"xxx_1","_rev":"_VldIjxC---","_to":"coll1/xxx_2","id":"1","metadata":null,"name":"yyy","properties":{"key":"value"},"provider":"xxx","timestamp":1501543772}],"graph":"abc","nodes":[{"_id":"coll1/xxx_1","_key":"xxx_1","_rev":"_Vlc2PCO---","id":"1","metadata":null,"name":"yyy","properties":{"key":"value"},"provider":"xxx","timestamp":1501543772},{"_id":"coll1/xxx_2","_key":"xxx_2","_rev":"_VldGaxu---","id":"2","metadata":null,"name":"yyy","properties":{"key":"value"},"provider":"xxx","timestamp":1501543772}]}]`
+  
+* **Error Response:**
+
+  * **Code:** 404
+  * **Content:** `{"errors": "Graph abc not found."}`
 
 * **Sample Call:**
 
