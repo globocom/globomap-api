@@ -6,10 +6,20 @@
 * **URL**
 
   /v1/edges/<edge>
+  /v1/edges/<edge>/search
 
 * **Method:**
 
   `GET`
+  
+* **URL Params**
+  
+  Optional:
+  
+  field=[string]
+  value=[string]
+  offset=[integer]
+  count=[integer]
   
 * **Success Response:**
 

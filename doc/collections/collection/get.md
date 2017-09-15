@@ -6,10 +6,20 @@
 * **URL**
 
   /v1/collections/<collection>
-
+  /v1/collections/<collection>/search
+  
 * **Method:**
 
   `GET`
+  
+* **URL Params**
+  
+  Optional:
+  
+  field=[string]
+  value=[string]
+  offset=[integer]
+  count=[integer]
   
 * **Success Response:**
 

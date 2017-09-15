@@ -37,7 +37,12 @@
 * **Error Response:**
 
   * **Code:** 404
-  * **Content:** `{"errors": "Graph abc not found."}`
+  * **Content:** `{"errors":"Graph abc not found."}`
+  
+  OR
+  
+  * **Code:** 500
+  * **Content:** `{"errors":"[HTTP 404][ERR 1202] invalid startVertex"}`
 
 * **Sample Call:**
 
