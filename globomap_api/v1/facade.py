@@ -103,7 +103,7 @@ def create_document(name, data):
         'provider': data['provider'],
         'timestamp': data['timestamp'],
         'properties': data.get('properties'),
-        'metadata': data.get('metadata')
+        'properties_metadata': data.get('properties_metadata')
     }
 
     inst_doc = Document(inst_coll)
@@ -129,7 +129,7 @@ def create_edge(name, data):
         'provider': data['provider'],
         'timestamp': data['timestamp'],
         'properties': data.get('properties'),
-        'metadata': data.get('metadata')
+        'properties_metadata': data.get('properties_metadata')
     }
 
     inst_doc = Document(inst_edge)
@@ -178,7 +178,7 @@ def update_edge(name, key, data):
         'provider': data['provider'],
         'timestamp': data['timestamp'],
         'properties': data.get('properties'),
-        'metadata': data.get('metadata')
+        'properties_metadata': data.get('properties_metadata')
     }
 
     constructor = Constructor()
@@ -204,7 +204,7 @@ def update_document(name, key, data):
         'provider': data['provider'],
         'timestamp': data['timestamp'],
         'properties': data.get('properties'),
-        'metadata': data.get('metadata')
+        'properties_metadata': data.get('properties_metadata')
     }
 
     constructor = Constructor()
