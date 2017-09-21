@@ -174,7 +174,7 @@ def update_edge(name, key, data):
         '_from': data['from'],
         '_to': data['to'],
         'id': data['id'],
-        'name': data['name'],
+        'name': data.get('name', ''),
         'provider': data['provider'],
         'timestamp': data['timestamp'],
         'properties': data.get('properties'),
