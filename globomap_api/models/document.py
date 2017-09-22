@@ -32,8 +32,12 @@ class Document:
         except exceptions.DocumentInsertError as err:
 
             if doc_err.get(err.error_code):
-                raise gmap_exceptions.DocumentException(
-                    doc_err.get(err.error_code).format(document['_key']))
+                if err.error_code == 1210:
+                    raise gmap_exceptions.DocumentAlreadyExist(
+                        doc_err.get(err.error_code).format(document['_key']))
+                else:
+                    raise gmap_exceptions.DocumentException(
+                        doc_err.get(err.error_code).format(document['_key']))
 
             else:
                 raise gmap_exceptions.DocumentException(

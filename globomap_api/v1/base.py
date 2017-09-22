@@ -143,6 +143,8 @@ def edges(edge):
         return res, 200
     except gmap_exc.EdgeNotExist as err:
         return err.message, 404
+    except gmap_exc.DocumentAlreadyExist as err:
+        return err.message, 409
     except JSONDecodeError as err:
         return str(err), 400
     except ValidationError as error:
@@ -302,6 +304,8 @@ def create_document(collection):
         return res, 400
     except gmap_exc.CollectionNotExist as err:
         return err.message, 404
+    except gmap_exc.DocumentAlreadyExist as err:
+        return err.message, 409
     except gmap_exc.DocumentException as err:
         return err.message, 400
     except Exception as err:
