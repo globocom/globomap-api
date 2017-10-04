@@ -13,6 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+# -*- coding: utf-8 -*-
+import math
+
 from flask import current_app as app
 
 from globomap_api import util
@@ -298,21 +301,9 @@ def delete_edge(name, key):
     inst_edge = constructor.factory(kind='Edges', name=name)
 
     inst_doc = Document(inst_edge)
-    doc = inst_doc.delete_document(key)
+    inst_doc.delete_document(key)
 
     return True
-
-
-def search_document(name, field, value, offset=0, count=100):
-    """Search in Database"""
-
-    db_inst = DB()
-    db_inst.get_database()
-    cursor = db_inst.search_in_database(
-        name, field, value, offset, count)
-    docs = [doc for doc in cursor]
-
-    return docs
 
 
 def search_traversal(**kwargs):
@@ -344,3 +335,28 @@ def search_traversal(**kwargs):
     traversal_results.update({'graph': kwargs.get('graph_name')})
 
     return traversal_results
+
+
+def search(name, data, page):
+    """Search in Database"""
+
+    spec = app.config['SPECS'].get('search')
+    util.json_validate(spec).validate(data)
+
+    db_inst = DB()
+
+    db_inst.get_database()
+    cursor = db_inst.search_in_database(name, data, page)
+
+    total_pages = int(math.ceil(cursor.statistics()['fullCount'] / 10.0))
+    total_documents = cursor.statistics()['fullCount']
+
+    docs = [doc for doc in cursor]
+
+    res = {
+        'total_pages': total_pages,
+        'total_documents': total_documents,
+        'data': docs
+    }
+
+    return res

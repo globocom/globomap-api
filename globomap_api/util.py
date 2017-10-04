@@ -89,7 +89,9 @@ def filter_graphs(data):
 
 def filter_collections(data, kind):
     collections = [coll['name'] for coll in data
-                   if coll['system'] is False and coll['type'] == kind]
+                   if coll['system'] is False and
+                   coll['name'] != 'internal_metadata' and
+                   coll['type'] == kind]
     return collections
 
 

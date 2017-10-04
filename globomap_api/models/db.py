@@ -125,28 +125,100 @@ class DB(object):
             msg = db_err.get(0).format(name, err.message)
             raise gmap_exceptions.DatabaseException(msg)
 
-    def search_in_database(self, collection, field, value, offset=0, count=10):
+    #######
+    # AQL #
+    #######
+    def search_in_database(self, collection, search, page=1):
         """Search Document"""
-        # TODO: To use a better way to search
         try:
-            if field and value:
-                where = 'FILTER LOWER(doc.`{}`) like "%{}%"'.format(
-                    field, value.lower())
-            else:
-                where = ''
+            index = 0
+            offset = (page - 1) * 10
+            bind_vars = {
+                '@collection': collection,
+                'offset': offset,
+                'count': 10
+            }
+            filters = list()
+            where = ''
+            if search:
+                for items in search:
+                    where_item = list()
+                    for item in items:
+                        if item['field'] and item['value']:
+                            field_array = item['field'].split('.')
+                            concat_field = 'doc'
+                            for field in field_array:
+                                idx = 'index_{}'.format(index)
+                                bind_vars[idx] = field
+                                concat_field += '.@{}'.format(idx)
+                                index += 1
 
-            cursor = self.database.aql.execute('''
-                FOR doc IN {} {} LIMIT {}, {} RETURN doc'''.format(
-                collection, where, offset, count),
-                count=True,
-                batch_size=1,
-                ttl=10,
-                optimizer_rules=['+all']
-            )
+                            if item['operator'] == 'LIKE':
+                                where_field = 'LOWER({}) {} LOWER(\'%{}%\')'.format(
+                                    concat_field, item['operator'], item['value'])
+                                # Example 'doc.@1.@2 LIKE '%value%'
+                            else:
+                                where_field = 'LOWER({}) {} LOWER(\'{}\')'.format(
+                                    concat_field, item['operator'], item['value'])
+                                # Example doc.@1.@2 == 'value'
+                        else:
+                            where_field = ''
+
+                        if where_field:
+                            where_item.append(where_field)
+                    filters.append(' AND '.join(where_item))
+                if filters:
+                    where = 'FILTER ' + ' OR '.join(filters)
+
+            full_query = 'FOR doc IN @@collection {} ' \
+                'LIMIT @offset, @count RETURN doc'.format(where)
+
+            cursor = self.database.aql.execute(full_query,
+                                               bind_vars=bind_vars,
+                                               count=True,
+                                               full_count=True,
+                                               batch_size=1,
+                                               ttl=10,
+                                               optimizer_rules=['+all']
+                                               )
             return cursor
+
+        except exceptions.AQLQueryExecuteError as err:
+
+            if err.error_code == 1203:
+                msg = db_err.get(1203).format(collection)
+                raise gmap_exceptions.CollectionNotExist(msg)
+
+            else:
+                msg = db_err.get(1).format(err.message)
+                raise gmap_exceptions.DatabaseException(msg)
+
         except Exception as err:
             msg = db_err.get(1).format(err.message)
             raise gmap_exceptions.DatabaseException(msg)
+
+    # def clear(self, collection, provider, timestamp):
+    #     """Clear colection by provider and timestamp"""
+
+    #     try:
+    #         if field and value:
+    #             where = 'FILTER LOWER(doc.`{}`) like "%{}%"'.format(
+    #                 field, value.lower())
+    #         else:
+    #             where = ''
+
+    #         cursor = self.database.aql.execute('''
+    #             FOR doc IN {} {} LIMIT {}, {} RETURN doc'''.format(
+    #             collection, where, offset, count),
+    #             count=True,
+    #             batch_size=1,
+    #             ttl=10,
+    #             optimizer_rules=['+all']
+    #         )
+    #         return cursor
+    #     except Exception as err:
+    #         msg = db_err.get(1).format(err.message)
+    #         raise gmap_exceptions.DatabaseException(msg)
 
     ###############
     # COLLECTIONS #

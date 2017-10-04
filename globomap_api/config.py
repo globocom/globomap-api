@@ -13,4 +13,5 @@ SPECS = {
     'edges_partial': 'globomap_api/specs/edges_partial.json',
     'collections': 'globomap_api/specs/collections.json',
     'graphs': 'globomap_api/specs/graphs.json',
+    'search': 'globomap_api/specs/search.json',
 }

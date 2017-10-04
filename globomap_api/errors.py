@@ -22,6 +22,7 @@ DOCUMENT = {
 DATABASE = {
     1228: 'Database {} not found.',
     1207: 'Cannot create database {}, duplicate name.',
+    1203: 'Collection {} not found.',
     0: 'Database {}. Error: {}',
     1: 'Error in search: {}',
 }
