@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import logging
 import os
 
 from arango import ArangoClient
@@ -25,6 +26,8 @@ from globomap_api.errors import COLLECTION as coll_err
 from globomap_api.errors import DATABASE as db_err
 from globomap_api.errors import EDGE as edge_err
 from globomap_api.errors import GRAPH as gph_err
+
+logger = logging.getLogger(__name__)
 
 
 class DB(object):
@@ -128,59 +131,32 @@ class DB(object):
     #######
     # AQL #
     #######
-    def search_in_database(self, collection, search, page=1):
+    def search_in_collection(self, collection, search, page=1, per_page=10):
         """Search Document"""
         try:
-            index = 0
+
             offset = (page - 1) * 10
-            bind_vars = {
-                '@collection': collection,
-                'offset': offset,
-                'count': 10
-            }
-            filters = list()
-            where = ''
-            if search:
-                for items in search:
-                    where_item = list()
-                    for item in items:
-                        if item['field'] and item['value']:
-                            field_array = item['field'].split('.')
-                            concat_field = 'doc'
-                            for field in field_array:
-                                idx = 'index_{}'.format(index)
-                                bind_vars[idx] = field
-                                concat_field += '.@{}'.format(idx)
-                                index += 1
+            per_page = per_page if per_page <= 100 else 100
 
-                            if item['operator'] == 'LIKE':
-                                where_field = 'LOWER({}) {} LOWER(\'%{}%\')'.format(
-                                    concat_field, item['operator'], item['value'])
-                                # Example 'doc.@1.@2 LIKE '%value%'
-                            else:
-                                where_field = 'LOWER({}) {} LOWER(\'{}\')'.format(
-                                    concat_field, item['operator'], item['value'])
-                                # Example doc.@1.@2 == 'value'
-                        else:
-                            where_field = ''
+            where, bind_vars = self.prepare_search(search)
 
-                        if where_field:
-                            where_item.append(where_field)
-                    filters.append(' AND '.join(where_item))
-                if filters:
-                    where = 'FILTER ' + ' OR '.join(filters)
+            bind_vars['@collection'] = collection
+            bind_vars['offset'] = offset
+            bind_vars['count'] = per_page
 
             full_query = 'FOR doc IN @@collection {} ' \
                 'LIMIT @offset, @count RETURN doc'.format(where)
 
-            cursor = self.database.aql.execute(full_query,
-                                               bind_vars=bind_vars,
-                                               count=True,
-                                               full_count=True,
-                                               batch_size=1,
-                                               ttl=10,
-                                               optimizer_rules=['+all']
-                                               )
+            logger.debug('Full Query: %s' % full_query)
+            cursor = self.database.aql.execute(
+                full_query,
+                bind_vars=bind_vars,
+                count=True,
+                full_count=True,
+                batch_size=1,
+                ttl=10,
+                optimizer_rules=['+all']
+            )
             return cursor
 
         except exceptions.AQLQueryExecuteError as err:
@@ -196,6 +172,95 @@ class DB(object):
         except Exception as err:
             msg = db_err.get(1).format(err.message)
             raise gmap_exceptions.DatabaseException(msg)
+
+    #######
+    # AQL #
+    #######
+    def search_in_collections(self, collections, search, page=1, per_page=10):
+        """Search Document"""
+        try:
+
+            offset = (page - 1) * 10
+            per_page = per_page if per_page <= 100 else 100
+
+            where, bind_vars = self.prepare_search(search)
+            bind_vars['offset'] = offset
+            bind_vars['count'] = per_page
+
+            queries = list()
+            for index, collection in enumerate(collections):
+                idx = '@cl_{}'.format(index)
+                bind_vars[idx] = collection
+                query = 'FOR doc IN @{} {} RETURN doc'.format(idx, where)
+                queries.append(query)
+
+            colls = ' , '.join(queries)
+            if len(queries) > 1:
+                colls = 'UNION({})'.format(colls)
+
+            full_query = 'FOR x IN {} ' \
+                'SORT x.name LIMIT @offset, @count RETURN x'.format(colls)
+
+            logger.debug('Full Query: %s' % full_query)
+            cursor = self.database.aql.execute(
+                full_query,
+                bind_vars=bind_vars,
+                count=True,
+                full_count=True,
+                ttl=10,
+                optimizer_rules=['+all']
+            )
+            return cursor
+
+        except exceptions.AQLQueryExecuteError as err:
+
+            if err.error_code == 1203:
+                msg = db_err.get(1203).format(collection)
+                raise gmap_exceptions.CollectionNotExist(msg)
+
+            else:
+                msg = db_err.get(1).format(err.message)
+                raise gmap_exceptions.DatabaseException(msg)
+
+        except Exception as err:
+            msg = db_err.get(1).format(err.message)
+            raise gmap_exceptions.DatabaseException(msg)
+
+    def prepare_search(self, search):
+        index = 0
+        bind_vars = {}
+        filters = list()
+        where = ''
+        if search:
+            for items in search:
+                where_item = list()
+                for item in items:
+                    if item['field'] and item['value']:
+                        field_array = item['field'].split('.')
+                        concat_field = 'doc'
+                        for field in field_array:
+                            idx = 'index_{}'.format(index)
+                            bind_vars[idx] = field
+                            concat_field += '.@{}'.format(idx)
+                            index += 1
+
+                        if item['operator'] == 'LIKE':
+                            where_field = 'LOWER({}) {} LOWER(\'%{}%\')'.format(
+                                concat_field, item['operator'], item['value'])
+                            # Example 'doc.@1.@2 LIKE '%value%'
+                        else:
+                            where_field = 'LOWER({}) {} LOWER(\'{}\')'.format(
+                                concat_field, item['operator'], item['value'])
+                            # Example doc.@1.@2 == 'value'
+
+                        where_item.append(where_field)
+
+                if where_item:
+                    filters.append(' AND '.join(where_item))
+            if filters:
+                where = 'FILTER ' + ' OR '.join(filters)
+
+        return where, bind_vars
 
     # def clear(self, collection, provider, timestamp):
     #     """Clear colection by provider and timestamp"""

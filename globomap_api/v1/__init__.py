@@ -13,8 +13,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from flask import Blueprint
+from flask_restplus import Api
 
-api = Blueprint('v1', __name__)
-
-from . import base
+api = Api(version='1.0', title='GloboMap API', description='GloboMap API')

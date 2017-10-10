@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+
+
 class DatabaseNotExist(Exception):
 
     def __init__(self, message):
@@ -137,5 +139,13 @@ class ConstructorException(Exception):
 
     def __init__(self, message):
         super(ConstructorException, self).__init__(message)
+
+        self.message = message
+
+
+class SearchException(Exception):
+
+    def __init__(self, message):
+        super(SearchException, self).__init__(message)
 
         self.message = message
