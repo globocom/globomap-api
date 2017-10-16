@@ -70,7 +70,8 @@ class DB(object):
         try:
             database = self._conn.database(name)
             database.properties()
-        except exceptions.DatabasePropertiesError:
+        except exceptions.DatabasePropertiesError as err:
+            logger.error(err)
             return False
         else:
             return True
@@ -86,6 +87,7 @@ class DB(object):
             return self.database
         else:
             msg = db_err.get(1228).format(name)
+            logger.error(msg)
             raise gmap_exceptions.DatabaseNotExist(msg)
 
     def create_database(self, name=''):
@@ -98,13 +100,16 @@ class DB(object):
 
             if err.error_code == 1207:
                 msg = db_err.get(1207).format(name)
+                logger.error(msg)
                 raise gmap_exceptions.DatabaseAlreadyExist(msg)
             else:
                 msg = db_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
             msg = db_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
     def delete_database(self, name=''):
@@ -118,14 +123,17 @@ class DB(object):
 
             if err.error_code == 1228:
                 msg = db_err.get(1228).format(name)
+                logger.error(msg)
                 raise gmap_exceptions.DatabaseNotExist(msg)
 
             else:
                 msg = db_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
             msg = db_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
     #######
@@ -163,14 +171,17 @@ class DB(object):
 
             if err.error_code == 1203:
                 msg = db_err.get(1203).format(collection)
+                logger.error(msg)
                 raise gmap_exceptions.CollectionNotExist(msg)
 
             else:
                 msg = db_err.get(1).format(err.message)
+                logger.error(msg)
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
             msg = db_err.get(1).format(err.message)
+            logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
     #######
@@ -216,14 +227,17 @@ class DB(object):
 
             if err.error_code == 1203:
                 msg = db_err.get(1203).format(collection)
+                logger.error(msg)
                 raise gmap_exceptions.CollectionNotExist(msg)
 
             else:
                 msg = db_err.get(1).format(err.message)
+                logger.error(msg)
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
             msg = db_err.get(1).format(err.message)
+            logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
     def prepare_search(self, search):
@@ -297,7 +311,8 @@ class DB(object):
             # import pdb; pdb.Pdb().set_trace()
             # if res is edge:
             return res
-        except exceptions.CollectionPropertiesError:
+        except exceptions.CollectionPropertiesError as err:
+            logger.error(err)
             return False
 
     def has_collection(self, name=''):
@@ -312,6 +327,7 @@ class DB(object):
             return self.collection
         else:
             msg = coll_err.get(1228).format(name)
+            logger.error(msg)
             raise gmap_exceptions.CollectionNotExist(msg)
 
     def create_collection(self, name='', edge=False):
@@ -325,13 +341,16 @@ class DB(object):
 
             if err.error_code == 1207:
                 msg = coll_err.get(1207).format(name)
+                logger.error(msg)
                 raise gmap_exceptions.CollectionAlreadyExist(msg)
             else:
                 msg = coll_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.CollectionException(msg)
 
         except Exception as err:
             msg = coll_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.CollectionException(msg)
 
         else:
@@ -348,14 +367,17 @@ class DB(object):
 
             if err.error_code == 1203:
                 msg = coll_err.get(1228).format(name)
+                logger.error(msg)
                 raise gmap_exceptions.CollectionNotExist(msg)
 
             else:
                 msg = coll_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.CollectionException(msg)
 
         except Exception as err:
             msg = coll_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.CollectionException(msg)
 
     def has_edge(self, name=''):
@@ -370,6 +392,7 @@ class DB(object):
             return self.edge
         else:
             msg = edge_err.get(1228).format(name)
+            logger.error(msg)
             raise gmap_exceptions.EdgeNotExist(msg)
 
     def create_edge(self, name=''):
@@ -383,14 +406,17 @@ class DB(object):
 
             if err.error_code == 1207:
                 msg = edge_err.get(1207).format(name)
+                logger.error(msg)
                 raise gmap_exceptions.EdgeAlreadyExist(msg)
 
             else:
                 msg = edge_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.EdgeException(msg)
 
         except Exception as err:
             msg = edge_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.EdgeException(msg)
 
     def delete_edge(self, name=''):
@@ -404,14 +430,17 @@ class DB(object):
 
             if err.error_code == 1203:
                 msg = edge_err.get(1228).format(name)
+                logger.error(msg)
                 raise gmap_exceptions.EdgeNotExist(msg)
 
             else:
                 msg = edge_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.EdgeException(msg)
 
         except Exception as err:
             msg = edge_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.EdgeException(msg)
         else:
             return True
@@ -426,7 +455,8 @@ class DB(object):
             graph = self.database.graph(name)
             graph.properties()
             return True
-        except exceptions.GraphPropertiesError:
+        except exceptions.GraphPropertiesError as err:
+            logger.error(err)
             return False
 
     def get_graph(self, name=''):
@@ -437,6 +467,7 @@ class DB(object):
             return self.graph
         else:
             msg = gph_err.get(1924).format(name)
+            logger.error(msg)
             raise gmap_exceptions.GraphNotExist(msg)
 
     def create_graph(self, name='', edge_definitions=None):
@@ -448,14 +479,17 @@ class DB(object):
 
             if err.error_code == 1925:
                 msg = gph_err.get(1925).format(name, err)
+                logger.error(msg)
                 raise gmap_exceptions.GraphAlreadyExist(msg)
 
             else:
                 msg = gph_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.GraphException(msg)
 
         except Exception as err:
             msg = gph_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.GraphException(msg)
         else:
 
@@ -470,6 +504,7 @@ class DB(object):
                     except Exception as err:
                         self.database.delete_graph(name)
                         msg = gph_err.get(1).format(name)
+                        logger.error(msg)
                         raise gmap_exceptions.GraphException(msg)
 
         return self.graph
@@ -484,12 +519,15 @@ class DB(object):
 
             if err.error_code == 1924:
                 msg = gph_err.get(1924).format(name)
+                logger.error(msg)
                 raise gmap_exceptions.GraphNotExist(msg)
 
             else:
                 msg = gph_err.get(0).format(name, err.message)
+                logger.error(msg)
                 raise gmap_exceptions.GraphException(msg)
 
         except Exception as err:
             msg = gph_err.get(0).format(name, err.message)
+            logger.error(msg)
             raise gmap_exceptions.GraphException(msg)

@@ -130,7 +130,7 @@ class Collection(Resource):
                 page = args.get('page')
                 query = args.get('query') or '[]'
                 per_page = args.get('per_page')
-                data = json.loads(search)
+                data = json.loads(query)
             except JSONDecodeError:
                 raise gmap_exc.SearchException('Parameter search is invalid')
             else:
