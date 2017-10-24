@@ -1,0 +1,3 @@
+[zabbix]
+description=Zabbix API trigger plugin
+module=globomap_api.api_plugins.zabbix.ZabbixPlugin
