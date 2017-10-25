@@ -79,6 +79,10 @@ class Search(Resource):
                 query = args.get('query') or '[]'
                 per_page = args.get('per_page')
                 collections = args.get('collections').split(',')
+
+                if len(collections) == 1:
+                    collections = ''.join(collections)
+
                 data = json.loads(query)
             except JSONDecodeError:
                 raise gmap_exc.SearchException('Parameter search is invalid')
