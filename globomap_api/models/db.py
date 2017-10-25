@@ -205,9 +205,9 @@ class DB(object):
                 query = 'FOR doc IN @{} {} RETURN doc'.format(idx, where)
                 queries.append(query)
 
-            colls = ' , '.join(queries)
+            colls = '({})'.format(','.join(queries))
             if len(queries) > 1:
-                colls = 'UNION({})'.format(colls)
+                colls = 'UNION{}'.format(colls)
 
             full_query = 'FOR x IN {} ' \
                 'SORT x.name LIMIT @offset, @count RETURN x'.format(colls)
