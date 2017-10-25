@@ -30,7 +30,7 @@ from globomap_api.v1.parsers import pag_collections_arguments
 from globomap_api.v1.parsers import pagination_arguments
 
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 ns = api.namespace('edges', description='Operations related to edges')
 
@@ -53,6 +53,7 @@ class Edges(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             facade.create_collection_edge(data)
             return {}, 200
 
@@ -102,6 +103,7 @@ class Edge(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             res = facade.create_edge(edge, data)
             return res, 200
 
@@ -152,6 +154,7 @@ class Document(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             res = facade.update_edge(edge, key, data)
             return res, 200
 
@@ -170,6 +173,7 @@ class Document(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             res = facade.patch_edge(edge, key, data)
             return res, 200
 

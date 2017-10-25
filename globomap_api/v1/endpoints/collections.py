@@ -30,7 +30,7 @@ from globomap_api.v1.parsers import pag_collections_arguments
 from globomap_api.v1.parsers import pagination_arguments
 
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 ns = api.namespace(
     'collections', description='Operations related to collections')
@@ -54,6 +54,7 @@ class Collections(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             facade.create_collection_document(data)
             return {}, 200
 
@@ -80,6 +81,7 @@ class Search(Resource):
                 per_page = args.get('per_page')
                 collections = args.get('collections').split(',')
                 data = json.loads(query)
+                logger.debug('Receive Data: %s', data)
             except JSONDecodeError:
                 raise gmap_exc.SearchException('Parameter search is invalid')
             else:
@@ -103,6 +105,7 @@ class Collection(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             res = facade.create_document(collection, data)
             return res, 200
 
@@ -153,6 +156,7 @@ class Document(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             res = facade.update_document(collection, key, data)
             return res, 200
 
@@ -171,6 +175,7 @@ class Document(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             res = facade.patch_document(collection, key, data)
             return res, 200
 

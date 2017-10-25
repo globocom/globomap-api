@@ -27,7 +27,7 @@ from globomap_api.v1 import facade
 from globomap_api.v1.parsers import traversal_arguments
 
 
-log = logging.getLogger(__name__)
+logger = logging.getLogger(__name__)
 
 ns = api.namespace('graphs', description='Operations related to graphs')
 
@@ -50,6 +50,7 @@ class Graph(Resource):
 
         try:
             data = request.get_json()
+            logger.debug('Receive Data: %s', data)
             facade.create_graph(data)
             return {}, 200
 
