@@ -43,11 +43,7 @@ def validate(error):
             'error_pointer': error[0],
             'error_reasons': list(error[1])
         })
-    res = {
-        'errors': msg
-    }
-
-    return res
+    return msg
 
 
 def filter_transversal(data):

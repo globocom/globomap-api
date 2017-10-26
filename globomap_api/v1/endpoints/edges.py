@@ -81,11 +81,31 @@ class Search(Resource):
                 collections = args.get('collections').split(',')
                 data = json.loads(query)
             except JSONDecodeError:
-                raise gmap_exc.SearchException('Parameter search is invalid')
+                raise gmap_exc.SearchException('Parameter query is invalid')
             else:
                 res = facade.search_collections(
                     collections, data, page, per_page)
                 return res, 200
+
+        except gmap_exc.CollectionNotExist as err:
+            api.abort(404, errors=err.message)
+
+        except ValidationError as error:
+            res = validate(error)
+            api.abort(400, errors=res)
+
+
+@ns.route('/<edge>/clear/')
+class EdgeClear(Resource):
+
+    def post(self, edge):
+        """Clear documents in edge."""
+
+        try:
+            data = request.get_json()
+            logger.debug('Receive Data: %s', data)
+            res = facade.clear_collection(edge, data)
+            return res, 200
 
         except gmap_exc.CollectionNotExist as err:
             api.abort(404, errors=err.message)
@@ -133,7 +153,7 @@ class Edge(Resource):
                 per_page = args.get('per_page')
                 data = json.loads(query)
             except JSONDecodeError:
-                api.abort(400, errors='Parameter search is invalid')
+                api.abort(400, errors='Parameter query is invalid')
             else:
                 res = facade.search(edge, data, page, per_page)
                 return res, 200

@@ -40,3 +40,6 @@ publish: clean dist
 	twine upload dist/*
 	@git tag ${VERSION}
 	@git push --tags
+
+deploy:
+	@tsuru app-deploy -a $(project) globomap_api .python-version Procfile requirements.txt

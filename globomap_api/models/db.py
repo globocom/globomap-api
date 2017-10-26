@@ -143,7 +143,7 @@ class DB(object):
         """Search Document"""
         try:
 
-            offset = (page - 1) * 10
+            offset = (page - 1) * per_page
             per_page = per_page if per_page <= 100 else 100
 
             where, bind_vars = self.prepare_search(search)
@@ -191,7 +191,7 @@ class DB(object):
         """Search Document"""
         try:
 
-            offset = (page - 1) * 10
+            offset = (page - 1) * per_page
             per_page = per_page if per_page <= 100 else 100
 
             where, bind_vars = self.prepare_search(search)
@@ -276,28 +276,45 @@ class DB(object):
 
         return where, bind_vars
 
-    # def clear(self, collection, provider, timestamp):
-    #     """Clear colection by provider and timestamp"""
+    def clear_collection(self, collection, search):
+        """Clear colection by query"""
 
-    #     try:
-    #         if field and value:
-    #             where = 'FILTER LOWER(doc.`{}`) like "%{}%"'.format(
-    #                 field, value.lower())
-    #         else:
-    #             where = ''
+        try:
+            where, bind_vars = self.prepare_search(search)
 
-    #         cursor = self.database.aql.execute('''
-    #             FOR doc IN {} {} LIMIT {}, {} RETURN doc'''.format(
-    #             collection, where, offset, count),
-    #             count=True,
-    #             batch_size=1,
-    #             ttl=10,
-    #             optimizer_rules=['+all']
-    #         )
-    #         return cursor
-    #     except Exception as err:
-    #         msg = db_err.get(1).format(err.message)
-    #         raise gmap_exceptions.DatabaseException(msg)
+            bind_vars['@collection'] = collection
+
+            full_query = 'FOR doc IN @@collection {} ' \
+                'REMOVE doc._key in @@collection'.format(where)
+
+            logger.debug('Full Query: %s' % full_query)
+            cursor = self.database.aql.execute(
+                full_query,
+                bind_vars=bind_vars,
+                count=True,
+                full_count=True,
+                batch_size=1,
+                ttl=10,
+                optimizer_rules=['+all']
+            )
+            return cursor
+
+        except exceptions.AQLQueryExecuteError as err:
+
+            if err.error_code == 1203:
+                msg = db_err.get(1203).format(collection)
+                logger.error(msg)
+                raise gmap_exceptions.CollectionNotExist(msg)
+
+            else:
+                msg = db_err.get(1).format(err.message)
+                logger.error(msg)
+                raise gmap_exceptions.DatabaseException(msg)
+
+        except Exception as err:
+            msg = db_err.get(1).format(err.message)
+            logger.error(msg)
+            raise gmap_exceptions.DatabaseException(msg)
 
     ###############
     # COLLECTIONS #

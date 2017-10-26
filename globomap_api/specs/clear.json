@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "type": "array",
+  "items": {
+    "type": "array",
+    "items": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "field": {
+          "type": "string",
+          "minimum": 1
+        },
+        "operator": {
+          "type": "string",
+          "enum": [
+            "LIKE",
+            "==",
+            "!=",
+            ">",
+            ">=",
+            "<",
+            "<="
+          ]
+        },
+        "value": {
+          "type": "string",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "field",
+        "operator",
+        "value"
+      ]
+    }
+  }
+}

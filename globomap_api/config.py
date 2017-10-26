@@ -16,6 +16,7 @@ SPECS = {
     'collections': 'globomap_api/specs/collections.json',
     'graphs': 'globomap_api/specs/graphs.json',
     'search': 'globomap_api/specs/search.json',
+    'clear': 'globomap_api/specs/clear.json',
 }
 
 # Flask-Restplus settings

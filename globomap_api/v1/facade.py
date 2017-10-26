@@ -340,7 +340,7 @@ def search_traversal(**kwargs):
 def search(name, data, page, per_page):
     """Search in Database"""
 
-    spec = app.config['SPECS'].get('search')
+    spec = app.config['SPECS'].get('query')
     util.json_validate(spec).validate(data)
 
     db_inst = DB()
@@ -348,7 +348,8 @@ def search(name, data, page, per_page):
     db_inst.get_database()
     cursor = db_inst.search_in_collection(name, data, page, per_page)
 
-    total_pages = int(math.ceil(cursor.statistics()['fullCount'] / 10.0))
+    total_pages = int(math.ceil(cursor.statistics()[
+                      'fullCount'] / (per_page * 1.0)))
     total_documents = cursor.statistics()['fullCount']
 
     docs = [doc for doc in cursor]
@@ -363,6 +364,20 @@ def search(name, data, page, per_page):
     return res
 
 
+def clear_collection(name, data):
+    """Clear document in Collection"""
+
+    spec = app.config['SPECS'].get('search')
+    util.json_validate(spec).validate(data)
+
+    db_inst = DB()
+
+    db_inst.get_database()
+    cursor = db_inst.clear_collection(name, data)
+
+    return {}
+
+
 def search_collections(collections, data, page, per_page):
     """Search in Database"""
 
@@ -374,7 +389,8 @@ def search_collections(collections, data, page, per_page):
     db_inst.get_database()
     cursor = db_inst.search_in_collections(collections, data, page, per_page)
 
-    total_pages = int(math.ceil(cursor.statistics()['fullCount'] / 10.0))
+    total_pages = int(math.ceil(cursor.statistics()[
+                      'fullCount'] / (per_page * 1.0)))
     total_documents = cursor.statistics()['fullCount']
 
     docs = [doc for doc in cursor]

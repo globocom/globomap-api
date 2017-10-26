@@ -83,7 +83,7 @@ class Search(Resource):
                 data = json.loads(query)
                 logger.debug('Receive Data: %s', data)
             except JSONDecodeError:
-                raise gmap_exc.SearchException('Parameter search is invalid')
+                raise gmap_exc.SearchException('Parameter query is invalid')
             else:
                 res = facade.search_collections(
                     collections, data, page, per_page)
@@ -135,10 +135,30 @@ class Collection(Resource):
                 per_page = args.get('per_page')
                 data = json.loads(query)
             except JSONDecodeError:
-                raise gmap_exc.SearchException('Parameter search is invalid')
+                raise gmap_exc.SearchException('Parameter query is invalid')
             else:
                 res = facade.search(collection, data, page, per_page)
                 return res, 200
+
+        except gmap_exc.CollectionNotExist as err:
+            api.abort(404, errors=err.message)
+
+        except ValidationError as error:
+            res = validate(error)
+            api.abort(400, errors=res)
+
+
+@ns.route('/<collection>/clear/')
+class CollectionClear(Resource):
+
+    def post(self, collection):
+        """Clear documents in collection."""
+
+        try:
+            data = request.get_json()
+            logger.debug('Receive Data: %s', data)
+            res = facade.clear_collection(collection, data)
+            return res, 200
 
         except gmap_exc.CollectionNotExist as err:
             api.abort(404, errors=err.message)
