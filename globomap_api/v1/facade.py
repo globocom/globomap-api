@@ -340,7 +340,7 @@ def search_traversal(**kwargs):
 def search(name, data, page, per_page):
     """Search in Database"""
 
-    spec = app.config['SPECS'].get('query')
+    spec = app.config['SPECS'].get('search')
     util.json_validate(spec).validate(data)
 
     db_inst = DB()
