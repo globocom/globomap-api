@@ -24,7 +24,6 @@
           ]
         },
         "value": {
-          "type": "string",
           "minimum": 1
         }
       },
