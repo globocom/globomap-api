@@ -26,4 +26,4 @@ if __name__ == '__main__':
     logging.basicConfig(
         level=logging.DEBUG, format='%(asctime)s %(threadName)s %(levelname)s %(message)s')
     application.logger.addHandler(handler)
-    application.run('0.0.0.0', int(environ.get('PORT', '5000')))
+    application.run('0.0.0.0', int(environ.get('PORT', '5000')), threaded=True)

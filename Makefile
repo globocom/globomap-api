@@ -42,4 +42,4 @@ publish: clean dist
 	@git push --tags
 
 deploy:
-	@tsuru app-deploy -a $(project) globomap_api .python-version Procfile requirements.txt
+	@tsuru app-deploy -a $(project) globomap_api .python-version Procfile requirements.txt api_plugins

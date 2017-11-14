@@ -58,7 +58,8 @@ class DB(object):
             port=self.arango_port,
             username=self.username,
             password=self.password,
-            enable_logging=True
+            enable_logging=True,
+            use_session=True
         )
 
     ############

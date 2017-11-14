@@ -102,7 +102,7 @@ def create_document(name, data):
     document = {
         '_key': util.make_key(data),
         'id': data['id'],
-        'name': data['name'],
+        'name': data.get('name', ''),
         'provider': data['provider'],
         'timestamp': data['timestamp'],
         'properties': data.get('properties'),
@@ -203,7 +203,7 @@ def update_document(name, key, data):
     document = {
         '_key': key,
         'id': data['id'],
-        'name': data['name'],
+        'name': data.get('name', ''),
         'provider': data['provider'],
         'timestamp': data['timestamp'],
         'properties': data.get('properties'),
