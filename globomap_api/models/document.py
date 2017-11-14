@@ -52,7 +52,7 @@ class Document:
 
         try:
             return self.collection.update(document)
-        except exceptions.DocumentInsertError as err:
+        except exceptions.DocumentUpdateError as err:
 
             if err.error_code == 1202:
                 msg = 'There no document with key {}'.format(document['_key'])
