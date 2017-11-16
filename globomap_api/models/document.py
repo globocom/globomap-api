@@ -51,8 +51,8 @@ class Document:
         """Update Document"""
 
         try:
-            return self.collection.update(document)
-        except exceptions.DocumentUpdateError as err:
+            return self.collection.replace(document)
+        except exceptions.DocumentReplaceError as err:
 
             if err.error_code == 1202:
                 msg = 'There no document with key {}'.format(document['_key'])
@@ -64,7 +64,7 @@ class Document:
 
         except Exception as err:
             raise gmap_exceptions.DocumentException(
-                doc_err.get(0).format(document['_key'], err.message))
+                doc_err.get(0).format(document['_key'], str(err)))
 
     def upsert_document(self, document):
         """Create/Update Document"""
