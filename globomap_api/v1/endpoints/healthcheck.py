@@ -53,8 +53,8 @@ def list_deps():
         db = DB()
         db.get_database()
         graphs = facade.list_graphs()
-        collections = facade.list_collections('collections')
-        edges = facade.list_collections('edges')
+        collections = facade.list_collections('document')
+        edges = facade.list_collections('edge')
     except:
         deps['arango']['status'] = False
     else:
