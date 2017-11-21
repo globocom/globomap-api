@@ -74,6 +74,10 @@ class DB(object):
         except exceptions.DatabasePropertiesError as err:
             logger.error(err)
             return False
+        except Exception as err:
+            msg = db_err.get(0).format(name, str(err))
+            logger.error(msg)
+            raise gmap_exceptions.DatabaseException(msg)
         else:
             return True
 
@@ -109,7 +113,7 @@ class DB(object):
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
-            msg = db_err.get(0).format(name, err.message)
+            msg = db_err.get(0).forma(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
@@ -133,7 +137,7 @@ class DB(object):
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
-            msg = db_err.get(0).format(name, err.message)
+            msg = db_err.get(0).format(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
@@ -181,7 +185,7 @@ class DB(object):
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
-            msg = db_err.get(1).format(err.message)
+            msg = db_err.get(1).format(str(err))
             logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
@@ -237,7 +241,7 @@ class DB(object):
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
-            msg = db_err.get(1).format(err.message)
+            msg = db_err.get(1).format(str(err))
             logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
@@ -313,7 +317,7 @@ class DB(object):
                 raise gmap_exceptions.DatabaseException(msg)
 
         except Exception as err:
-            msg = db_err.get(1).format(err.message)
+            msg = db_err.get(1).format(str(err))
             logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
@@ -367,7 +371,7 @@ class DB(object):
                 raise gmap_exceptions.CollectionException(msg)
 
         except Exception as err:
-            msg = coll_err.get(0).format(name, err.message)
+            msg = coll_err.get(0).format(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.CollectionException(msg)
 
@@ -394,7 +398,7 @@ class DB(object):
                 raise gmap_exceptions.CollectionException(msg)
 
         except Exception as err:
-            msg = coll_err.get(0).format(name, err.message)
+            msg = coll_err.get(0).format(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.CollectionException(msg)
 
@@ -433,7 +437,7 @@ class DB(object):
                 raise gmap_exceptions.EdgeException(msg)
 
         except Exception as err:
-            msg = edge_err.get(0).format(name, err.message)
+            msg = edge_err.get(0).format(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.EdgeException(msg)
 
@@ -457,7 +461,7 @@ class DB(object):
                 raise gmap_exceptions.EdgeException(msg)
 
         except Exception as err:
-            msg = edge_err.get(0).format(name, err.message)
+            msg = edge_err.get(0).format(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.EdgeException(msg)
         else:
@@ -506,7 +510,7 @@ class DB(object):
                 raise gmap_exceptions.GraphException(msg)
 
         except Exception as err:
-            msg = gph_err.get(0).format(name, err.message)
+            msg = gph_err.get(0).format(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.GraphException(msg)
         else:
@@ -546,6 +550,6 @@ class DB(object):
                 raise gmap_exceptions.GraphException(msg)
 
         except Exception as err:
-            msg = gph_err.get(0).format(name, err.message)
+            msg = gph_err.get(0).format(name, str(err))
             logger.error(msg)
             raise gmap_exceptions.GraphException(msg)
