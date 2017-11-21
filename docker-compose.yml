@@ -17,8 +17,12 @@ services:
         container_name: globomap_queue
         image: rabbitmq:3.6.9
         ports:
-            - "5672"
-            - "15672"
+            - "5672:5672"
+            - "15672:15672"
+        command: sh -c "rabbitmq-plugins enable rabbitmq_management; rabbitmq-server"
+        volumes:
+            - ./scripts/docker/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
+            - ./scripts/docker/definitions.json:/etc/rabbitmq/definitions.json:ro
         networks:
             - globomap_net
 
