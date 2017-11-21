@@ -18,6 +18,7 @@ from flask_restplus import Resource
 
 from globomap_api.models.db import DB
 from globomap_api.v1 import api
+from globomap_api.v1 import facade
 
 ns = api.namespace('healthcheck', description='healthcheck')
 
@@ -26,6 +27,13 @@ ns = api.namespace('healthcheck', description='healthcheck')
 class Healthcheck(Resource):
 
     def get(self):
+        deps = list_deps()
+        problems = {}
+        for key in deps:
+            if deps[key].get('status') is False:
+                problems.update({key: deps[key]})
+        if problems:
+            return problems, 503
         return 'WORKING', 200
 
 
@@ -33,15 +41,26 @@ class Healthcheck(Resource):
 class HealthcheckDeps(Resource):
 
     def get(self):
-        deps = {
-            'arango': None
-        }
-        try:
-            db = DB()
-            db.get_database()
-        except Exception as err:
-            deps['arango'] = False
-        else:
-            deps['arango'] = True
-
+        deps = list_deps()
         return deps, 200
+
+
+def list_deps():
+    deps = {
+        'arango': {}
+    }
+    try:
+        db = DB()
+        db.get_database()
+        graphs = facade.list_graphs()
+        collections = facade.list_collections('collections')
+        edges = facade.list_collections('edges')
+    except:
+        deps['arango']['status'] = False
+    else:
+        deps['arango']['status'] = True
+        deps['arango']['graphs'] = graphs
+        deps['arango']['collections'] = collections
+        deps['arango']['edges'] = edges
+
+    return deps
