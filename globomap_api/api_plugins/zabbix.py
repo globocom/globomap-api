@@ -14,8 +14,15 @@
    limitations under the License.
 """
 import logging
-import os
+import shutil
+from os import remove
+from time import time
+
+import requests
+from flask import send_file
 from pyzabbix import ZabbixAPI
+
+from globomap_api import config
 from globomap_api.api_plugins.abstract_plugin import AbstractPlugin
 
 
@@ -24,31 +31,43 @@ class ZabbixPlugin(AbstractPlugin):
     logger = logging.getLogger(__name__)
 
     def __init__(self):
-        url = os.getenv('ZABBIX_API_URL')
+        url = config.ZABBIX_API_URL
         if not url:
             self.logger.error('Zabbix endpoint is not set')
             raise Exception('Invalid plugin configuration')
-        user = os.getenv('ZABBIX_API_USER')
-        if not url:
+
+        user = config.ZABBIX_API_USER
+        if not user:
             self.logger.error('Zabbix user is not set')
             raise Exception('Invalid plugin configuration')
-        password = os.getenv('ZABBIX_API_PASSWORD')
-        if not url:
+
+        password = config.ZABBIX_API_PASSWORD
+        if not password:
             self.logger.error('Zabbix password is not set')
+            raise Exception('Invalid plugin configuration')
+
+        if not config.ZABBIX_UI_URL:
+            self.logger.error('Zabbix Ui is not set')
             raise Exception('Invalid plugin configuration')
 
         self.zabbix = ZabbixAPI(url=url, user=user, password=password)
 
     def get_data(self, params):
         ips = params.get('ips')
-        if not ips:
-            raise Exception("The field 'ips' is required")
+        graphid = params.get('graphid')
+        if ips:
+            return self.get_trigger(ips)
+        elif graphid:
+            return self.get_graph(graphid)
+        else:
+            raise Exception("The field 'ips' or 'graphid' is required")
 
+    def get_trigger(self, ips):
         try:
             ips = ips.split(',')
 
             hosts = self.zabbix.do_request('host.get', {
-                "output": ['hostid'],
+                'output': ['hostid'],
                 'search': {'ip': ips},
                 'searchByAny': 1
             })
@@ -57,9 +76,9 @@ class ZabbixPlugin(AbstractPlugin):
                 hostIds = [host['hostid'] for host in hosts['result']]
 
                 triggers = self.zabbix.do_request('trigger.get', {
-                    "output": ["description", "status", "state", "value"],
-                    "filter": {"hostid": hostIds},
-                    "expandDescription": 1
+                    'output': ['description', 'status', 'state', 'value'],
+                    'filter': {'hostid': hostIds},
+                    'expandDescription': 1
                 })
 
                 if triggers['result']:
@@ -68,10 +87,10 @@ class ZabbixPlugin(AbstractPlugin):
                     return []
             else:
                 raise Exception(
-                    "No hosts were found for IPs {}".format(ips)
+                    'No hosts were found for IPs {}'.format(ips)
                 )
         except:
-            logging.exception("Zabbix API error")
+            logging.exception('Zabbix API error')
             raise
 
     def format_response(self, triggers):
@@ -85,3 +104,30 @@ class ZabbixPlugin(AbstractPlugin):
                 }
             )
         return response
+
+    def get_graph(self, graphid):
+        with requests.Session() as s:
+            data = {
+                'password': config.ZABBIX_API_PASSWORD,
+                'name': config.ZABBIX_API_USER,
+                'enter': 'Sign in'
+            }
+            url = '{}/index.php'.format(config.ZABBIX_UI_URL)
+            res = s.post(url, data=data, verify=False)
+            url = '{}/chart2.php?graphid={}'.format(config.ZABBIX_UI_URL,
+                                                    graphid)
+            res = s.get(url, verify=False, stream=True)
+            if res.status_code == 200:
+                name = '/tmp/{}_{}.png'.format(graphid, time())
+                with open(name, 'wb') as out_file:
+                    shutil.copyfileobj(res.raw, out_file)
+
+                try:
+                    data = send_file(name, mimetype='image/png')
+                except:
+                    raise Exception('Cannot get graph')
+                finally:
+                    remove(name)
+                    return data
+
+            raise Exception('Cannot get graph')

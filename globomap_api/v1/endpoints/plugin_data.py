@@ -35,7 +35,8 @@ class PluginData(Resource):
     def get(self, plugin_name):
         try:
             plugin_instance = ApiPluginLoader().load_plugin(plugin_name)
-            return plugin_instance.get_data(request.args), 200
+            data = plugin_instance.get_data(request.args)
+            return data
         except PluginNotFoundException as err:
             api.abort(404, errors=str(err))
         except Exception as err:

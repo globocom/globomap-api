@@ -14,6 +14,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import flask
+import six
 from flask_restplus import Resource
 
 from globomap_api.models.db import DB
@@ -23,8 +25,15 @@ from globomap_api.v1 import facade
 ns = api.namespace('healthcheck', description='healthcheck')
 
 
+def text(data, code, headers=None):
+    return flask.make_response(six.text_type(data))
+
+
 @ns.route('/')
 class Healthcheck(Resource):
+    representations = {
+        'text/plain': text,
+    }
 
     def get(self):
         deps = list_deps()
