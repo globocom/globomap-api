@@ -30,4 +30,5 @@ Environment variables needed for the Zabbix plugin to work properly
 |-----------------------------|-------------------------|----------------------------|
 | ZABBIX_API_URL              | Zabbix API endpoint     | https://ro.api.zabbix.com  |
 | ZABBIX_API_USER             | Zabbix username         | username                   |
-| ZABBIX_API_PASSWORD         | Zabbix password         | xyz                        | 
+| ZABBIX_API_PASSWORD         | Zabbix password         | xyz                        |
+| ZABBIX_UI_URL               | Zabbix endpoint         | https://zabbix.com         |
