@@ -22,6 +22,7 @@ from flask_restplus import Resource
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 from globomap_api.api_plugins.plugin_loader import ApiPluginLoader
 from globomap_api.v1 import api
+from globomap_api.v1.parsers import plugin_arguments
 
 
 log = logging.getLogger(__name__)
@@ -32,10 +33,12 @@ ns = api.namespace('plugin_data', description='test')
 @ns.route('/<plugin_name>/')
 class PluginData(Resource):
 
+    @api.expect(plugin_arguments)
     def get(self, plugin_name):
         try:
+            args = plugin_arguments.parse_args(request)
             plugin_instance = ApiPluginLoader().load_plugin(plugin_name)
-            data = plugin_instance.get_data(request.args)
+            data = plugin_instance.get_data(args)
             return data
         except PluginNotFoundException as err:
             api.abort(404, errors=str(err))

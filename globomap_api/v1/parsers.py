@@ -18,6 +18,14 @@ pagination_arguments.add_argument('per_page', type=int, required=False,
 pagination_arguments.add_argument('query', type=str, required=False,
                                   default='[]', help='Query')
 
+plugin_arguments = reqparse.RequestParser()
+plugin_arguments.add_argument('ips', type=str, required=False,
+                              help='IPs')
+plugin_arguments.add_argument('graphid', type=int, required=False,
+                              help='Id of Graph')
+plugin_arguments.add_argument('encoded', type=int, required=False,
+                              default=0, help='Encode Image Base64')
+
 traversal_arguments = reqparse.RequestParser()
 traversal_arguments.add_argument('start_vertex', type=str, required=True,
                                  help='Start Vertex'),

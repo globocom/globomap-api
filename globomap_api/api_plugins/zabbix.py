@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import base64
 import logging
 import shutil
 from os import remove
@@ -55,10 +56,11 @@ class ZabbixPlugin(AbstractPlugin):
     def get_data(self, params):
         ips = params.get('ips')
         graphid = params.get('graphid')
+        encoded = params.get('encoded')
         if ips:
             return self.get_trigger(ips)
         elif graphid:
-            return self.get_graph(graphid)
+            return self.get_graph(graphid, encoded)
         else:
             raise Exception("The field 'ips' or 'graphid' is required")
 
@@ -105,7 +107,7 @@ class ZabbixPlugin(AbstractPlugin):
             )
         return response
 
-    def get_graph(self, graphid):
+    def get_graph(self, graphid, encoded=False):
         with requests.Session() as s:
             data = {
                 'password': config.ZABBIX_API_PASSWORD,
@@ -122,12 +124,23 @@ class ZabbixPlugin(AbstractPlugin):
                 with open(name, 'wb') as out_file:
                     shutil.copyfileobj(res.raw, out_file)
 
-                try:
-                    data = send_file(name, mimetype='image/png')
-                except:
-                    raise Exception('Cannot get graph')
-                finally:
-                    remove(name)
-                    return data
+                if encoded:
+                    return self._get_base64(name)
+                else:
+                    return self._get_image(name)
 
             raise Exception('Cannot get graph')
+
+    def _get_base64(self, name):
+        with open(name, 'rb') as f:
+            encodedZip = base64.b64encode(f.read())
+            return encodedZip.decode()
+
+    def _get_image(self, name):
+        try:
+            data = send_file(name, mimetype='image/png')
+        except:
+            raise Exception('Cannot get graph')
+        finally:
+            remove(name)
+        return data
