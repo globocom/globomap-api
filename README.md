@@ -1,6 +1,6 @@
 # Globo Map API
 
-Application responsible for reading and writing in ARANGODB. This application has a API RESTFul.
+Application responsible for reading and writing in ARANGODB. This application has a RESTFul API.
 
 ## Starting Project:
 
@@ -32,3 +32,7 @@ Environment variables needed for the Zabbix plugin to work properly
 | ZABBIX_API_USER             | Zabbix username         | username                   |
 | ZABBIX_API_PASSWORD         | Zabbix password         | xyz                        |
 | ZABBIX_UI_URL               | Zabbix endpoint         | https://zabbix.com         |
+
+## Licensing
+
+Globo Map API is under [Apache 2 License](./LICENSE)
