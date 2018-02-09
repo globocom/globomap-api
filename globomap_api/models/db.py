@@ -267,6 +267,10 @@ class DB(object):
                             where_field = 'LOWER({}) {} LOWER(\'%{}%\')'.format(
                                 concat_field, item['operator'], item['value'])
                             # Example 'doc.@1.@2 LIKE '%value%'
+                        elif item['operator'] == 'IN':
+                            where_field = '\'{}\' {} {}'.format(
+                                item['value'], item['operator'], concat_field)
+                            # Example 'value' IN 'doc.@1.@2
                         else:
                             where_field = 'LOWER({}) {} LOWER(\'{}\')'.format(
                                 concat_field, item['operator'], item['value'])

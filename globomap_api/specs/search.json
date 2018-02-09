@@ -15,6 +15,7 @@
           "type": "string",
           "enum": [
             "LIKE",
+            "IN",
             "==",
             "!=",
             ">",
