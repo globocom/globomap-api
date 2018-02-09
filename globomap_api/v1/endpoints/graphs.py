@@ -38,13 +38,13 @@ class Graph(Resource):
     def get(self):
         """List all graphs from DB."""
 
-        try:
-            graphs = facade.list_graphs()
-            return graphs, 200
+        graphs = facade.list_graphs()
+        return graphs, 200
 
-        except gmap_exc.DatabaseNotExist as err:
-            api.abort(404, errors=err.message)
-
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+    })
     def post(self):
         """Create graph in DB."""
 
@@ -60,8 +60,13 @@ class Graph(Resource):
 
 
 @ns.route('/<graph>/traversal/')
+@api.doc(params={'graph': 'Name Of Graph'})
 class GraphTraversal(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        404: 'Not Found'
+    })
     @api.expect(traversal_arguments)
     def get(self, graph):
         """Search traversal."""

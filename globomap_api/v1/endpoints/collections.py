@@ -29,7 +29,6 @@ from globomap_api.v1 import facade
 from globomap_api.v1.parsers import pag_collections_arguments
 from globomap_api.v1.parsers import pagination_arguments
 
-
 logger = logging.getLogger(__name__)
 
 ns = api.namespace(
@@ -39,16 +38,18 @@ ns = api.namespace(
 @ns.route('/')
 class Collections(Resource):
 
+    @api.doc(responses={200: 'Success'})
     def get(self):
         """List all collections of kind document from DB."""
 
-        try:
-            collections = facade.list_collections(kind='document')
-            return collections, 200
+        collections = facade.list_collections(kind='document')
+        return collections, 200
 
-        except gmap_exc.DatabaseNotExist as err:
-            api.abort(404, errors=err.message)
-
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def post(self):
         """Create collection of kind document in DB."""
 
@@ -69,6 +70,12 @@ class Collections(Resource):
 @ns.route('/search/')
 class Search(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
+    @api.expect(pag_collections_arguments)
     def get(self):
         """Search document in collections of kind document from DB."""
 
@@ -98,8 +105,15 @@ class Search(Resource):
 
 
 @ns.route('/<collection>/')
+@api.doc(params={'collection': 'Name Of Collection'})
 class Collection(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found',
+        409: 'Document Already Exists'
+    })
     def post(self, collection):
         """Insert document in DB."""
 
@@ -122,6 +136,11 @@ class Collection(Resource):
         except gmap_exc.DocumentException as err:
             api.abort(404, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     @api.expect(pagination_arguments)
     def get(self, collection):
         """Search documents from collection."""
@@ -149,8 +168,14 @@ class Collection(Resource):
 
 
 @ns.route('/<collection>/clear/')
+@api.doc(params={'collection': 'Name Of Collection'})
 class CollectionClear(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def post(self, collection):
         """Clear documents in collection."""
 
@@ -169,8 +194,17 @@ class CollectionClear(Resource):
 
 
 @ns.route('/<collection>/<key>/')
+@api.doc(params={
+    'collection': 'Name Of Collection',
+    'key': 'Key Of Document'
+})
 class Document(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def put(self, collection, key):
         """Update document."""
 
@@ -190,6 +224,11 @@ class Document(Resource):
         except gmap_exc.DocumentNotExist as err:
             api.abort(404, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def patch(self, collection, key):
         """Partial update document."""
 
@@ -209,6 +248,11 @@ class Document(Resource):
         except gmap_exc.DocumentNotExist as err:
             api.abort(404, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def get(self, collection, key):
         """Get document by key."""
 
@@ -222,6 +266,10 @@ class Document(Resource):
         except gmap_exc.DocumentNotExist as err:
             api.abort(404, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        404: 'Not Found'
+    })
     def delete(self, collection, key):
         """Delete document by key."""
 

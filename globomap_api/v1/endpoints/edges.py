@@ -38,16 +38,18 @@ ns = api.namespace('edges', description='Operations related to edges')
 @ns.route('/')
 class Edges(Resource):
 
+    @api.doc(responses={200: 'Success'})
     def get(self):
         """List all collections of kind edge from DB."""
 
-        try:
-            collections = facade.list_collections('edge')
-            return collections, 200
+        collections = facade.list_collections('edge')
+        return collections, 200
 
-        except gmap_exc.DatabaseNotExist as err:
-            api.abort(404, errors=err.message)
-
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def post(self):
         """Create collection of kind edge in DB."""
 
@@ -68,6 +70,12 @@ class Edges(Resource):
 @ns.route('/search/')
 class Search(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
+    @api.expect(pag_collections_arguments)
     def get(self):
         """Search edge in collections of kind edge from DB."""
 
@@ -96,8 +104,14 @@ class Search(Resource):
 
 
 @ns.route('/<edge>/clear/')
+@api.doc(params={'edge': 'Name Of Edge(Collection)'})
 class EdgeClear(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def post(self, edge):
         """Clear documents in edge."""
 
@@ -116,8 +130,15 @@ class EdgeClear(Resource):
 
 
 @ns.route('/<edge>/')
+@api.doc(params={'edge': 'Name Of Edge(Collection)'})
 class Edge(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found',
+        409: 'Document Already Exists'
+    })
     def post(self, edge):
         """Insert edge in DB."""
 
@@ -140,6 +161,11 @@ class Edge(Resource):
         except gmap_exc.DocumentException as err:
             api.abort(400, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     @api.expect(pagination_arguments)
     def get(self, edge):
         """Search documents from collection."""
@@ -167,8 +193,17 @@ class Edge(Resource):
 
 
 @ns.route('/<edge>/<key>/')
+@api.doc(params={
+    'edge': 'Name Of Edge(Collection)',
+    'key': 'Key Of Document'
+})
 class Document(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def put(self, edge, key):
         """Update edge."""
 
@@ -188,6 +223,11 @@ class Document(Resource):
         except gmap_exc.DocumentNotExist as err:
             api.abort(404, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def patch(self, edge, key):
         """Partial update edge."""
 
@@ -207,6 +247,11 @@ class Document(Resource):
         except gmap_exc.DocumentNotExist as err:
             api.abort(404, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        404: 'Not Found'
+    })
     def get(self, edge, key):
         """Get edge by key."""
 
@@ -220,6 +265,10 @@ class Document(Resource):
         except gmap_exc.DocumentNotExist as err:
             api.abort(404, errors=err.message)
 
+    @api.doc(responses={
+        200: 'Success',
+        404: 'Not Found'
+    })
     def delete(self, edge, key):
         """Delete edge by key."""
 

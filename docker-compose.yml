@@ -12,20 +12,6 @@ services:
             - globomap_db_vol:/var/lib/arangodb-apps/_db
         networks:
             - globomap_net
-
-    queue:
-        container_name: globomap_queue
-        image: rabbitmq:3.6.9
-        ports:
-            - "5672:5672"
-            - "15672:15672"
-        command: sh -c "rabbitmq-plugins enable rabbitmq_management; rabbitmq-server"
-        volumes:
-            - ./scripts/docker/rabbitmq.config:/etc/rabbitmq/rabbitmq.config:ro
-            - ./scripts/docker/definitions.json:/etc/rabbitmq/definitions.json:ro
-        networks:
-            - globomap_net
-
     api:
         container_name: globomap_api
         build: .
@@ -41,14 +27,25 @@ services:
         command: make run
         depends_on:
             - db
-            - queue
         links:
             - db:globomap_db
+            - redis:globomap_redis
         external_links:
             - queue:globomap_queue
+    redis:
+        container_name: globomap_redis
+        image: redis:4.0.5-alpine
+        command: ["redis-server", "--appendonly", "yes"]
+        ports:
+            - "6379:6379"
+        networks:
+            - globomap_net
+        volumes:
+            - globomap_redis_vol:/data
 
 volumes:
     globomap_db_vol:
+    globomap_redis_vol:
 
 networks:
     globomap_net:

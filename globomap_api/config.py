@@ -29,3 +29,41 @@ ZABBIX_UI_URL = os.getenv('ZABBIX_UI_URL')
 ZABBIX_API_URL = os.getenv('ZABBIX_API_URL')
 ZABBIX_API_USER = os.getenv('ZABBIX_API_USER')
 ZABBIX_API_PASSWORD = os.getenv('ZABBIX_API_PASSWORD')
+
+REDIS_SENTINEL_ENDPOINT_SIMPLE = os.getenv('REDIS_SENTINEL_ENDPOINT_SIMPLE')
+REDIS_SENTINEL_SERVICE_NAME = os.getenv('REDIS_SENTINEL_SERVICE_NAME')
+REDIS_SENTINEL_PASSWORD = os.getenv('REDIS_SENTINEL_PASSWORD')
+REDIS_SENTINELS = os.getenv('REDIS_SENTINELS')
+REDIS_HOST = os.getenv('REDIS_HOST')
+REDIS_PORT = os.getenv('REDIS_PORT')
+REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': True,
+    'formatters': {
+        'verbose': {
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+        }
+    },
+    'handlers': {
+        'stdout': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'stream': 'ext://sys.stdout',
+        },
+        'log_file': {
+            'level': 'DEBUG',
+            'class': 'logging.handlers.WatchedFileHandler',
+            'filename': '/tmp/globomap.log',
+            'mode': 'a',
+        },
+    },
+    'loggers': {
+        'globomap_api': {
+            'handlers': ['log_file', 'stdout'],
+            'level': 'DEBUG',
+            'formatter': 'verbose',
+        }
+    }
+}

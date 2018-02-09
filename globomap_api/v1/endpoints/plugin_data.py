@@ -27,12 +27,17 @@ from globomap_api.v1.parsers import plugin_arguments
 
 log = logging.getLogger(__name__)
 
-ns = api.namespace('plugin_data', description='test')
+ns = api.namespace('plugin_data', description='Plugins')
 
 
 @ns.route('/<plugin_name>/')
+@api.doc(params={'plugin_name': 'Name Of Plugin'})
 class PluginData(Resource):
 
+    @api.doc(responses={
+        200: 'Success',
+        404: 'Not Found'
+    })
     @api.expect(plugin_arguments)
     def get(self, plugin_name):
         try:
@@ -42,5 +47,3 @@ class PluginData(Resource):
             return data
         except PluginNotFoundException as err:
             api.abort(404, errors=str(err))
-        except Exception as err:
-            api.abort(500, errors=str(err))

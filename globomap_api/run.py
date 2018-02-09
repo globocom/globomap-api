@@ -13,17 +13,13 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
-from logging.handlers import RotatingFileHandler
+from logging import config
 from os import environ
 
 from app import create_app
+from config import LOGGING
 
 if __name__ == '__main__':
+    config.dictConfig(LOGGING)
     application = create_app('config')
-    handler = RotatingFileHandler('foo.log', maxBytes=10000, backupCount=1)
-    handler.setLevel(logging.DEBUG)
-    logging.basicConfig(
-        level=logging.DEBUG, format='%(asctime)s %(threadName)s %(levelname)s %(message)s')
-    application.logger.addHandler(handler)
     application.run('0.0.0.0', int(environ.get('PORT', '5000')), threaded=True)

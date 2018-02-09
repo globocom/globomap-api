@@ -22,7 +22,7 @@ from globomap_api.models.db import DB
 from globomap_api.v1 import api
 from globomap_api.v1 import facade
 
-ns = api.namespace('healthcheck', description='healthcheck')
+ns = api.namespace('healthcheck', description='Healthcheck')
 
 
 def text(data, code, headers=None):
@@ -35,6 +35,10 @@ class Healthcheck(Resource):
         'text/plain': text,
     }
 
+    @api.doc(responses={
+        200: 'Success',
+        503: 'Service Unavailable',
+    })
     def get(self):
         deps = list_deps()
         problems = {}
@@ -49,6 +53,7 @@ class Healthcheck(Resource):
 @ns.route('/deps/')
 class HealthcheckDeps(Resource):
 
+    @api.doc(responses={200: 'Success'})
     def get(self):
         deps = list_deps()
         return deps, 200
