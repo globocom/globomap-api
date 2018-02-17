@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,7 +14,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-# -*- coding: utf-8 -*-
 import json
 import logging
 from json.decoder import JSONDecodeError
@@ -23,11 +23,12 @@ from flask_restplus import Resource
 from jsonspec.validators.exceptions import ValidationError
 
 from globomap_api import exceptions as gmap_exc
+from globomap_api.api import facade
+from globomap_api.api.v2 import api
+from globomap_api.api.v2 import permissions
+from globomap_api.api.v2.decorators import permission_classes
+from globomap_api.api.v2.parsers import collections as coll_parsers
 from globomap_api.util import validate
-from globomap_api.v1 import api
-from globomap_api.v1 import facade
-from globomap_api.v1.parsers import pag_collections_arguments
-from globomap_api.v1.parsers import pagination_arguments
 
 logger = logging.getLogger(__name__)
 
@@ -36,11 +37,24 @@ ns = api.namespace(
 
 
 @ns.route('/')
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
 class Collections(Resource):
 
-    @api.doc(responses={200: 'Success'})
+    @api.doc(responses={
+        200: 'Success',
+        401: 'Unauthorized',
+        403: 'Forbidden',
+    })
+    @permission_classes((permissions.Read, permissions.Collection))
     def get(self):
         """List all collections of kind document from DB."""
+
+        coll_parsers.get_coll_parser.parse_args(request)
 
         collections = facade.list_collections(kind='document')
         return collections, 200
@@ -48,13 +62,20 @@ class Collections(Resource):
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
+    @api.expect(coll_parsers.post_coll_parser)
+    @permission_classes((
+        permissions.Write, permissions.Collection, permissions.Admin))
     def post(self):
         """Create collection of kind document in DB."""
 
+        args = coll_parsers.post_coll_parser.parse_args(request)
+
         try:
-            data = request.get_json()
+            data = args.get('data')
             logger.debug('Receive Data: %s', data)
             facade.create_collection_document(data)
             return {}, 200
@@ -68,18 +89,27 @@ class Collections(Resource):
 
 
 @ns.route('/search/')
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
 class Search(Resource):
 
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(pag_collections_arguments)
+    @api.expect(coll_parsers.search_all_parser)
+    @permission_classes((permissions.Read, permissions.Collection))
     def get(self):
         """Search document in collections of kind document from DB."""
 
-        args = pag_collections_arguments.parse_args(request)
+        args = coll_parsers.search_all_parser.parse_args(request)
 
         try:
             try:
@@ -106,19 +136,31 @@ class Search(Resource):
 
 @ns.route('/<collection>/')
 @api.doc(params={'collection': 'Name Of Collection'})
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
 class Collection(Resource):
 
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found',
         409: 'Document Already Exists'
     })
+    @api.expect(coll_parsers.post_document_parser)
+    @permission_classes((permissions.Write, permissions.Collection))
     def post(self, collection):
         """Insert document in DB."""
 
+        args = coll_parsers.post_document_parser.parse_args(request)
+
         try:
-            data = request.get_json()
+            data = args.get('data')
             logger.debug('Receive Data: %s', data)
             res = facade.create_document(collection, data)
             return res, 200
@@ -139,13 +181,16 @@ class Collection(Resource):
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(pagination_arguments)
+    @api.expect(coll_parsers.search_parser)
+    @permission_classes((permissions.Read, permissions.Collection))
     def get(self, collection):
         """Search documents from collection."""
 
-        args = pagination_arguments.parse_args(request)
+        args = coll_parsers.search_parser.parse_args(request)
 
         try:
             try:
@@ -169,13 +214,23 @@ class Collection(Resource):
 
 @ns.route('/<collection>/clear/')
 @api.doc(params={'collection': 'Name Of Collection'})
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
 class CollectionClear(Resource):
 
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
+    @api.expect(coll_parsers.clear_document_parser)
+    @permission_classes((permissions.Write, permissions.Collection))
     def post(self, collection):
         """Clear documents in collection."""
 
@@ -198,13 +253,23 @@ class CollectionClear(Resource):
     'collection': 'Name Of Collection',
     'key': 'Key Of Document'
 })
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
 class Document(Resource):
 
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
+    @api.expect(coll_parsers.put_document_parser)
+    @permission_classes((permissions.Write, permissions.Collection))
     def put(self, collection, key):
         """Update document."""
 
@@ -227,8 +292,12 @@ class Document(Resource):
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
+    @api.expect(coll_parsers.patch_document_parser)
+    @permission_classes((permissions.Write, permissions.Collection))
     def patch(self, collection, key):
         """Partial update document."""
 
@@ -251,8 +320,11 @@ class Document(Resource):
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
+    @permission_classes((permissions.Read, permissions.Collection))
     def get(self, collection, key):
         """Get document by key."""
 
@@ -268,8 +340,11 @@ class Document(Resource):
 
     @api.doc(responses={
         200: 'Success',
+        401: 'Unauthorized',
+        403: 'Forbidden',
         404: 'Not Found'
     })
+    @permission_classes((permissions.Write, permissions.Collection))
     def delete(self, collection, key):
         """Delete document by key."""
 

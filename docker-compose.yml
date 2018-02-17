@@ -35,7 +35,7 @@ services:
     redis:
         container_name: globomap_redis
         image: redis:4.0.5-alpine
-        command: ["redis-server", "--appendonly", "yes"]
+        command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
         ports:
             - "6379:6379"
         networks:

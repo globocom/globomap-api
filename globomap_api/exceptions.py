@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -147,5 +148,21 @@ class SearchException(Exception):
 
     def __init__(self, message):
         super(SearchException, self).__init__(message)
+
+        self.message = message
+
+
+class AuthException(Exception):
+
+    def __init__(self, message):
+        super(AuthException, self).__init__(message)
+
+        self.message = message
+
+
+class InvalidToken(Exception):
+
+    def __init__(self, message):
+        super(InvalidToken, self).__init__(message)
 
         self.message = message

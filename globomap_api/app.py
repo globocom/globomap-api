@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,38 +15,35 @@
    limitations under the License.
 """
 import os
+from logging import config
 
-from flask import Blueprint
+from flask import abort
 from flask import Flask
 from flask import jsonify
 from flask import request
+from flask import session
 
-from globomap_api import config
+from globomap_api import config as app_config
 from globomap_api import exceptions
-from globomap_api.v1 import api
-from globomap_api.v1.endpoints.collections import ns as collections_namespace
-from globomap_api.v1.endpoints.edges import ns as edges_namespace
-from globomap_api.v1.endpoints.graphs import ns as graphs_namespace
-from globomap_api.v1.endpoints.healthcheck import ns as healthcheck_namespace
-from globomap_api.v1.endpoints.plugin_data import ns as plugin_namespace
+from globomap_api.api.v1.api import blueprint as api_v1
+from globomap_api.api.v2.api import blueprint as api_v2
 
 
-def create_app(config_module=None):
+def create_app():
     app = Flask(__name__)
-    app.config.from_object(config_module or
-                           os.environ.get('FLASK_CONFIG') or
+    app.secret_key = 'something-from-os.urandom(24)'
+    app.config.from_object(os.environ.get('FLASK_CONFIG') or
                            'globomap_api.config')
+    app.config['LOGGER_HANDLER_POLICY'] = 'default'
+    app.config['LOGGER_NAME'] = 'api'
+    app.config['BUNDLE_ERRORS'] = True
+    app.config[
+        'SWAGGER_UI_DOC_EXPANSION'] = app_config.RESTPLUS_SWAGGER_UI_DOC_EXPANSION
+    app.config['RESTPLUS_VALIDATE'] = app_config.RESTPLUS_VALIDATE
+    app.logger
+    config.dictConfig(app_config.LOGGING)
 
-    blueprint = Blueprint('api', __name__, url_prefix='/v1')
-
-    api.init_app(blueprint)
-
-    api.add_namespace(graphs_namespace)
-    api.add_namespace(edges_namespace)
-    api.add_namespace(collections_namespace)
-    api.add_namespace(plugin_namespace)
-    api.add_namespace(healthcheck_namespace)
-
-    app.register_blueprint(blueprint)
+    app.register_blueprint(api_v1)
+    app.register_blueprint(api_v2)
 
     return app

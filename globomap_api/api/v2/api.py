@@ -14,5 +14,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from globomap_api.app import create_app
-application = create_app()
+from globomap_api.api.v2 import api
+from globomap_api.api.v2 import blueprint
+from globomap_api.api.v2.endpoints.collections import ns as coll_ns
+from globomap_api.api.v2.endpoints.edges import ns as edges_ns
+from globomap_api.api.v2.endpoints.graphs import ns as graphs_ns
+from globomap_api.api.v2.endpoints.healthcheck import ns as healthcheck_ns
+from globomap_api.api.v2.endpoints.plugin_data import ns as plugin_ns
+
+api.add_namespace(graphs_ns)
+api.add_namespace(edges_ns)
+api.add_namespace(coll_ns)
+api.add_namespace(plugin_ns)
+api.add_namespace(healthcheck_ns)

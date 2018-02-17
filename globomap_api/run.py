@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -21,5 +22,5 @@ from config import LOGGING
 
 if __name__ == '__main__':
     config.dictConfig(LOGGING)
-    application = create_app('config')
+    application = create_app()
     application.run('0.0.0.0', int(environ.get('PORT', '5000')), threaded=True)

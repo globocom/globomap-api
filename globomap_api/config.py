@@ -1,3 +1,19 @@
+# -*- coding: utf-8 -*-
+"""
+   Copyright 2018 Globo.com
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+"""
 import os
 
 ARANGO_DB = os.getenv('ARANGO_DB')
@@ -22,14 +38,13 @@ SPECS = {
 # Flask-Restplus settings
 RESTPLUS_SWAGGER_UI_DOC_EXPANSION = 'list'
 RESTPLUS_VALIDATE = True
-RESTPLUS_MASK_SWAGGER = False
-RESTPLUS_ERROR_404_HELP = False
 
 ZABBIX_UI_URL = os.getenv('ZABBIX_UI_URL')
 ZABBIX_API_URL = os.getenv('ZABBIX_API_URL')
 ZABBIX_API_USER = os.getenv('ZABBIX_API_USER')
 ZABBIX_API_PASSWORD = os.getenv('ZABBIX_API_PASSWORD')
 
+# Redis
 REDIS_SENTINEL_ENDPOINT_SIMPLE = os.getenv('REDIS_SENTINEL_ENDPOINT_SIMPLE')
 REDIS_SENTINEL_SERVICE_NAME = os.getenv('REDIS_SENTINEL_SERVICE_NAME')
 REDIS_SENTINEL_PASSWORD = os.getenv('REDIS_SENTINEL_PASSWORD')
@@ -37,6 +52,20 @@ REDIS_SENTINELS = os.getenv('REDIS_SENTINELS')
 REDIS_HOST = os.getenv('REDIS_HOST')
 REDIS_PORT = os.getenv('REDIS_PORT')
 REDIS_PASSWORD = os.getenv('REDIS_PASSWORD')
+
+# Keystone
+KEYSTONE_AUTH_ENABLE = os.getenv('KEYSTONE_AUTH_ENABLE')
+KEYSTONE_AUTH_URL = os.getenv('KEYSTONE_AUTH_URL')
+KEYSTONE_USERNAME = os.getenv('KEYSTONE_USERNAME')
+KEYSTONE_PASSWORD = os.getenv('KEYSTONE_PASSWORD')
+KEYSTONE_TENANT_NAME = os.getenv('KEYSTONE_TENANT_NAME')
+
+ADMIN = 'globomap_admin'
+READ = 'globomap_read'
+WRITE = 'globomap_write'
+COLLECTION = 'globomap_collection'
+EDGE = 'globomap_edge'
+GRAPH = 'globomap_graph'
 
 LOGGING = {
     'version': 1,

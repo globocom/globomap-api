@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,16 +14,15 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-# -*- coding: utf-8 -*-
 import logging
 
 from flask import request
 from flask_restplus import Resource
 
+from globomap_api.api.parsers import plugin_arguments
+from globomap_api.api.v1 import api
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 from globomap_api.api_plugins.plugin_loader import ApiPluginLoader
-from globomap_api.v1 import api
-from globomap_api.v1.parsers import plugin_arguments
 
 
 log = logging.getLogger(__name__)

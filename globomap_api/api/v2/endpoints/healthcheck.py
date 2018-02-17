@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -14,15 +14,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import logging
+
 import flask
 import six
 from flask_restplus import Resource
+from flask_restplus.representations import output_json
 
+from globomap_api.api import facade
+from globomap_api.api.v2 import api
 from globomap_api.models.db import DB
-from globomap_api.v1 import api
-from globomap_api.v1 import facade
+from globomap_api.models.redis import RedisClient
 
 ns = api.namespace('healthcheck', description='Healthcheck')
+logger = logging.getLogger(__name__)
 
 
 def text(data, code, headers=None):
@@ -40,7 +45,7 @@ class Healthcheck(Resource):
         503: 'Service Unavailable',
     })
     def get(self):
-        deps = list_deps()
+        deps = _list_deps()
         problems = {}
         for key in deps:
             if deps[key].get('status') is False:
@@ -55,14 +60,34 @@ class HealthcheckDeps(Resource):
 
     @api.doc(responses={200: 'Success'})
     def get(self):
-        deps = list_deps()
+        deps = _list_deps()
         return deps, 200
 
 
-def list_deps():
+def _list_deps():
     deps = {
-        'arango': {}
+        'redis': _is_redis_ok(),
+        'arango': _is_arango_ok()
     }
+
+    return deps
+
+
+def _is_redis_ok():
+    try:
+        conn = RedisClient().get_redis_conn()
+    except:
+        logger.error('Failed to healthcheck redis.')
+        return {'status': False}
+    else:
+        if not conn.ping():
+            logger.error('Failed to healthcheck redis.')
+            return {'status': False}
+        else:
+            return {'status': True}
+
+
+def _is_arango_ok():
     try:
         db = DB()
         db.get_database()
@@ -70,11 +95,14 @@ def list_deps():
         collections = facade.list_collections('document')
         edges = facade.list_collections('edge')
     except:
-        deps['arango']['status'] = False
+        logger.error('Failed to healthcheck arango.')
+        deps = {'status': False}
     else:
-        deps['arango']['status'] = True
-        deps['arango']['graphs'] = graphs
-        deps['arango']['collections'] = collections
-        deps['arango']['edges'] = edges
+        deps = {
+            'status': True,
+            'graphs': graphs,
+            'collections': collections,
+            'edges': edges
+        }
 
     return deps
