@@ -1,4 +1,5 @@
 import redis
+from flask import current_app as app
 from redis.sentinel import Sentinel
 
 from globomap_api import config

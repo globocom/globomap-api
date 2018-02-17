@@ -18,6 +18,7 @@ import logging
 
 import flask
 import six
+from flask import current_app as app
 from flask_restplus import Resource
 from flask_restplus.representations import output_json
 
@@ -27,7 +28,6 @@ from globomap_api.models.db import DB
 from globomap_api.models.redis import RedisClient
 
 ns = api.namespace('healthcheck', description='Healthcheck')
-logger = logging.getLogger(__name__)
 
 
 def text(data, code, headers=None):
@@ -77,11 +77,11 @@ def _is_redis_ok():
     try:
         conn = RedisClient().get_redis_conn()
     except:
-        logger.error('Failed to healthcheck redis.')
+        app.logger.error('Failed to healthcheck redis.')
         return {'status': False}
     else:
         if not conn.ping():
-            logger.error('Failed to healthcheck redis.')
+            app.logger.error('Failed to healthcheck redis.')
             return {'status': False}
         else:
             return {'status': True}
@@ -95,7 +95,7 @@ def _is_arango_ok():
         collections = facade.list_collections('document')
         edges = facade.list_collections('edge')
     except:
-        logger.error('Failed to healthcheck arango.')
+        app.logger.error('Failed to healthcheck arango.')
         deps = {'status': False}
     else:
         deps = {

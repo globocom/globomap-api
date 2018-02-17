@@ -46,3 +46,8 @@ GRAPH = {
     0: 'Graph {}. Error: {}',
     1: 'Error to create edge definition in graph {}. Error: {}'
 }
+
+GRAPH_TRAVERSE = {
+    1202: 'Invalid startVertex.',
+    0: 'Graph {}. Error: {}',
+}

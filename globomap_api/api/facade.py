@@ -16,9 +16,12 @@
 """
 import math
 
+from arango.exceptions import GraphTraverseError
 from flask import current_app as app
 
+from globomap_api import exceptions as gmap_exceptions
 from globomap_api import util
+from globomap_api.errors import GRAPH_TRAVERSE as traverse_err
 from globomap_api.models.constructor import Constructor
 from globomap_api.models.db import DB
 from globomap_api.models.document import Document
@@ -312,24 +315,41 @@ def search_traversal(**kwargs):
     db_inst = DB()
     db_inst.get_database()
     graph = db_inst.get_graph(kwargs.get('graph_name'))
+    try:
+        traversal_results = graph.traverse(
+            start_vertex=kwargs.get('start_vertex'),
+            direction=kwargs.get('direction'),
+            item_order=kwargs.get('item_order'),
+            strategy=kwargs.get('strategy'),
+            order=kwargs.get('order'),
+            edge_uniqueness=kwargs.get('edge_uniqueness'),
+            vertex_uniqueness=kwargs.get('vertex_uniqueness'),
+            max_iter=kwargs.get('max_iter'),
+            min_depth=kwargs.get('min_depth'),
+            max_depth=kwargs.get('max_depth'),
+            init_func=kwargs.get('init_func'),
+            sort_func=kwargs.get('sort_func'),
+            filter_func=kwargs.get('filter_func'),
+            visitor_func=kwargs.get('visitor_func'),
+            expander_func=kwargs.get('expander_func')
+        )
+    except GraphTraverseError as err:
 
-    traversal_results = graph.traverse(
-        start_vertex=kwargs.get('start_vertex'),
-        direction=kwargs.get('direction'),
-        item_order=kwargs.get('item_order'),
-        strategy=kwargs.get('strategy'),
-        order=kwargs.get('order'),
-        edge_uniqueness=kwargs.get('edge_uniqueness'),
-        vertex_uniqueness=kwargs.get('vertex_uniqueness'),
-        max_iter=kwargs.get('max_iter'),
-        min_depth=kwargs.get('min_depth'),
-        max_depth=kwargs.get('max_depth'),
-        init_func=kwargs.get('init_func'),
-        sort_func=kwargs.get('sort_func'),
-        filter_func=kwargs.get('filter_func'),
-        visitor_func=kwargs.get('visitor_func'),
-        expander_func=kwargs.get('expander_func')
-    )
+        if traverse_err.get(err.error_code):
+            if err.error_code == 1202:
+                msg = traverse_err.get(1202)
+                raise gmap_exceptions.GraphTraverseException(msg)
+            raise gmap_exceptions.GraphTraverseException(
+                traverse_err.get(err.error_code).format(err.message))
+
+        else:
+            raise gmap_exceptions.GraphTraverseException(
+                traverse_err.get(0).format(
+                    kwargs.get('graph_name'), err.message))
+
+    except Exception as err:
+        raise gmap_exceptions.GraphTraverseException(
+            traverse_err.get(0).format(kwargs.get('graph_name'), err.message))
 
     traversal_results = util.filter_transversal(traversal_results)
     traversal_results.update({'graph': kwargs.get('graph_name')})

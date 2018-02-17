@@ -16,6 +16,7 @@
 """
 import logging
 
+from flask import current_app as app
 from flask import request
 from flask_restplus import reqparse
 
@@ -24,8 +25,6 @@ from globomap_api import exceptions
 from globomap_api.api.v2 import api
 from globomap_api.api.v2.keystone.keystone_auth import KeystoneAuth
 from globomap_api.config import KEYSTONE_AUTH_ENABLE
-
-logger = logging.getLogger(__name__)
 
 
 class BasePermission(object):
@@ -54,12 +53,12 @@ class BasePermission(object):
             return token_data
 
         except exceptions.InvalidToken:
-            logger.error('Invalid Token %s' % token)
+            app.logger.error('Invalid Token')
             api.abort(401, errors='Invalid Token')
 
         except:
             err_msg = 'Error to validate token'
-            logger.exception(err_msg)
+            app.logger.exception(err_msg)
             api.abort(401, errors=err_msg)
 
 

@@ -3,6 +3,7 @@ import logging
 from datetime import datetime
 
 from flask import abort
+from flask import current_app as app
 from werkzeug.exceptions import Forbidden
 
 from globomap_api import config
@@ -14,14 +15,12 @@ from globomap_api.models.redis import RedisClient
 
 class KeystoneAuth(object):
 
-    logger = logging.getLogger(__name__)
-
     def __init__(self, value):
         self.value = value
 
     def check_auth_token(self):
         auth = self.value
-        if auth.find('Token token=') == 0:
+        if auth is not None and auth.find('Token token=') == 0:
             token = auth[12:]
             token_data = self.get_cache_info_token(token)
             if not token_data:
@@ -31,10 +30,10 @@ class KeystoneAuth(object):
                     token_data = token_data.to_dict()
                     self.set_cache_info_token(token_data)
                 else:
-                    self.logger.error('Invalid Token %s' % token)
+                    app.logger.error('Invalid Token %s' % token)
                     raise InvalidToken('Invalid Token')
         else:
-            self.logger.error('Invalid Token %s' % token)
+            app.logger.error('Invalid Token')
             raise InvalidToken('Invalid Token')
 
         return token_data

@@ -13,16 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import configparser
 import importlib
 import logging
-from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
+
+import configparser
 from flask import current_app as app
+
+from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 
 
 class ApiPluginLoader(object):
-
-    logger = logging.getLogger(__name__)
 
     def load_plugin(self, plugin_name):
         plugins_config = configparser.ConfigParser()
@@ -36,18 +36,18 @@ class ApiPluginLoader(object):
         try:
             plugin_desc = plugins_config.get(plugin_name, 'description')
             plugin_module = plugins_config.get(plugin_name, 'module')
-            self.logger.debug("Lading '{}'".format(plugin_desc))
+            app.logger.debug("Lading '{}'".format(plugin_desc))
             return self.create_plugin_instance(plugin_module)
         except:
-            logging.exception("Error loading api plugin")
+            logging.exception('Error loading api plugin')
             raise PluginNotFoundException(
-                "It was not possible to load plugin {}".format(plugin_name)
+                'It was not possible to load plugin {}'.format(plugin_name)
             )
 
     def create_plugin_instance(self, class_path):
         components = class_path.split('.')
         class_name = components[-1]
-        package_path = ".".join(components[0:-1])
+        package_path = '.'.join(components[0:-1])
         plugin_class = getattr(
             importlib.import_module(package_path), class_name
         )

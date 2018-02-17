@@ -16,6 +16,7 @@
 """
 import logging
 
+from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
 
@@ -26,7 +27,6 @@ from globomap_api.api.v2.decorators import permission_classes
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 from globomap_api.api_plugins.plugin_loader import ApiPluginLoader
 
-logger = logging.getLogger(__name__)
 ns = api.namespace('plugin_data', description='Plugins')
 
 
@@ -48,7 +48,7 @@ class PluginData(Resource):
         404: 'Not Found'
     })
     @api.expect(plugin_arguments)
-    @permission_classes((permissions.Read))
+    @permission_classes((permissions.Read,))
     def get(self, plugin_name):
         try:
             args = plugin_arguments.parse_args(request)
@@ -60,5 +60,5 @@ class PluginData(Resource):
             return data
         except:
             err_msg = 'Error in plugin'
-            logger.exception(err_msg)
+            app.logger.exception(err_msg)
             api.abort(400, errors=err_msg)

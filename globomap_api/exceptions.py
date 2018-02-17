@@ -136,6 +136,14 @@ class GraphException(Exception):
         self.message = message
 
 
+class GraphTraverseException(Exception):
+
+    def __init__(self, message):
+        super(GraphTraverseException, self).__init__(message)
+
+        self.message = message
+
+
 class ConstructorException(Exception):
 
     def __init__(self, message):

@@ -18,6 +18,7 @@ import json
 import logging
 from json.decoder import JSONDecodeError
 
+from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
 from jsonspec.validators.exceptions import ValidationError
@@ -29,8 +30,6 @@ from globomap_api.api.v2 import permissions
 from globomap_api.api.v2.decorators import permission_classes
 from globomap_api.api.v2.parsers import collections as coll_parsers
 from globomap_api.util import validate
-
-logger = logging.getLogger(__name__)
 
 ns = api.namespace(
     'collections', description='Operations related to collections')
@@ -54,8 +53,6 @@ class Collections(Resource):
     def get(self):
         """List all collections of kind document from DB."""
 
-        coll_parsers.get_coll_parser.parse_args(request)
-
         collections = facade.list_collections(kind='document')
         return collections, 200
 
@@ -72,11 +69,12 @@ class Collections(Resource):
     def post(self):
         """Create collection of kind document in DB."""
 
-        args = coll_parsers.post_coll_parser.parse_args(request)
+        coll_parsers.post_coll_parser.parse_args(request)
 
         try:
-            data = args.get('data')
-            logger.debug('Receive Data: %s', data)
+            data = request.get_json()
+
+            app.logger.debug('Receive Data: %s', data)
             facade.create_collection_document(data)
             return {}, 200
 
@@ -118,7 +116,7 @@ class Search(Resource):
                 per_page = args.get('per_page')
                 collections = args.get('collections').split(',')
                 data = json.loads(query)
-                logger.debug('Receive Data: %s', data)
+                app.logger.debug('Receive Data: %s', data)
             except JSONDecodeError:
                 raise gmap_exc.SearchException('Parameter query is invalid')
             else:
@@ -157,11 +155,11 @@ class Collection(Resource):
     def post(self, collection):
         """Insert document in DB."""
 
-        args = coll_parsers.post_document_parser.parse_args(request)
+        coll_parsers.post_document_parser.parse_args(request)
 
         try:
-            data = args.get('data')
-            logger.debug('Receive Data: %s', data)
+            data = request.get_json()
+            app.logger.debug('Receive Data: %s', data)
             res = facade.create_document(collection, data)
             return res, 200
 
@@ -234,9 +232,11 @@ class CollectionClear(Resource):
     def post(self, collection):
         """Clear documents in collection."""
 
+        coll_parsers.clear_document_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             res = facade.clear_collection(collection, data)
             return res, 200
 
@@ -273,9 +273,11 @@ class Document(Resource):
     def put(self, collection, key):
         """Update document."""
 
+        coll_parsers.put_document_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             res = facade.update_document(collection, key, data)
             return res, 200
 
@@ -301,9 +303,11 @@ class Document(Resource):
     def patch(self, collection, key):
         """Partial update document."""
 
+        coll_parsers.patch_document_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             res = facade.patch_document(collection, key, data)
             return res, 200
 

@@ -14,6 +14,7 @@
    limitations under the License.
 """
 from arango import exceptions
+from flask import current_app as app
 
 from globomap_api import exceptions as gmap_exceptions
 from globomap_api.errors import DOCUMENT as doc_err
@@ -31,6 +32,8 @@ class Document:
             return self.collection.insert(document)
         except exceptions.DocumentInsertError as err:
 
+            app.logger.error(err.message)
+
             if doc_err.get(err.error_code):
                 if err.error_code == 1210:
                     raise gmap_exceptions.DocumentAlreadyExist(
@@ -44,6 +47,7 @@ class Document:
                     doc_err.get(0).format(document['_key'], err.message))
 
         except Exception as err:
+            app.logger.error(err.message)
             raise gmap_exceptions.DocumentException(
                 doc_err.get(0).format(document['_key'], err.message))
 
@@ -53,16 +57,17 @@ class Document:
         try:
             return self.collection.replace(document)
         except exceptions.DocumentReplaceError as err:
-
             if err.error_code == 1202:
                 msg = 'There no document with key {}'.format(document['_key'])
+                app.logger.error(msg)
                 raise gmap_exceptions.DocumentNotExist(msg)
-
             else:
+                app.logger.error(err.message)
                 raise gmap_exceptions.DocumentException(
                     doc_err.get(0).format(document['_key'], err.message))
 
         except Exception as err:
+            app.logger.error(err.message)
             raise gmap_exceptions.DocumentException(
                 doc_err.get(0).format(document['_key'], str(err)))
 
@@ -83,11 +88,13 @@ class Document:
             document = self.collection.get(key)
 
         except Exception as err:
+            app.logger.error(err.message)
             raise gmap_exceptions.DocumentException(
                 doc_err.get(0).format(key, err.message))
         else:
             if document is None:
                 msg = 'There no document with key {}'.format(key)
+                app.logger.error(msf)
                 raise gmap_exceptions.DocumentNotExist(msg)
 
             return document
@@ -101,13 +108,16 @@ class Document:
 
             if err.error_code == 1202:
                 msg = 'There no document with key {}'.format(key)
+                app.logger.error(msg)
                 raise gmap_exceptions.DocumentNotExist(msg)
 
             else:
+                app.logger.error(err.message)
                 raise gmap_exceptions.DocumentException(
                     doc_err.get(0).format(key, err.message))
 
         except Exception as err:
+            app.logger.error(err.message)
             raise gmap_exceptions.DocumentException(
                 doc_err.get(0).format(key, err.message))
         else:

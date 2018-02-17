@@ -18,6 +18,7 @@ import json
 import logging
 from json.decoder import JSONDecodeError
 
+from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
 from jsonspec.validators.exceptions import ValidationError
@@ -30,8 +31,6 @@ from globomap_api.api.v2.decorators import permission_classes
 from globomap_api.api.v2.parsers import edges as edges_parsers
 from globomap_api.util import validate
 
-
-logger = logging.getLogger(__name__)
 
 ns = api.namespace('edges', description='Operations related to edges')
 
@@ -64,15 +63,17 @@ class Edges(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(edges_parsers.post_document_parser)
+    @api.expect(edges_parsers.post_edge_parser)
     @permission_classes((
         permissions.Write, permissions.Edge, permissions.Admin))
     def post(self):
         """Create collection of kind edge in DB."""
 
+        edges_parsers.post_edge_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             facade.create_collection_edge(data)
             return {}, 200
 
@@ -112,13 +113,13 @@ class Search(Resource):
                 page = args.get('page')
                 query = args.get('query') or '[]'
                 per_page = args.get('per_page')
-                collections = args.get('collections').split(',')
+                edges = args.get('edges').split(',')
                 data = json.loads(query)
             except JSONDecodeError:
                 raise gmap_exc.SearchException('Parameter query is invalid')
             else:
                 res = facade.search_collections(
-                    collections, data, page, per_page)
+                    edges, data, page, per_page)
                 return res, 200
 
         except gmap_exc.CollectionNotExist as err:
@@ -151,9 +152,11 @@ class EdgeClear(Resource):
     def post(self, edge):
         """Clear documents in edge."""
 
+        edges_parsers.clear_document_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             res = facade.clear_collection(edge, data)
             return res, 200
 
@@ -188,10 +191,11 @@ class Edge(Resource):
     def post(self, edge):
         """Insert edge in DB."""
 
+        edges_parsers.post_document_parser.parse_args(request)
+
         try:
-            args = edges_parsers.post_document_parser.parse_args(request)
-            data = args.get('data')
-            logger.debug('Receive Data: %s', data)
+            data = request.get_json()
+            app.logger.debug('Receive Data: %s', data)
             res = facade.create_edge(edge, data)
             return res, 200
 
@@ -267,9 +271,11 @@ class Document(Resource):
     def put(self, edge, key):
         """Update edge."""
 
+        edges_parsers.put_document_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             res = facade.update_edge(edge, key, data)
             return res, 200
 
@@ -295,9 +301,11 @@ class Document(Resource):
     def patch(self, edge, key):
         """Partial update edge."""
 
+        edges_parsers.patch_document_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             res = facade.patch_edge(edge, key, data)
             return res, 200
 

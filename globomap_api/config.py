@@ -76,23 +76,19 @@ LOGGING = {
         }
     },
     'handlers': {
-        'stdout': {
+        'default': {
             'level': 'DEBUG',
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',
-        },
-        'log_file': {
-            'level': 'DEBUG',
-            'class': 'logging.handlers.WatchedFileHandler',
-            'filename': '/tmp/globomap.log',
-            'mode': 'a',
-        },
-    },
-    'loggers': {
-        'globomap_api': {
-            'handlers': ['log_file', 'stdout'],
-            'level': 'DEBUG',
             'formatter': 'verbose',
         }
+    },
+    'loggers': {
+        'api': {
+            'handlers': ['default'],
+            'level': 'DEBUG',
+            'propagate': True
+        },
+        'werkzeug': {'propagate': True},
     }
 }

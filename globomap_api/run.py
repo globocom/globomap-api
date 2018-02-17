@@ -23,4 +23,9 @@ from config import LOGGING
 if __name__ == '__main__':
     config.dictConfig(LOGGING)
     application = create_app()
-    application.run('0.0.0.0', int(environ.get('PORT', '5000')), threaded=True)
+    application.run(
+        '0.0.0.0',
+        int(environ.get('PORT', '5000')),
+        debug=True,
+        threaded=True
+    )

@@ -16,6 +16,7 @@
 """
 import logging
 
+from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
 from jsonspec.validators.exceptions import ValidationError
@@ -27,9 +28,6 @@ from globomap_api.api.v2 import permissions
 from globomap_api.api.v2.decorators import permission_classes
 from globomap_api.api.v2.parsers import graphs as graphs_parsers
 from globomap_api.util import validate
-
-
-logger = logging.getLogger(__name__)
 
 ns = api.namespace('graphs', description='Operations related to graphs')
 
@@ -66,9 +64,11 @@ class Graph(Resource):
     def post(self):
         """Create graph in DB."""
 
+        graphs_parsers.post_graph_parser.parse_args(request)
+
         try:
             data = request.get_json()
-            logger.debug('Receive Data: %s', data)
+            app.logger.debug('Receive Data: %s', data)
             facade.create_graph(data)
             return {}, 200
 
@@ -122,6 +122,9 @@ class GraphTraversal(Resource):
 
             res = facade.search_traversal(**search_dict)
             return res, 200
+
+        except gmap_exc.GraphTraverseException as err:
+            api.abort(400, errors=err.message)
 
         except gmap_exc.GraphNotExist as err:
             api.abort(404, errors=err.message)
