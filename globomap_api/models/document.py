@@ -94,7 +94,7 @@ class Document:
         else:
             if document is None:
                 msg = 'There no document with key {}'.format(key)
-                app.logger.error(msf)
+                app.logger.error(msg)
                 raise gmap_exceptions.DocumentNotExist(msg)
 
             return document
