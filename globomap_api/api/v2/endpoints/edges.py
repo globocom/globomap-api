@@ -24,8 +24,8 @@ from flask_restplus import Resource
 from jsonspec.validators.exceptions import ValidationError
 
 from globomap_api import exceptions as gmap_exc
-from globomap_api.api import facade
 from globomap_api.api.v2 import api
+from globomap_api.api.v2 import facade
 from globomap_api.api.v2 import permissions
 from globomap_api.api.v2.decorators import permission_classes
 from globomap_api.api.v2.parsers import edges as edges_parsers

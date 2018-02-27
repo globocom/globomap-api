@@ -22,8 +22,8 @@ from flask import current_app as app
 from flask_restplus import Resource
 from flask_restplus.representations import output_json
 
-from globomap_api.api import facade
 from globomap_api.api.v2 import api
+from globomap_api.api.v2 import facade
 from globomap_api.models.db import DB
 from globomap_api.models.redis import RedisClient
 
