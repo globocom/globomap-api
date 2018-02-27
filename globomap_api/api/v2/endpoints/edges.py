@@ -220,7 +220,7 @@ class Edge(Resource):
         404: 'Not Found'
     })
     @api.expect(edges_parsers.search_parser)
-    @permission_classes((permissions.Write, permissions.Edge))
+    @permission_classes((permissions.Read, permissions.Edge))
     def get(self, edge):
         """Search documents from collection."""
 
