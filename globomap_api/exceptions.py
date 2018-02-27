@@ -160,6 +160,14 @@ class SearchException(Exception):
         self.message = message
 
 
+class Unauthorized(Exception):
+
+    def __init__(self, message):
+        super(Unauthorized, self).__init__(message)
+
+        self.message = message
+
+
 class AuthException(Exception):
 
     def __init__(self, message):
