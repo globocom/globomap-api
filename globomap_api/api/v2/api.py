@@ -16,6 +16,7 @@
 """
 from globomap_api.api.v2 import api
 from globomap_api.api.v2 import blueprint
+from globomap_api.api.v2.endpoints.auth import ns as auth_ns
 from globomap_api.api.v2.endpoints.collections import ns as coll_ns
 from globomap_api.api.v2.endpoints.edges import ns as edges_ns
 from globomap_api.api.v2.endpoints.graphs import ns as graphs_ns
@@ -27,3 +28,4 @@ api.add_namespace(edges_ns)
 api.add_namespace(coll_ns)
 api.add_namespace(plugin_ns)
 api.add_namespace(healthcheck_ns)
+api.add_namespace(auth_ns)
