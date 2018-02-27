@@ -4,9 +4,6 @@ from flask import session
 from flask_restplus import reqparse
 
 from globomap_api import exceptions
-from globomap_api.api.v2.keystone.keystone_auth import KeystoneAuth
-from globomap_api.config import KEYSTONE_AUTH_ENABLE
-
 
 search_parser = reqparse.RequestParser()
 search_parser.add_argument(

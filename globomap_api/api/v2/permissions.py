@@ -23,14 +23,14 @@ from flask_restplus import reqparse
 from globomap_api import config
 from globomap_api import exceptions
 from globomap_api.api.v2 import api
-from globomap_api.api.v2.keystone.keystone_auth import KeystoneAuth
-from globomap_api.config import KEYSTONE_AUTH_ENABLE
+from globomap_api.api.v2.auth import Auth
 
 
 class BasePermission(object):
 
     def __init__(self):
-        if KEYSTONE_AUTH_ENABLE:
+        self.auth = Auth()
+        if self.is_auth_enable():
             token = self.validate_token()
             if not self.has_permission(token):
                 api.abort(403)
@@ -44,22 +44,25 @@ class BasePermission(object):
             return True
         return False
 
+    def is_auth_enable(self):
+        return self.auth.is_enable()
+
     def validate_token(self):
 
         try:
             value = request.headers.get('Authorization')
-            auth = KeystoneAuth(value)
-            token_data = auth.check_auth_token()
+            self.auth.set_auth_token(value)
+            token_data = self.auth.check_auth_token()
             return token_data
 
         except exceptions.InvalidToken:
             app.logger.error('Invalid Token')
             api.abort(401, errors='Invalid Token')
 
-        except:
+        except exceptions.AuthException:
             err_msg = 'Error to validate token'
             app.logger.exception(err_msg)
-            api.abort(401, errors=err_msg)
+            api.abort(503)
 
 
 class Admin(BasePermission):
