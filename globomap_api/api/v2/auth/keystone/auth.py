@@ -67,4 +67,4 @@ class Auth(object):
             token_expires, '%Y-%m-%dT%H:%M:%SZ')
         ttl = (datetime.utcnow().now() - datetime_object)
         token_data = json.dumps(token_data)
-        conn.setex(token, token_data, ttl.seconds)
+        conn.set(token, token_data, ex=ttl.seconds)
