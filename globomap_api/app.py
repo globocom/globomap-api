@@ -17,14 +17,9 @@
 import os
 from logging import config
 
-from flask import abort
 from flask import Flask
-from flask import jsonify
-from flask import request
-from flask import session
 
 from globomap_api import config as app_config
-from globomap_api import exceptions
 from globomap_api.api.v1.api import blueprint as api_v1
 from globomap_api.api.v2.api import blueprint as api_v2
 
@@ -37,9 +32,6 @@ def create_app():
     app.config['LOGGER_HANDLER_POLICY'] = 'default'
     app.config['LOGGER_NAME'] = 'api'
     app.config['BUNDLE_ERRORS'] = True
-    app.config[
-        'SWAGGER_UI_DOC_EXPANSION'] = app_config.RESTPLUS_SWAGGER_UI_DOC_EXPANSION
-    app.config['RESTPLUS_VALIDATE'] = app_config.RESTPLUS_VALIDATE
     app.logger
     config.dictConfig(app_config.LOGGING)
 

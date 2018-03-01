@@ -14,26 +14,19 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
-
 from flask import current_app as app
 from flask import request
-from flask_restplus import reqparse
+from globomap_auth_manager import exceptions
 
 from globomap_api import config
-from globomap_api import exceptions
 from globomap_api.api.v2 import api
-from globomap_api.api.v2.auth import Auth
 
 
 class BasePermission(object):
 
-    def __init__(self):
-        self.auth = Auth()
-        if self.is_auth_enable():
-            token = self.validate_token()
-            if not self.has_permission(token):
-                api.abort(403)
+    def __init__(self, auth):
+        self.auth = auth
+        self.validate_token()
 
     def has_permission(self):
         return True
@@ -44,16 +37,11 @@ class BasePermission(object):
             return True
         return False
 
-    def is_auth_enable(self):
-        return self.auth.is_enable()
-
     def validate_token(self):
-
         try:
             value = request.headers.get('Authorization')
-            self.auth.set_auth_token(value)
-            token_data = self.auth.check_auth_token()
-            return token_data
+            self.auth.set_token(value)
+            token_data = self.auth.validate_token()
 
         except exceptions.InvalidToken:
             app.logger.error('Invalid Token')
@@ -63,6 +51,9 @@ class BasePermission(object):
             err_msg = 'Error to validate token'
             app.logger.exception(err_msg)
             api.abort(503)
+        else:
+            if not self.has_permission(token_data):
+                api.abort(403, 'User have not permission to this action')
 
 
 class Admin(BasePermission):

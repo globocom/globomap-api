@@ -16,8 +16,6 @@
 """
 from flask_restplus import reqparse
 
-from globomap_api.api.v2.parsers import base
-
 auth_parser = reqparse.RequestParser()
 auth_parser.add_argument(
     'data',

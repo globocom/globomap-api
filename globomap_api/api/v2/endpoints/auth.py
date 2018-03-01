@@ -14,23 +14,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import json
-import logging
-from json.decoder import JSONDecodeError
-
 from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
-from jsonspec.validators.exceptions import ValidationError
+from globomap_auth_manager import exceptions
 
-from globomap_api import exceptions as gmap_exc
 from globomap_api.api.v2 import api
-from globomap_api.api.v2 import facade
-from globomap_api.api.v2 import permissions
-from globomap_api.api.v2.auth import Auth
-from globomap_api.api.v2.decorators import permission_classes
+from globomap_api.api.v2.auth import facade
 from globomap_api.api.v2.parsers import auth as auth_parsers
-from globomap_api.util import validate
 
 ns = api.namespace(
     'auth', description='Operations related to auth')
@@ -52,17 +43,16 @@ class CreateAuth(Resource):
             username = data.get('username')
             password = data.get('password')
             if not username or not password:
-                api.abort(401, errors='Username and Password is required')
-            auth_inst = Auth()
-            auth_inst.set_credentials(username, password)
-            token = auth_inst.get_auth_token()
-            data = {
-                'token'
-            }
+                app.logger.error('Username and Password is required.')
+                api.abort(401, errors='Username and Password is required.')
+
+            token = facade.auth(username, password)
             return token, 200
 
-        except gmap_exc.Unauthorized:
-            api.abort(401, 'User not Unauthorized')
+        except exceptions.Unauthorized:
+            app.logger.error('User not Unauthorized.')
+            api.abort(401, 'User not Unauthorized.')
 
-        except gmap_exc.AuthException:
-            api.abort(503)
+        except exceptions.AuthException:
+            app.logger.error('Auth Unavailable.')
+            api.abort(503, 'Auth Unavailable.')

@@ -14,16 +14,14 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
-
 from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
 
 from globomap_api.api.parsers import plugin_arguments
 from globomap_api.api.v2 import api
-from globomap_api.api.v2 import permissions
-from globomap_api.api.v2.decorators import permission_classes
+from globomap_api.api.v2.auth import permissions
+from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 from globomap_api.api_plugins.plugin_loader import ApiPluginLoader
 
@@ -56,6 +54,7 @@ class PluginData(Resource):
             data = plugin_instance.get_data(args)
             return data
         except PluginNotFoundException as err:
+            app.logger.error(str(err))
             api.abort(404, errors=str(err))
             return data
         except:

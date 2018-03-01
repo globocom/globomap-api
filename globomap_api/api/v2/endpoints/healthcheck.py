@@ -14,18 +14,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
-
 import flask
 import six
 from flask import current_app as app
 from flask_restplus import Resource
-from flask_restplus.representations import output_json
+from globomap_auth_manager.healthcheck import is_redis_ok
 
 from globomap_api.api.v2 import api
 from globomap_api.api.v2 import facade
 from globomap_api.models.db import DB
-from globomap_api.models.redis import RedisClient
+# from flask_restplus.representations import output_json
 
 ns = api.namespace('healthcheck', description='Healthcheck')
 
@@ -51,7 +49,8 @@ class Healthcheck(Resource):
             if deps[key].get('status') is False:
                 problems.update({key: deps[key]})
         if problems:
-            return problems, 503
+            app.logger.error(problems)
+            api.abort(503, problems)
         return 'WORKING', 200
 
 
@@ -66,25 +65,11 @@ class HealthcheckDeps(Resource):
 
 def _list_deps():
     deps = {
-        'redis': _is_redis_ok(),
+        'redis': is_redis_ok(),
         'arango': _is_arango_ok()
     }
 
     return deps
-
-
-def _is_redis_ok():
-    try:
-        conn = RedisClient().get_redis_conn()
-    except:
-        app.logger.error('Failed to healthcheck redis.')
-        return {'status': False}
-    else:
-        if not conn.ping():
-            app.logger.error('Failed to healthcheck redis.')
-            return {'status': False}
-        else:
-            return {'status': True}
 
 
 def _is_arango_ok():

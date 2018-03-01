@@ -14,8 +14,6 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
-
 from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
@@ -24,8 +22,8 @@ from jsonspec.validators.exceptions import ValidationError
 from globomap_api import exceptions as gmap_exc
 from globomap_api.api.v2 import api
 from globomap_api.api.v2 import facade
-from globomap_api.api.v2 import permissions
-from globomap_api.api.v2.decorators import permission_classes
+from globomap_api.api.v2.auth import permissions
+from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import graphs as graphs_parsers
 from globomap_api.util import validate
 
@@ -74,6 +72,7 @@ class Graph(Resource):
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
 
@@ -124,7 +123,9 @@ class GraphTraversal(Resource):
             return res, 200
 
         except gmap_exc.GraphTraverseException as err:
+            app.logger.error(err.message)
             api.abort(400, errors=err.message)
 
         except gmap_exc.GraphNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)

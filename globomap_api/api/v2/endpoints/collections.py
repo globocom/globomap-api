@@ -15,7 +15,6 @@
    limitations under the License.
 """
 import json
-import logging
 from json.decoder import JSONDecodeError
 
 from flask import current_app as app
@@ -26,8 +25,8 @@ from jsonspec.validators.exceptions import ValidationError
 from globomap_api import exceptions as gmap_exc
 from globomap_api.api.v2 import api
 from globomap_api.api.v2 import facade
-from globomap_api.api.v2 import permissions
-from globomap_api.api.v2.decorators import permission_classes
+from globomap_api.api.v2.auth import permissions
+from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import collections as coll_parsers
 from globomap_api.util import validate
 
@@ -80,9 +79,11 @@ class Collections(Resource):
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
 
@@ -125,10 +126,12 @@ class Search(Resource):
                 return res, 200
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
 
@@ -165,15 +168,19 @@ class Collection(Resource):
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentAlreadyExist as err:
+            app.logger.error(err.message)
             api.abort(409, errors=err.message)
 
         except gmap_exc.DocumentException as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -203,10 +210,12 @@ class Collection(Resource):
                 return res, 200
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
 
@@ -241,10 +250,12 @@ class CollectionClear(Resource):
             return res, 200
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
 
@@ -283,12 +294,15 @@ class Document(Resource):
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -313,12 +327,15 @@ class Document(Resource):
 
         except ValidationError as error:
             res = validate(error)
+            app.logger.error(res)
             api.abort(400, errors=res)
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -337,9 +354,11 @@ class Document(Resource):
             return res, 200
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -357,7 +376,9 @@ class Document(Resource):
             return {}, 200
 
         except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
+            app.logger.error(err.message)
             api.abort(404, errors=err.message)

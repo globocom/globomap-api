@@ -35,10 +35,6 @@ SPECS = {
     'clear': 'globomap_api/specs/clear.json',
 }
 
-# Flask-Restplus settings
-RESTPLUS_SWAGGER_UI_DOC_EXPANSION = 'list'
-RESTPLUS_VALIDATE = True
-
 ZABBIX_UI_URL = os.getenv('ZABBIX_UI_URL')
 ZABBIX_API_URL = os.getenv('ZABBIX_API_URL')
 ZABBIX_API_USER = os.getenv('ZABBIX_API_USER')
@@ -73,7 +69,8 @@ LOGGING = {
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s'
+            'format': '%(levelname)s %(asctime)s %(module)s %(process)d ' +
+            '%(thread)d %(message)s'
         }
     },
     'handlers': {
