@@ -18,12 +18,12 @@ import flask
 import six
 from flask import current_app as app
 from flask_restplus import Resource
-from globomap_auth_manager.healthcheck import is_redis_ok
+from globomap_auth_manager.auth import Auth
 
 from globomap_api.api.v2 import api
 from globomap_api.api.v2 import facade
+from globomap_api.api.v2.auth.facade import set_config_redis
 from globomap_api.models.db import DB
-# from flask_restplus.representations import output_json
 
 ns = api.namespace('healthcheck', description='Healthcheck')
 
@@ -50,7 +50,8 @@ class Healthcheck(Resource):
                 problems.update({key: deps[key]})
         if problems:
             app.logger.error(problems)
-            api.abort(503, problems)
+            self.representations = {}
+            return problems, 503
         return 'WORKING', 200
 
 
@@ -65,7 +66,7 @@ class HealthcheckDeps(Resource):
 
 def _list_deps():
     deps = {
-        'redis': is_redis_ok(),
+        'redis': _is_redis_ok(),
         'arango': _is_arango_ok()
     }
 
@@ -91,3 +92,13 @@ def _is_arango_ok():
         }
 
     return deps
+
+
+def _is_redis_ok():
+    auth_inst = Auth()
+    set_config_redis(auth_inst)
+    status = {
+        'status': auth_inst.redis.is_redis_ok()
+    }
+
+    return status

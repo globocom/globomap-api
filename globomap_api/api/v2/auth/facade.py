@@ -10,7 +10,6 @@ def auth(username=None, password=None):
     auth_inst = Auth()
     set_config_redis(auth_inst)
     auth_inst.set_config_keystone(auth_url, tenant_name, username, password)
-    auth_inst.start_conn()
     token = auth_inst.get_token_data()
 
     return token
@@ -32,3 +31,4 @@ def set_config_redis(auth_inst):
         )
     else:
         auth_inst.set_config(host, port, password)
+    auth_inst.start_redis_conn()

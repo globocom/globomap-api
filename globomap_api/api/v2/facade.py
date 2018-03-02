@@ -76,7 +76,7 @@ def list_graphs():
     db_inst = DB()
     db_inst.get_database()
     graphs = db_inst.database.graphs()
-    util.filter_graphs(graphs)
+    graphs = util.filter_graphs(graphs)
 
     return graphs
 

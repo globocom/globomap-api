@@ -1,6 +1,6 @@
 Flask==0.12.2
 flask-restplus==0.10.1
-globomap-auth-manager==0.0.1a
+globomap-auth-manager==0.0.4
 gunicorn==19.7.1
 json-spec==0.10.1
 py-zabbix==1.1.3

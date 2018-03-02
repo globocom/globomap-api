@@ -13,7 +13,6 @@ def permission_classes(permission_classes):
             auth = Auth()
             if app.config['KEYSTONE_AUTH_ENABLE'] == '1':
                 facade.set_config_redis(auth)
-                auth.start_conn()
                 for permission_class in permission_classes:
                     permission_class(auth)
             return func(self, *args, **kwargs)
