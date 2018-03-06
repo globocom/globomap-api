@@ -46,7 +46,7 @@ class CreateAuth(Resource):
                 app.logger.error('Username and Password is required.')
                 api.abort(401, errors='Username and Password is required.')
 
-            token = facade.auth(username, password)
+            token = facade.create_token(username, password)
             return token, 200
 
         except exceptions.Unauthorized:

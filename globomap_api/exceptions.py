@@ -158,27 +158,3 @@ class SearchException(Exception):
         super(SearchException, self).__init__(message)
 
         self.message = message
-
-
-class Unauthorized(Exception):
-
-    def __init__(self, message):
-        super(Unauthorized, self).__init__(message)
-
-        self.message = message
-
-
-class AuthException(Exception):
-
-    def __init__(self, message):
-        super(AuthException, self).__init__(message)
-
-        self.message = message
-
-
-class InvalidToken(Exception):
-
-    def __init__(self, message):
-        super(InvalidToken, self).__init__(message)
-
-        self.message = message
