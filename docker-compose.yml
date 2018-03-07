@@ -32,16 +32,6 @@ services:
             - redis:globomap_redis
         external_links:
             - queue:globomap_queue
-    redis:
-        container_name: globomap_redis
-        image: redis:4.0.5-alpine
-        command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
-        ports:
-            - "6379:6379"
-        networks:
-            - globomap_net
-        volumes:
-            - globomap_redis_vol:/data
 
 volumes:
     globomap_db_vol:
