@@ -14,8 +14,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from flask import current_app as app
+from globomap_auth_manager import exceptions
 from globomap_auth_manager.auth import Auth
 
+from globomap_api.api.v2 import api
 from globomap_api.api.v2.auth.exceptions import AuthException
 
 
@@ -29,3 +32,24 @@ def create_token(username=None, password=None):
         raise AuthException('Auth is not enabled')
 
     return token
+
+
+def validate_token(token):
+    auth_inst = Auth()
+    if auth_inst.is_enable():
+        try:
+            auth_inst.set_token(token)
+            auth_inst.validate_token()
+
+            return auth_inst
+
+        except exceptions.InvalidToken:
+            app.logger.error('Invalid Token')
+            api.abort(401, errors='Invalid Token')
+
+        except exceptions.AuthException:
+            err_msg = 'Error to validate token'
+            app.logger.exception(err_msg)
+            api.abort(503)
+    else:
+        return False

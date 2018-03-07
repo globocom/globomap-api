@@ -21,6 +21,7 @@ from globomap_auth_manager import exceptions
 
 from globomap_api.api.v2 import api
 from globomap_api.api.v2.auth import facade
+from globomap_api.api.v2.auth.exceptions import AuthException
 from globomap_api.api.v2.parsers import auth as auth_parsers
 
 ns = api.namespace(
@@ -54,5 +55,9 @@ class CreateAuth(Resource):
             api.abort(401, 'User not Unauthorized.')
 
         except exceptions.AuthException:
+            app.logger.error('Auth Unavailable.')
+            api.abort(503, 'Auth Unavailable.')
+
+        except AuthException:
             app.logger.error('Auth Unavailable.')
             api.abort(503, 'Auth Unavailable.')
