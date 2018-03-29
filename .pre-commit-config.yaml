@@ -1,22 +1,41 @@
 -   repo: https://github.com/pre-commit/pre-commit-hooks
-    sha: v0.7.1
+    sha: v1.2.3
     hooks:
+    -   id: check-json
+    -   id: check-added-large-files
+    -   id: check-yaml
+    -   id: requirements-txt-fixer
     -   id: trailing-whitespace
+        language_version: python3.6
     -   id: end-of-file-fixer
+        language_version: python3.6
     -   id: autopep8-wrapper
+        language_version: python3.6
         args:
         - -i
         - --ignore=E501
     -   id: check-docstring-first
-    -   id: check-json
-    -   id: check-added-large-files
-    -   id: check-yaml
+        language_version: python3.6
     -   id: debug-statements
-    -   id: requirements-txt-fixer
+        language_version: python3.6
     -   id: double-quote-string-fixer
+        language_version: python3.6
     -   id: check-merge-conflict
+        language_version: python3.6
     -   id: check-ast
+        language_version: python3.6
+    -   id: check-builtin-literals
+        language_version: python3.6
+    -   id: check-byte-order-marker
+        language_version: python3.6
+    -   id: name-tests-test
+        language_version: python3.6
+    -   id: fix-encoding-pragma
+        language_version: python3.6
+        args:
+        - --remove
     -   id: flake8
+        language_version: python3.6
         args:
         - '-'
         - --ignore=E501,E402,F405
@@ -29,8 +48,9 @@
     sha: 9aa4d08f9a28d3defc5e4db3c3b77d1a9980fd1a
     hooks:
     -   id: reorder-python-imports
-        language_version: python2.7
--   repo: git://github.com/pre-commit/mirrors-autopep8
-    sha: 726322761e33581fcc0886d49a693945dece8594
+        language_version: python3.6
+-   repo: https://github.com/pre-commit/mirrors-autopep8
+    sha: a59112ac7558236e411fd83a26551584ef8b928f
     hooks:
     -   id: autopep8
+        language_version: python3.6

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
    Copyright 2018 Globo.com
 
@@ -209,6 +208,7 @@ class Edge(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentAlreadyExist as err:
+            app.logger.warning(err.message)
             api.abort(409, errors=err.message)
 
         except ValidationError as error:
@@ -298,7 +298,7 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -331,7 +331,7 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -354,7 +354,7 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -376,5 +376,5 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)

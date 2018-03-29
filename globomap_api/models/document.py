@@ -32,13 +32,13 @@ class Document:
             return self.collection.insert(document)
         except exceptions.DocumentInsertError as err:
 
-            app.logger.error(err.message)
-
             if doc_err.get(err.error_code):
                 if err.error_code == 1210:
+                    app.logger.warning(err.message)
                     raise gmap_exceptions.DocumentAlreadyExist(
                         doc_err.get(err.error_code).format(document['_key']))
                 else:
+                    app.logger.error(err.message)
                     raise gmap_exceptions.DocumentException(
                         doc_err.get(err.error_code).format(document['_key']))
 
@@ -59,7 +59,7 @@ class Document:
         except exceptions.DocumentReplaceError as err:
             if err.error_code == 1202:
                 msg = 'There no document with key {}'.format(document['_key'])
-                app.logger.error(msg)
+                app.logger.warning(msg)
                 raise gmap_exceptions.DocumentNotExist(msg)
             else:
                 app.logger.error(err.message)
@@ -94,7 +94,7 @@ class Document:
         else:
             if document is None:
                 msg = 'There no document with key {}'.format(key)
-                app.logger.error(msg)
+                app.logger.warning(msg)
                 raise gmap_exceptions.DocumentNotExist(msg)
 
             return document
@@ -108,7 +108,7 @@ class Document:
 
             if err.error_code == 1202:
                 msg = 'There no document with key {}'.format(key)
-                app.logger.error(msg)
+                app.logger.warning(msg)
                 raise gmap_exceptions.DocumentNotExist(msg)
 
             else:

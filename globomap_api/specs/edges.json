@@ -10,7 +10,9 @@
       "type": "string"
     },
     "id": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^([a-zA-Z0-9=._-]){1,}$",
+      "minimum": 1
     },
     "name": {
       "type": "string"

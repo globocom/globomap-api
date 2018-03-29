@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
    Copyright 2018 Globo.com
 
@@ -176,19 +175,20 @@ class Collection(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentAlreadyExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(409, errors=err.message)
 
         except gmap_exc.DocumentException as err:
             app.logger.error(err.message)
-            api.abort(404, errors=err.message)
+            api.abort(400, errors=err.message)
 
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
         401: 'Unauthorized',
         403: 'Forbidden',
-        404: 'Not Found'
+        404: 'Not Found',
+        409: 'Document Already Exists'
     })
     @api.expect(coll_parsers.search_parser)
     @permission_classes((permissions.Read, permissions.Collection))
@@ -302,7 +302,7 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -335,7 +335,7 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -358,7 +358,7 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)
 
     @api.doc(responses={
@@ -380,5 +380,5 @@ class Document(Resource):
             api.abort(404, errors=err.message)
 
         except gmap_exc.DocumentNotExist as err:
-            app.logger.error(err.message)
+            app.logger.warning(err.message)
             api.abort(404, errors=err.message)

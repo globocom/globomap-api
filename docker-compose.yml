@@ -3,7 +3,7 @@ services:
 
     db:
         container_name: globomap_db
-        image: arangodb:3.1.23
+        image: arangodb:3.3.4
         ports:
             - "8529:8529"
         environment:
@@ -29,7 +29,6 @@ services:
             - db
         links:
             - db:globomap_db
-            - redis:globomap_redis
         external_links:
             - queue:globomap_queue
 

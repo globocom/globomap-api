@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
    Copyright 2018 Globo.com
 
@@ -66,7 +65,7 @@ LOGGING = {
     },
     'handlers': {
         'default': {
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',
             'formatter': 'verbose',
@@ -75,7 +74,7 @@ LOGGING = {
     'loggers': {
         'api': {
             'handlers': ['default'],
-            'level': 'DEBUG',
+            'level': 'WARNING',
             'propagate': True
         },
         'werkzeug': {'propagate': True},
