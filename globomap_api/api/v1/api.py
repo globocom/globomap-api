@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
    Copyright 2018 Globo.com
 
@@ -14,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+__all__ = ['api', 'blueprint']
+
 from globomap_api.api.v1 import api
 from globomap_api.api.v1 import blueprint
 from globomap_api.api.v1.endpoints.collections import ns as collections_namespace

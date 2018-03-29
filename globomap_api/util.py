@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
    Copyright 2018 Globo.com
 
@@ -16,10 +15,7 @@
 """
 import json
 
-from jsonspec.reference import resolve
 from jsonspec.validators import load
-
-from globomap_api.models.constructor import Constructor
 
 
 def json_validate(json_file):
@@ -32,7 +28,7 @@ def json_validate(json_file):
 
 
 def validate(error):
-    msg = list()
+    msg = []
     if error.flatten():
         for pointer, reasons in error.flatten().items():
             msg.append({

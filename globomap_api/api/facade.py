@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
    Copyright 2018 Globo.com
 
@@ -36,7 +35,7 @@ def create_graph(data):
     constructor = Constructor()
     name = data.get('name')
     links = data.get('links')
-    graph = constructor.factory(
+    constructor.factory(
         kind='Graph', create=True, name=name, links=links)
 
     return True
@@ -50,7 +49,7 @@ def create_collection_document(data):
 
     constructor = Constructor()
     name = data.get('name')
-    collection = constructor.factory(
+    constructor.factory(
         kind='Collection', create=True, name=name)
 
     return True
@@ -64,7 +63,7 @@ def create_collection_edge(data):
 
     constructor = Constructor()
     name = data.get('name')
-    edge = constructor.factory(
+    constructor.factory(
         kind='Edges', create=True, name=name)
 
     return True
@@ -292,7 +291,7 @@ def delete_document(name, key):
     inst_coll = constructor.factory(kind='Collection', name=name)
 
     inst_doc = Document(inst_coll)
-    doc = inst_doc.delete_document(key)
+    inst_doc.delete_document(key)
 
     return True
 
@@ -393,7 +392,7 @@ def clear_collection(name, data):
     db_inst = DB()
 
     db_inst.get_database()
-    cursor = db_inst.clear_collection(name, data)
+    db_inst.clear_collection(name, data)
 
     return {}
 

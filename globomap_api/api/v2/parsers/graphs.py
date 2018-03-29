@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
    Copyright 2018 Globo.com
 
@@ -16,7 +15,6 @@
 """
 from flask_restplus import reqparse
 
-from globomap_api.api.v2.parsers import base
 
 traversal_parser = reqparse.RequestParser()
 traversal_parser.add_argument(
