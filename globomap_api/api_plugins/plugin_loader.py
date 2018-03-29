@@ -1,5 +1,5 @@
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,10 +13,10 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import configparser
 import importlib
 import logging
 
-import configparser
 from flask import current_app as app
 
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException

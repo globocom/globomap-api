@@ -1,5 +1,5 @@
 """
-   Copyright 2017 Globo.com
+   Copyright 2018 Globo.com
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -13,12 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import logging
-import os
-
 from arango import ArangoClient
 from arango import exceptions
-from arango.aql import AQL
 from flask import current_app as app
 
 from globomap_api import exceptions as gmap_exceptions
@@ -26,6 +22,7 @@ from globomap_api.errors import COLLECTION as coll_err
 from globomap_api.errors import DATABASE as db_err
 from globomap_api.errors import EDGE as edge_err
 from globomap_api.errors import GRAPH as gph_err
+# from arango.aql import AQL
 
 
 class DB(object):
@@ -201,7 +198,7 @@ class DB(object):
             bind_vars['offset'] = offset
             bind_vars['count'] = per_page
 
-            queries = list()
+            queries = []
             for index, collection in enumerate(collections):
                 idx = '@cl_{}'.format(index)
                 bind_vars[idx] = collection
@@ -246,11 +243,11 @@ class DB(object):
     def prepare_search(self, search):
         index = 0
         bind_vars = {}
-        filters = list()
+        filters = []
         where = ''
         if search:
             for items in search:
-                where_item = list()
+                where_item = []
                 for item in items:
                     if item['field'] and item['value']:
                         field_array = item['field'].split('.')
