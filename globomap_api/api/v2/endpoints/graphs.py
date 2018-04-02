@@ -57,7 +57,8 @@ class Graph(Resource):
         400: 'Validation Error',
     })
     @api.expect(graphs_parsers.post_graph_parser)
-    @permission_classes((permissions.Write, permissions.Graph))
+    @permission_classes((
+        permissions.Write, permissions.Graph, permissions.Admin))
     def post(self):
         """Create graph in DB."""
 
