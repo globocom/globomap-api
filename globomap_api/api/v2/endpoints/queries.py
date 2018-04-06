@@ -76,8 +76,8 @@ class Query(Resource):
             data = request.get_json()
 
             app.logger.debug('Receive Data: %s', data)
-            facade.create_query(data)
-            return {}, 200
+            res = facade.create_query(data)
+            return res, 200
 
         except ValidationError as error:
             res = validate(error)
@@ -169,8 +169,8 @@ class DocumentQuery(Resource):
         """Delete query by key."""
 
         try:
-            facade.delete_query(key)
-            return {}, 200
+            res = facade.delete_query(key)
+            return res, 200
 
         except gmap_exc.DocumentNotExist as error:
             app.logger.warning(error.message)

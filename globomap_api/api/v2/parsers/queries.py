@@ -62,6 +62,5 @@ execute_query_parser.add_argument(
     'variable',
     type=str,
     required=True,
-    default=1,
     help='Variable'
 )
