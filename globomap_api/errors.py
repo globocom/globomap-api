@@ -50,3 +50,8 @@ GRAPH_TRAVERSE = {
     1202: 'Invalid startVertex.',
     0: 'Graph {}. Error: {}',
 }
+
+AQL_QUERY = {
+    1501: 'Syntax error in Query.',
+    0: 'Eroor in Query. Error: {}',
+}

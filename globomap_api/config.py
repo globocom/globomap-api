@@ -32,6 +32,7 @@ SPECS = {
     'graphs': 'globomap_api/specs/graphs.json',
     'search': 'globomap_api/specs/search.json',
     'clear': 'globomap_api/specs/clear.json',
+    'queries': 'globomap_api/specs/queries.json',
 }
 
 ZABBIX_UI_URL = os.getenv('ZABBIX_UI_URL')

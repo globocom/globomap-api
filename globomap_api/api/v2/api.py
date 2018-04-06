@@ -20,12 +20,14 @@ from globomap_api.api.v2.endpoints.auth import ns as auth_ns
 from globomap_api.api.v2.endpoints.collections import ns as coll_ns
 from globomap_api.api.v2.endpoints.edges import ns as edges_ns
 from globomap_api.api.v2.endpoints.graphs import ns as graphs_ns
+from globomap_api.api.v2.endpoints.queries import ns as query_ns
 from globomap_api.api.v2.endpoints.healthcheck import ns as healthcheck_ns
 from globomap_api.api.v2.endpoints.plugin_data import ns as plugin_ns
 
-api.add_namespace(graphs_ns)
-api.add_namespace(edges_ns)
-api.add_namespace(coll_ns)
-api.add_namespace(plugin_ns)
-api.add_namespace(healthcheck_ns)
 api.add_namespace(auth_ns)
+api.add_namespace(coll_ns)
+api.add_namespace(edges_ns)
+api.add_namespace(graphs_ns)
+api.add_namespace(healthcheck_ns)
+api.add_namespace(plugin_ns)
+api.add_namespace(query_ns)

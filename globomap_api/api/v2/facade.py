@@ -348,7 +348,7 @@ def search_traversal(**kwargs):
 
     except Exception as err:
         raise gmap_exceptions.GraphTraverseException(
-            traverse_err.get(0).format(kwargs.get('graph_name'), err.message))
+            traverse_err.get(0).format(kwargs.get('graph_name'), err))
 
     traversal_results = util.filter_transversal(traversal_results)
     traversal_results.update({'graph': kwargs.get('graph_name')})
@@ -422,3 +422,100 @@ def search_collections(collections, data, page, per_page):
     }
 
     return res
+
+###########
+# Queries #
+###########
+
+
+def make_query(data):
+    """Validate query and make document"""
+
+    spec = app.config['SPECS'].get('queries')
+    util.json_validate(spec).validate(data)
+
+    query = data
+    key = 'query_{}'.format(data.get('name'))
+    query = {
+        '_key': key,
+        'name': data.get('name'),
+        'description': data['description'],
+        'query': data['query'],
+        'params': data.get('params')
+    }
+
+    db_inst = DB()
+    db_inst.get_database()
+    db_inst.validate_aql(data['query'])
+
+    return query
+
+
+def create_query(data):
+    """Create query in Database"""
+
+    query = make_query(data)
+
+    constructor = Constructor()
+    inst_coll = constructor.factory(kind='Collection',
+                                    name='internal_metadata')
+
+    inst_doc = Document(inst_coll)
+    doc = inst_doc.create_document(query)
+
+    return doc
+
+
+def update_query(key, data):
+    """Update query in Database"""
+
+    query = make_query(data)
+
+    constructor = Constructor()
+    inst_coll = constructor.factory(kind='Collection',
+                                    name='internal_metadata')
+
+    inst_doc = Document(inst_coll)
+    doc = inst_doc.update_document(query)
+
+    return doc
+
+
+def get_query(key):
+    """Get query from Database"""
+
+    # TODO: validate key
+    return get_document('internal_metadata', key)
+
+
+def delete_query(key):
+    """Delete query in Database"""
+
+    # TODO: validate key
+    return delete_document('internal_metadata', key)
+
+
+def list_query(page, per_page):
+    """List query in Database"""
+
+    data = [[{
+        'value': 'query_',
+        'operator': 'LIKE',
+        'field': '_key'
+    }]]
+
+    return search('internal_metadata', data, page, per_page)
+
+
+def execute_query(key, variable):
+    query = get_query(key)
+    query['params']['variable'] = variable
+
+    db_inst = DB()
+
+    db_inst.get_database()
+    cursor = db_inst.execute_aql(query['query'], query['params'])
+
+    docs = [doc for doc in cursor]
+
+    return docs

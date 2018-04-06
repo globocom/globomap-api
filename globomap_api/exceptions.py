@@ -157,3 +157,12 @@ class SearchException(Exception):
         super(SearchException, self).__init__(message)
 
         self.message = message
+        self.message = message
+
+
+class QueryException(Exception):
+
+    def __init__(self, message):
+        super(QueryException, self).__init__(message)
+
+        self.message = message

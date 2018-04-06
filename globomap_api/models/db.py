@@ -18,11 +18,11 @@ from arango import exceptions
 from flask import current_app as app
 
 from globomap_api import exceptions as gmap_exceptions
+from globomap_api.errors import AQL_QUERY as aql_err
 from globomap_api.errors import COLLECTION as coll_err
 from globomap_api.errors import DATABASE as db_err
 from globomap_api.errors import EDGE as edge_err
 from globomap_api.errors import GRAPH as gph_err
-# from arango.aql import AQL
 
 
 class DB(object):
@@ -139,6 +139,54 @@ class DB(object):
     #######
     # AQL #
     #######
+    def validate_aql(self, aql):
+        """Validate AQL"""
+
+        try:
+            self.database.aql.validate(aql)
+        except exceptions.AQLQueryValidateError as err:
+
+            if err.error_code == 1501:
+                msg = aql_err.get(1501)
+                app.logger.error(msg)
+                raise gmap_exceptions.QueryException(msg)
+
+            else:
+                msg = aql_err.get(0).format(err.message)
+                app.logger.error(msg)
+                raise gmap_exceptions.QueryException(msg)
+
+        except Exception as err:
+            msg = db_err.get(0).format(str(err))
+            app.logger.error(msg)
+            raise gmap_exceptions.DatabaseException(msg)
+
+    def execute_aql(self, aql, params):
+        """Execute AQL"""
+
+        try:
+            cursor = self.database.aql.execute(
+                aql,
+                bind_vars=params,
+                count=True,
+                full_count=True,
+                batch_size=1,
+                ttl=10,
+                optimizer_rules=['+all']
+            )
+            return cursor
+
+        except exceptions.AQLQueryExecuteError as err:
+
+            msg = db_err.get(1).format(err.message)
+            app.logger.error(msg)
+            raise gmap_exceptions.DatabaseException(msg)
+
+        except Exception as err:
+            msg = db_err.get(1).format(str(err))
+            app.logger.error(msg)
+            raise gmap_exceptions.DatabaseException(msg)
+
     def search_in_collection(self, collection, search, page=1, per_page=10):
         """Search Document"""
         try:
@@ -184,9 +232,6 @@ class DB(object):
             app.logger.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
-    #######
-    # AQL #
-    #######
     def search_in_collections(self, collections, search, page=1, per_page=10):
         """Search Document"""
         try:
