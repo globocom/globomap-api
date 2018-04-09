@@ -22,9 +22,11 @@ from globomap_api.api.v1.endpoints.edges import ns as edges_namespace
 from globomap_api.api.v1.endpoints.graphs import ns as graphs_namespace
 from globomap_api.api.v1.endpoints.healthcheck import ns as healthcheck_ns
 from globomap_api.api.v1.endpoints.plugin_data import ns as plugin_namespace
+from globomap_api.api.v1.endpoints.queries import ns as query_ns
 
 api.add_namespace(graphs_namespace)
 api.add_namespace(edges_namespace)
 api.add_namespace(collections_namespace)
 api.add_namespace(plugin_namespace)
 api.add_namespace(healthcheck_ns)
+api.add_namespace(query_ns)
