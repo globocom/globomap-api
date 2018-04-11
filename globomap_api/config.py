@@ -55,13 +55,15 @@ COLLECTION = 'globomap_collection'
 EDGE = 'globomap_edge'
 GRAPH = 'globomap_graph'
 
+# Logging
+SENTRY_DSN = os.getenv('SENTRY_DSN')
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': True,
     'formatters': {
         'verbose': {
-            'format': '%(levelname)s %(asctime)s %(module)s %(process)d ' +
-            '%(thread)d %(message)s'
+            'format': 'level=%(levelname)s timestamp=%(asctime)s module=%(module)s line=%(lineno)d' +
+            'message=%(message)s '
         }
     },
     'handlers': {
@@ -70,11 +72,16 @@ LOGGING = {
             'class': 'logging.StreamHandler',
             'stream': 'ext://sys.stdout',
             'formatter': 'verbose',
-        }
+        },
+        'sentry': {
+            'level': 'ERROR',
+            'class': 'raven.handlers.logging.SentryHandler',
+            'dsn': SENTRY_DSN,
+        },
     },
     'loggers': {
         'api': {
-            'handlers': ['default'],
+            'handlers': ['default', 'sentry'],
             'level': 'WARNING',
             'propagate': True
         },

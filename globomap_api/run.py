@@ -13,15 +13,11 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from logging import config
 from os import environ
 
-from app import create_app
-from config import LOGGING
+from wsgi import application
 
 if __name__ == '__main__':
-    config.dictConfig(LOGGING)
-    application = create_app()
     application.run(
         '0.0.0.0',
         int(environ.get('PORT', '5000')),

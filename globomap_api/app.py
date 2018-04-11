@@ -13,6 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import binascii
 import os
 from logging import config
 
@@ -25,12 +26,13 @@ from globomap_api.api.v2.api import blueprint as api_v2
 
 def create_app():
     app = Flask(__name__)
-    app.secret_key = 'something-from-os.urandom(24)'
+    app.secret_key = binascii.hexlify(os.urandom(24))
     app.config.from_object(os.environ.get('FLASK_CONFIG') or
                            'globomap_api.config')
     app.config['LOGGER_HANDLER_POLICY'] = 'default'
     app.config['LOGGER_NAME'] = 'api'
     app.config['BUNDLE_ERRORS'] = True
+
     app.logger
     config.dictConfig(app_config.LOGGING)
 
