@@ -23,6 +23,7 @@ ARANGO_HOST = os.getenv('ARANGO_HOST')
 ARANGO_PORT = os.getenv('ARANGO_PORT')
 FLASK_DEBUG = os.getenv('FLASK_DEBUG', False)
 API_PLUGINS_CONFIG_FILE = 'api_plugins'
+CORS = os.getenv('CORS', '').split('')
 SPECS = {
     'documents': 'globomap_api/specs/documents.json',
     'edges': 'globomap_api/specs/edges.json',

@@ -1,8 +1,9 @@
 Flask==0.12.2
-flask-restplus==0.10.1
+flask-cors==3.0.3flask-restplus==0.10.1
 gevent==1.2.2
 globomap-auth-manager==0.0.9
 gunicorn==19.7.1
 json-spec==0.10.1
 py-zabbix==1.1.3
 python-arango==3.8.0
+raven==6.6.0
