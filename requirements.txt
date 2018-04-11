@@ -1,5 +1,6 @@
 Flask==0.12.2
-flask-cors==3.0.3flask-restplus==0.10.1
+flask-cors==3.0.3
+flask-restplus==0.10.1
 gevent==1.2.2
 globomap-auth-manager==0.0.9
 gunicorn==19.7.1
