@@ -8,11 +8,6 @@ PROJECT_HOME = "`pwd`"
 help:
 	@echo
 	@echo "Please use 'make <target>' where <target> is one of"
-	@echo "  clean      to clean garbage left by builds and installation"
-	@echo "  deploy     to deploy project in Tsuru"
-	@echo "  test       to execute all tests"
-	@echo "  dist       to create egg for distribution"
-	@echo "  publish    to publish the package to PyPI"
 	@echo
 
 	@grep -E '^[a-zA-Z0-9_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -37,9 +32,14 @@ tests:
 run: ## Run a development web server
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
 
-docker: ## Run a development web server
-	@docker-compose build
-	@docker-compose up -d
+containers_start:## Start containers
+	docker-compose up -d
 
-deploy:
+keystone_config: ## Config keystone
+	@docker exec globomap_keystone "/home/keystone.sh"
+
+containers_build: ## Build containers
+	docker-compose build
+
+deploy: ## Deploy in Tsuru
 	@tsuru app-deploy -a $(project) globomap_api .python-version Procfile requirements.txt api_plugins
