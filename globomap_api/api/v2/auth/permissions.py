@@ -25,7 +25,7 @@ class BasePermission(object):
         self.auth = auth
         self.validate_token()
 
-    def has_permission(self):
+    def has_permission(self, token=None):
         return True
 
     def has_perm(self, token, role):

@@ -1,5 +1,3 @@
-.PHONY: help setup clean pep8 tests run
-
 # Version package
 VERSION=$(shell python -c 'import globomap_api; print globomap_api.VERSION')
 
@@ -19,14 +17,11 @@ clean: ## Clear *.pyc files, etc
 	@rm -rf build dist *.egg-info
 	@find . \( -name '*.pyc' -o  -name '__pycache__' -o -name '**/*.pyc' -o -name '*~' \) -delete
 
-pep8: ## Check source-code for PEP8 compliance
-	@-pep8 globomap_api
-
-exec_tests: clean pep8 ## Run all tests with coverage
+exec_tests: clean ## Run all tests with coverage
 	@python3.6 -m unittest discover -s tests/
 	#@run --source=globomap_api -m unittest2 discover -s tests/; coverage report -m
 
-tests:
+tests: ## Run tests
 	@docker exec -it globomap_api make exec_tests
 
 run: ## Run a development web server
