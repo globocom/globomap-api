@@ -94,13 +94,8 @@ def _is_arango_ok():
 
 def _is_auth_ok():
     auth_inst = Auth()
-
-    status = True
-    if auth_inst.is_enable():
-        status = auth_inst.is_url_ok()
-
     status = {
-        'status': status
+        'status': auth_inst.is_url_ok()
     }
 
     return status
