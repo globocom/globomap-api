@@ -18,6 +18,14 @@ import json
 from jsonspec.validators import load
 
 
+def get_dict(json_file):
+
+    with open(json_file) as data_file:
+        data = json.load(data_file)
+
+    return data
+
+
 def json_validate(json_file):
 
     with open(json_file) as data_file:

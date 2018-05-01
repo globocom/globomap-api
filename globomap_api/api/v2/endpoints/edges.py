@@ -27,6 +27,8 @@ from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import edges as edges_parsers
+from globomap_api.config import SPECS
+from globomap_api.util import get_dict
 from globomap_api.util import validate
 
 
@@ -61,7 +63,7 @@ class Edges(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(edges_parsers.post_edge_parser)
+    @api.expect(api.schema_model('Edge', get_dict(SPECS.get('collections'))))
     @permission_classes((
         permissions.Write, permissions.Edge, permissions.Admin))
     def post(self):
@@ -149,12 +151,10 @@ class EdgeClear(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(edges_parsers.clear_document_parser)
+    @api.expect(api.schema_model('EdgeClear', get_dict(SPECS.get('clear'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def post(self, edge):
         """Clear documents in edge."""
-
-        edges_parsers.clear_document_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -190,12 +190,10 @@ class Edge(Resource):
         404: 'Not Found',
         409: 'Document Already Exists'
     })
-    @api.expect(edges_parsers.post_document_parser)
+    @api.expect(api.schema_model('EdgePost', get_dict(SPECS.get('edges'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def post(self, edge):
         """Insert edge in DB."""
-
-        edges_parsers.post_document_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -275,12 +273,10 @@ class Document(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(edges_parsers.put_document_parser)
+    @api.expect(api.schema_model('EdgePut', get_dict(SPECS.get('edges'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def put(self, edge, key):
         """Update edge."""
-
-        edges_parsers.put_document_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -308,12 +304,11 @@ class Document(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(edges_parsers.patch_document_parser)
+    @api.expect(api.schema_model('EdgePatch',
+                                 get_dict(SPECS.get('edges_partial'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def patch(self, edge, key):
         """Partial update edge."""
-
-        edges_parsers.patch_document_parser.parse_args(request)
 
         try:
             data = request.get_json()

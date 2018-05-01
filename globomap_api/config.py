@@ -25,6 +25,7 @@ FLASK_DEBUG = os.getenv('FLASK_DEBUG', False)
 API_PLUGINS_CONFIG_FILE = 'api_plugins'
 CORS = os.getenv('CORS', '').split(',')
 SPECS = {
+    'auth': 'globomap_api/specs/auth.json',
     'documents': 'globomap_api/specs/documents.json',
     'edges': 'globomap_api/specs/edges.json',
     'documents_partial': 'globomap_api/specs/documents_partial.json',

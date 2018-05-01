@@ -24,6 +24,8 @@ from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import graphs as graphs_parsers
+from globomap_api.config import SPECS
+from globomap_api.util import get_dict
 from globomap_api.util import validate
 
 ns = api.namespace('graphs', description='Operations related to graphs')
@@ -56,7 +58,8 @@ class Graph(Resource):
         403: 'Forbidden',
         400: 'Validation Error',
     })
-    @api.expect(graphs_parsers.post_graph_parser)
+    @api.expect(api.schema_model('GraphPost',
+                                 get_dict(SPECS.get('graphs'))))
     @permission_classes((
         permissions.Write, permissions.Graph, permissions.Admin))
     def post(self):

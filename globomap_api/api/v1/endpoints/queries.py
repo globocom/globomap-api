@@ -16,13 +16,11 @@
 from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
-from jsonspec.validators.exceptions import ValidationError
 
 from globomap_api import exceptions as gmap_exc
 from globomap_api.api.v1 import api
 from globomap_api.api.v2 import facade
 from globomap_api.api.v2.parsers import queries as query_parsers
-from globomap_api.util import validate
 
 ns = api.namespace(
     'queries', description='Operations related to queries')
@@ -48,78 +46,12 @@ class Query(Resource):
         queries = facade.list_query(page, per_page)
         return queries, 200
 
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        401: 'Unauthorized',
-        403: 'Forbidden',
-        409: 'Document Already Exists'
-    })
-    @api.expect(query_parsers.post_query_parser)
-    def post(self):
-        """Create queries in DB."""
-
-        query_parsers.post_query_parser.parse_args(request)
-
-        try:
-            data = request.get_json()
-
-            app.logger.debug('Receive Data: %s', data)
-            res = facade.create_query(data)
-            return res, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            app.logger.error(res)
-            api.abort(400, errors=res)
-
-        except gmap_exc.QueryException as error:
-            app.logger.warning(error.message)
-            api.abort(400, errors=error.message)
-
-        except gmap_exc.DocumentAlreadyExist:
-            res = 'Cannot create query, already created.'
-            app.logger.warning(res)
-            api.abort(409, errors=res)
-
 
 @ns.route('/<key>/')
 @api.doc(params={
     'key': 'Key Of Query'
 })
 class DocumentQuery(Resource):
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        401: 'Unauthorized',
-        403: 'Forbidden',
-        404: 'Not Found'
-    })
-    @api.expect(query_parsers.put_query_parser)
-    def put(self, key):
-        """Update query in DB."""
-
-        query_parsers.put_query_parser.parse_args(request)
-
-        try:
-            data = request.get_json()
-            app.logger.debug('Receive Data: %s', data)
-            res = facade.update_query(key, data)
-            return res, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            app.logger.error(res)
-            api.abort(400, errors=res)
-
-        except gmap_exc.QueryException as error:
-            app.logger.warning(error.message)
-            api.abort(400, errors=error.message)
-
-        except gmap_exc.DocumentNotExist as error:
-            app.logger.warning(error.message)
-            api.abort(404, errors=error.message)
 
     @api.doc(responses={
         200: 'Success',

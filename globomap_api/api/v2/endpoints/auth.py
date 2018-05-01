@@ -21,7 +21,8 @@ from globomap_auth_manager import exceptions
 from globomap_api.api.v2 import api
 from globomap_api.api.v2.auth import facade
 from globomap_api.api.v2.auth.exceptions import AuthException
-from globomap_api.api.v2.parsers import auth as auth_parsers
+from globomap_api.config import SPECS
+from globomap_api.util import get_dict
 
 ns = api.namespace(
     'auth', description='Operations related to auth')
@@ -34,14 +35,18 @@ class CreateAuth(Resource):
         200: 'Success',
         401: 'Unauthorized',
     })
-    @api.expect(auth_parsers.auth_parser)
+    @api.expect(api.schema_model('Auth', get_dict(SPECS.get('auth'))))
     def post(self):
         """Create token"""
 
         try:
             data = request.get_json()
-            username = data.get('username')
-            password = data.get('password')
+            if type(data) is dict:
+                username = data.get('username')
+                password = data.get('password')
+            else:
+                username = None
+                password = None
             if not username or not password:
                 app.logger.error('Username and Password is required.')
                 api.abort(401, errors='Username and Password is required.')

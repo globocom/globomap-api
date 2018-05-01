@@ -16,7 +16,6 @@
 import math
 
 from arango.exceptions import GraphTraverseError
-from flask import current_app as app
 
 from globomap_api import exceptions as gmap_exceptions
 from globomap_api import util
@@ -28,9 +27,6 @@ from globomap_api.models.document import Document
 
 def create_graph(data):
     """Create graph in Database"""
-
-    spec = app.config['SPECS'].get('graphs')
-    util.json_validate(spec).validate(data)
 
     constructor = Constructor()
     name = data.get('name')
@@ -44,9 +40,6 @@ def create_graph(data):
 def create_collection_document(data):
     """Create collection in Database"""
 
-    spec = app.config['SPECS'].get('collections')
-    util.json_validate(spec).validate(data)
-
     constructor = Constructor()
     name = data.get('name')
     constructor.factory(
@@ -57,9 +50,6 @@ def create_collection_document(data):
 
 def create_collection_edge(data):
     """Create edge in Database"""
-
-    spec = app.config['SPECS'].get('collections')
-    util.json_validate(spec).validate(data)
 
     constructor = Constructor()
     name = data.get('name')
@@ -94,9 +84,6 @@ def list_collections(kind):
 def create_document(name, data):
     """Create document in Database"""
 
-    spec = app.config['SPECS'].get('documents')
-    util.json_validate(spec).validate(data)
-
     constructor = Constructor()
     inst_coll = constructor.factory(kind='Collection', name=name)
 
@@ -119,9 +106,6 @@ def create_document(name, data):
 
 def create_edge(name, data):
     """Create document-edge in Database"""
-
-    spec = app.config['SPECS'].get('edges')
-    util.json_validate(spec).validate(data)
 
     constructor = Constructor()
     inst_edge = constructor.factory(kind='Edges', name=name)
@@ -171,9 +155,6 @@ def update_edge(name, key, data):
     """Update edge from Database"""
 
     get_edge(name, key)
-
-    spec = app.config['SPECS'].get('edges')
-    util.json_validate(spec).validate(data)
     edge = {
         '_key': key,
         '_from': data['from'],
@@ -199,9 +180,6 @@ def update_document(name, key, data):
     """Update document from Database"""
 
     get_document(name, key)
-
-    spec = app.config['SPECS'].get('documents')
-    util.json_validate(spec).validate(data)
     document = {
         '_key': key,
         'id': data['id'],
@@ -225,9 +203,6 @@ def patch_edge(name, key, data):
     """Partial update edge from Database"""
 
     edge = get_edge(name, key)
-
-    spec = app.config['SPECS'].get('edges_partial')
-    util.json_validate(spec).validate(data)
     for key in data:
         if key == 'from':
             edge['_from'] = data[key]
@@ -258,9 +233,6 @@ def patch_document(name, key, data):
     """Partial update document from Database"""
 
     document = get_document(name, key)
-
-    spec = app.config['SPECS'].get('documents_partial')
-    util.json_validate(spec).validate(data)
 
     for key in data:
         if key == 'properties':
@@ -359,9 +331,6 @@ def search_traversal(**kwargs):
 def search(name, data, page, per_page):
     """Search in Database"""
 
-    spec = app.config['SPECS'].get('search')
-    util.json_validate(spec).validate(data)
-
     db_inst = DB()
 
     db_inst.get_database()
@@ -386,9 +355,6 @@ def search(name, data, page, per_page):
 def clear_collection(name, data):
     """Clear document in Collection"""
 
-    spec = app.config['SPECS'].get('search')
-    util.json_validate(spec).validate(data)
-
     db_inst = DB()
 
     db_inst.get_database()
@@ -399,9 +365,6 @@ def clear_collection(name, data):
 
 def search_collections(collections, data, page, per_page):
     """Search in Database"""
-
-    spec = app.config['SPECS'].get('search')
-    util.json_validate(spec).validate(data)
 
     db_inst = DB()
 
@@ -430,9 +393,6 @@ def search_collections(collections, data, page, per_page):
 
 def make_query(data):
     """Validate query and make document"""
-
-    spec = app.config['SPECS'].get('queries')
-    util.json_validate(spec).validate(data)
 
     query = data
     key = 'query_{}'.format(data.get('name'))

@@ -25,6 +25,13 @@
           ]
         },
         "value": {
+          "type": [
+            "string",
+            "boolean",
+            "integer",
+            "array",
+            "object"
+          ],
           "minimum": 1
         }
       },

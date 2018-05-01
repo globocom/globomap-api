@@ -27,6 +27,8 @@ from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import collections as coll_parsers
+from globomap_api.config import SPECS
+from globomap_api.util import get_dict
 from globomap_api.util import validate
 
 ns = api.namespace(
@@ -61,13 +63,12 @@ class Collections(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(coll_parsers.post_coll_parser)
-    @permission_classes((
-        permissions.Write, permissions.Collection, permissions.Admin))
+    @api.expect(api.schema_model('Collections',
+                                 get_dict(SPECS.get('collections'))))
+    @permission_classes((permissions.Write, permissions.Collection,
+                         permissions.Admin))
     def post(self):
         """Create collection of kind document in DB."""
-
-        coll_parsers.post_coll_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -152,12 +153,11 @@ class Collection(Resource):
         404: 'Not Found',
         409: 'Document Already Exists'
     })
-    @api.expect(coll_parsers.post_document_parser)
+    @api.expect(api.schema_model('DocumentPost',
+                                 get_dict(SPECS.get('documents'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def post(self, collection):
         """Insert document in DB."""
-
-        coll_parsers.post_document_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -236,12 +236,11 @@ class CollectionClear(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(coll_parsers.clear_document_parser)
+    @api.expect(api.schema_model('DocumentClear',
+                                 get_dict(SPECS.get('clear'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def post(self, collection):
         """Clear documents in collection."""
-
-        coll_parsers.clear_document_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -279,12 +278,11 @@ class Document(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(coll_parsers.put_document_parser)
+    @api.expect(api.schema_model('DocumentPut',
+                                 get_dict(SPECS.get('documents'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def put(self, collection, key):
         """Update document."""
-
-        coll_parsers.put_document_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -312,12 +310,11 @@ class Document(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(coll_parsers.patch_document_parser)
+    @api.expect(api.schema_model('DocumentPatch',
+                                 get_dict(SPECS.get('documents_partial'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def patch(self, collection, key):
         """Partial update document."""
-
-        coll_parsers.patch_document_parser.parse_args(request)
 
         try:
             data = request.get_json()

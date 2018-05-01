@@ -13,19 +13,7 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from flask_restplus import reqparse
-
 from globomap_api.api.v2.parsers import base
-
-post_coll_parser = reqparse.RequestParser()
-post_coll_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Collection',
-    location='json'
-)
-
 
 search_all_parser = base.search_parser.copy()
 search_all_parser.add_argument(
@@ -37,39 +25,3 @@ search_all_parser.add_argument(
 )
 
 search_parser = base.search_parser.copy()
-
-post_document_parser = reqparse.RequestParser()
-post_document_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Document',
-    location='json'
-)
-
-put_document_parser = reqparse.RequestParser()
-put_document_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Document',
-    location='json'
-)
-
-patch_document_parser = reqparse.RequestParser()
-patch_document_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Document',
-    location='json'
-)
-
-clear_document_parser = reqparse.RequestParser()
-clear_document_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Query',
-    location='json'
-)

@@ -24,6 +24,8 @@ from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import queries as query_parsers
+from globomap_api.config import SPECS
+from globomap_api.util import get_dict
 from globomap_api.util import validate
 
 ns = api.namespace(
@@ -64,13 +66,12 @@ class Query(Resource):
         403: 'Forbidden',
         409: 'Document Already Exists'
     })
-    @api.expect(query_parsers.post_query_parser)
+    @api.expect(api.schema_model('QueryPost',
+                                 get_dict(SPECS.get('queries'))))
     @permission_classes((
         permissions.Write, permissions.Collection, permissions.Admin))
     def post(self):
         """Create queries in DB."""
-
-        query_parsers.post_query_parser.parse_args(request)
 
         try:
             data = request.get_json()
@@ -113,12 +114,11 @@ class DocumentQuery(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(query_parsers.put_query_parser)
+    @api.expect(api.schema_model('QueryPut',
+                                 get_dict(SPECS.get('queries'))))
     @permission_classes((permissions.Write, permissions.Collection, permissions.Admin))
     def put(self, key):
         """Update query in DB."""
-
-        query_parsers.put_query_parser.parse_args(request)
 
         try:
             data = request.get_json()

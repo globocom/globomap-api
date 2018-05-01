@@ -126,12 +126,3 @@ traversal_parser.add_argument(
     default=None,
     help='Expander Function'
 )
-
-post_graph_parser = reqparse.RequestParser()
-post_graph_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Graph',
-    location='json'
-)

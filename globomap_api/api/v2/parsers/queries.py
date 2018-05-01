@@ -15,24 +15,6 @@
 """
 from flask_restplus import reqparse
 
-post_query_parser = reqparse.RequestParser()
-post_query_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Collection',
-    location='json'
-)
-
-put_query_parser = reqparse.RequestParser()
-put_query_parser.add_argument(
-    'data',
-    type=str,
-    required=True,
-    help='Document',
-    location='json'
-)
-
 search_query_parser = reqparse.RequestParser()
 search_query_parser.add_argument(
     'page',
