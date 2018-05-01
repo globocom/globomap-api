@@ -1,13 +1,15 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+
   "type": "object",
   "additionalProperties": false,
   "properties": {
     "from": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^(([a-z_]){1,}\/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
     },
     "to": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^(([a-z_]){1,}\/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
     },
     "id": {
       "type": "string",
@@ -18,7 +20,9 @@
       "type": "string"
     },
     "provider": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^([a-z_]){1,}$",
+      "minimum": 1
     },
     "timestamp": {
       "type": "number"

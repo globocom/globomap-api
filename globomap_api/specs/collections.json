@@ -1,10 +1,11 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "additionalProperties": false,
   "properties": {
     "name": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^([a-z_]){1,}$",
+      "minimum": 1
     }
   },
   "required": [

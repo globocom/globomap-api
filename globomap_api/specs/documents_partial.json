@@ -1,5 +1,5 @@
 {
-  "$schema": "http://json-schema.org/draft-04/schema#",
+
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -12,7 +12,9 @@
       "type": "string"
     },
     "provider": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^([a-z_]){1,}$",
+      "minimum": 1
     },
     "timestamp": {
       "type": "number"

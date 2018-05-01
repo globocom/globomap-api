@@ -69,8 +69,6 @@ class Edges(Resource):
     def post(self):
         """Create collection of kind edge in DB."""
 
-        edges_parsers.post_edge_parser.parse_args(request)
-
         try:
             data = request.get_json()
             app.logger.debug('Receive Data: %s', data)
@@ -94,7 +92,7 @@ class Edges(Resource):
     required=True,
     default='Token token='
 )
-class Search(Resource):
+class EdgeSearch(Resource):
 
     @api.doc(responses={
         200: 'Success',
@@ -264,7 +262,7 @@ class Edge(Resource):
     required=True,
     default='Token token='
 )
-class Document(Resource):
+class DocumentEdge(Resource):
 
     @api.doc(responses={
         200: 'Success',

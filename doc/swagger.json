@@ -1,0 +1,1929 @@
+{
+    "swagger": "2.0",
+    "basePath": "/v2",
+    "paths": {
+        "/auth/": {
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "summary": "Create token",
+                "operationId": "post_create_auth",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Auth"
+                        }
+                    }
+                ],
+                "tags": [
+                    "auth"
+                ]
+            }
+        },
+        "/collections/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "summary": "List all collections of kind document from DB",
+                "operationId": "get_collections",
+                "tags": [
+                    "collections"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Create collection of kind document in DB",
+                "operationId": "post_collections",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Collections"
+                        }
+                    }
+                ],
+                "tags": [
+                    "collections"
+                ]
+            }
+        },
+        "/collections/search/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Search document in collections of kind document from DB",
+                "operationId": "get_search",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Page number",
+                        "default": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Items number per page",
+                        "default": 10
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Query",
+                        "default": "[[{\"field\":\"name\",\"operator\":\"LIKE\",\"value\":\"\"}]]"
+                    },
+                    {
+                        "name": "collections",
+                        "in": "query",
+                        "type": "string",
+                        "required": true,
+                        "description": "Collections"
+                    }
+                ],
+                "tags": [
+                    "collections"
+                ]
+            }
+        },
+        "/collections/{collection}/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Name Of Collection",
+                    "name": "collection",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Document Already Exists"
+                    }
+                },
+                "summary": "Search documents from collection",
+                "operationId": "get_collection",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Page number",
+                        "default": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Items number per page",
+                        "default": 10
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Query",
+                        "default": "[[{\"field\":\"name\",\"operator\":\"LIKE\",\"value\":\"\"}]]"
+                    }
+                ],
+                "tags": [
+                    "collections"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Document Already Exists"
+                    }
+                },
+                "summary": "Insert document in DB",
+                "operationId": "post_collection",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/DocumentPost"
+                        }
+                    }
+                ],
+                "tags": [
+                    "collections"
+                ]
+            }
+        },
+        "/collections/{collection}/clear/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Name Of Collection",
+                    "name": "collection",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Clear documents in collection",
+                "operationId": "post_collection_clear",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/DocumentClear"
+                        }
+                    }
+                ],
+                "tags": [
+                    "collections"
+                ]
+            }
+        },
+        "/collections/{collection}/{key}/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Name Of Collection",
+                    "name": "collection",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "description": "Key Of Document",
+                    "name": "key",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Delete document by key",
+                "operationId": "delete_document",
+                "tags": [
+                    "collections"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Get document by key",
+                "operationId": "get_document",
+                "tags": [
+                    "collections"
+                ]
+            },
+            "patch": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Partial update document",
+                "operationId": "patch_document",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/DocumentPatch"
+                        }
+                    }
+                ],
+                "tags": [
+                    "collections"
+                ]
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Update document",
+                "operationId": "put_document",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/DocumentPut"
+                        }
+                    }
+                ],
+                "tags": [
+                    "collections"
+                ]
+            }
+        },
+        "/edges/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "summary": "List all collections of kind edge from DB",
+                "operationId": "get_edges",
+                "tags": [
+                    "edges"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Create collection of kind edge in DB",
+                "operationId": "post_edges",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/Edge"
+                        }
+                    }
+                ],
+                "tags": [
+                    "edges"
+                ]
+            }
+        },
+        "/edges/search/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Search edge in collections of kind edge from DB",
+                "operationId": "get_edge_search",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Page number",
+                        "default": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Items number per page",
+                        "default": 10
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Query",
+                        "default": "[[{\"field\":\"name\",\"operator\":\"LIKE\",\"value\":\"\"}]]"
+                    },
+                    {
+                        "name": "edges",
+                        "in": "query",
+                        "type": "string",
+                        "required": true,
+                        "description": "Edges Document"
+                    }
+                ],
+                "tags": [
+                    "edges"
+                ]
+            }
+        },
+        "/edges/{edge}/": {
+            "parameters": [
+                {
+                    "description": "Name Of Edge(Collection)",
+                    "name": "edge",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Search documents from collection",
+                "operationId": "get_edge",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Page number",
+                        "default": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Items number per page",
+                        "default": 10
+                    },
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Query",
+                        "default": "[[{\"field\":\"name\",\"operator\":\"LIKE\",\"value\":\"\"}]]"
+                    }
+                ],
+                "tags": [
+                    "edges"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    },
+                    "409": {
+                        "description": "Document Already Exists"
+                    }
+                },
+                "summary": "Insert edge in DB",
+                "operationId": "post_edge",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/EdgePost"
+                        }
+                    }
+                ],
+                "tags": [
+                    "edges"
+                ]
+            }
+        },
+        "/edges/{edge}/clear/": {
+            "parameters": [
+                {
+                    "description": "Name Of Edge(Collection)",
+                    "name": "edge",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Clear documents in edge",
+                "operationId": "post_edge_clear",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/EdgeClear"
+                        }
+                    }
+                ],
+                "tags": [
+                    "edges"
+                ]
+            }
+        },
+        "/edges/{edge}/{key}/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Name Of Edge(Collection)",
+                    "name": "edge",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                },
+                {
+                    "description": "Key Of Document",
+                    "name": "key",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Delete edge by key",
+                "operationId": "delete_document_edge",
+                "tags": [
+                    "edges"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Get edge by key",
+                "operationId": "get_document_edge",
+                "tags": [
+                    "edges"
+                ]
+            },
+            "patch": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Partial update edge",
+                "operationId": "patch_document_edge",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/EdgePatch"
+                        }
+                    }
+                ],
+                "tags": [
+                    "edges"
+                ]
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Update edge",
+                "operationId": "put_document_edge",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/EdgePut"
+                        }
+                    }
+                ],
+                "tags": [
+                    "edges"
+                ]
+            }
+        },
+        "/graphs/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "summary": "List all graphs from DB",
+                "operationId": "get_graph",
+                "tags": [
+                    "graphs"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "summary": "Create graph in DB",
+                "operationId": "post_graph",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/GraphPost"
+                        }
+                    }
+                ],
+                "tags": [
+                    "graphs"
+                ]
+            }
+        },
+        "/graphs/{graph}/traversal/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Name Of Graph",
+                    "name": "graph",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Search traversal",
+                "operationId": "get_graph_traversal",
+                "parameters": [
+                    {
+                        "name": "start_vertex",
+                        "in": "query",
+                        "type": "string",
+                        "required": true,
+                        "description": "Start Vertex"
+                    },
+                    {
+                        "name": "direction",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Direction",
+                        "default": "outbound",
+                        "enum": [
+                            "outbound",
+                            "inbound",
+                            "any"
+                        ],
+                        "collectionFormat": "multi"
+                    },
+                    {
+                        "name": "item_order",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Item Order",
+                        "default": "forward",
+                        "enum": [
+                            "forward",
+                            "backward"
+                        ],
+                        "collectionFormat": "multi"
+                    },
+                    {
+                        "name": "strategy",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Strategy",
+                        "default": "dfs",
+                        "enum": [
+                            "dfs",
+                            "bfs"
+                        ],
+                        "collectionFormat": "multi"
+                    },
+                    {
+                        "name": "order",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Order",
+                        "enum": [
+                            "preorder",
+                            "postorder",
+                            "preorder-expander"
+                        ],
+                        "collectionFormat": "multi"
+                    },
+                    {
+                        "name": "edge_uniqueness",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Edge Uniqueness",
+                        "enum": [
+                            "global",
+                            "path"
+                        ],
+                        "collectionFormat": "multi"
+                    },
+                    {
+                        "name": "vertex_uniqueness",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Vertex Uniqueness",
+                        "enum": [
+                            "global",
+                            "path"
+                        ],
+                        "collectionFormat": "multi"
+                    },
+                    {
+                        "name": "max_iter",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Max Iteration"
+                    },
+                    {
+                        "name": "min_depth",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Min Depth"
+                    },
+                    {
+                        "name": "max_depth",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Max Depth",
+                        "default": 1
+                    },
+                    {
+                        "name": "init_func",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Init Func"
+                    },
+                    {
+                        "name": "sort_func",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Sort Function"
+                    },
+                    {
+                        "name": "filter_func",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Filter Function"
+                    },
+                    {
+                        "name": "visitor_func",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Visitor Function"
+                    },
+                    {
+                        "name": "expander_func",
+                        "in": "query",
+                        "type": "string",
+                        "description": "Expander Function"
+                    }
+                ],
+                "tags": [
+                    "graphs"
+                ]
+            }
+        },
+        "/healthcheck/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "503": {
+                        "description": "Service Unavailable"
+                    }
+                },
+                "operationId": "get_healthcheck",
+                "tags": [
+                    "healthcheck"
+                ]
+            }
+        },
+        "/healthcheck/deps/": {
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    }
+                },
+                "operationId": "get_healthcheck_deps",
+                "tags": [
+                    "healthcheck"
+                ]
+            }
+        },
+        "/plugin_data/{plugin_name}/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Name Of Plugin",
+                    "name": "plugin_name",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "operationId": "get_plugin_data",
+                "parameters": [
+                    {
+                        "name": "ips",
+                        "in": "query",
+                        "type": "string",
+                        "description": "IPs"
+                    },
+                    {
+                        "name": "graphid",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Id of Graph"
+                    },
+                    {
+                        "name": "encoded",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Encode Image Base64"
+                    }
+                ],
+                "tags": [
+                    "plugin_data"
+                ]
+            }
+        },
+        "/queries/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "summary": "List all queries from DB",
+                "operationId": "get_query",
+                "parameters": [
+                    {
+                        "name": "page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Page number",
+                        "default": 1
+                    },
+                    {
+                        "name": "per_page",
+                        "in": "query",
+                        "type": "integer",
+                        "description": "Items number per page",
+                        "default": 10
+                    }
+                ],
+                "tags": [
+                    "queries"
+                ]
+            },
+            "post": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "409": {
+                        "description": "Document Already Exists"
+                    }
+                },
+                "summary": "Create queries in DB",
+                "operationId": "post_query",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/QueryPost"
+                        }
+                    }
+                ],
+                "tags": [
+                    "queries"
+                ]
+            }
+        },
+        "/queries/{key}/": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Key Of Query",
+                    "name": "key",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "delete": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Delete query by key",
+                "operationId": "delete_document_query",
+                "tags": [
+                    "queries"
+                ]
+            },
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Get query by key",
+                "operationId": "get_document_query",
+                "tags": [
+                    "queries"
+                ]
+            },
+            "put": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Update query in DB",
+                "operationId": "put_document_query",
+                "parameters": [
+                    {
+                        "name": "payload",
+                        "required": true,
+                        "in": "body",
+                        "schema": {
+                            "$ref": "#/definitions/QueryPut"
+                        }
+                    }
+                ],
+                "tags": [
+                    "queries"
+                ]
+            }
+        },
+        "/queries/{key}/execute": {
+            "parameters": [
+                {
+                    "required": true,
+                    "default": "Token token=",
+                    "in": "header",
+                    "description": "Token Authorization",
+                    "name": "Authorization",
+                    "type": "string"
+                },
+                {
+                    "description": "Key Of Query",
+                    "name": "key",
+                    "in": "path",
+                    "required": true,
+                    "type": "string"
+                }
+            ],
+            "get": {
+                "responses": {
+                    "200": {
+                        "description": "Success"
+                    },
+                    "400": {
+                        "description": "Validation Error"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "summary": "Get query by key",
+                "operationId": "get_execute_query",
+                "parameters": [
+                    {
+                        "name": "variable",
+                        "in": "query",
+                        "type": "string",
+                        "required": true,
+                        "description": "Variable"
+                    }
+                ],
+                "tags": [
+                    "queries"
+                ]
+            }
+        }
+    },
+    "info": {
+        "title": "GloboMap API",
+        "version": "2.0",
+        "description": "GloboMap API"
+    },
+    "produces": [
+        "application/json"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "tags": [
+        {
+            "name": "default",
+            "description": "Default namespace"
+        },
+        {
+            "name": "auth",
+            "description": "Operations related to auth"
+        },
+        {
+            "name": "collections",
+            "description": "Operations related to collections"
+        },
+        {
+            "name": "edges",
+            "description": "Operations related to edges"
+        },
+        {
+            "name": "graphs",
+            "description": "Operations related to graphs"
+        },
+        {
+            "name": "queries",
+            "description": "Operations related to queries"
+        },
+        {
+            "name": "healthcheck",
+            "description": "Healthcheck"
+        },
+        {
+            "name": "plugin_data",
+            "description": "Plugins"
+        }
+    ],
+    "definitions": {
+        "Auth": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "username": {
+                    "type": "string"
+                },
+                "password": {
+                    "type": "string"
+                }
+            },
+            "required": [
+                "username",
+                "password"
+            ]
+        },
+        "Collections": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "DocumentPost": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^([a-zA-Z0-9=._-]){1,}$",
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                },
+                "timestamp": {
+                    "type": "number"
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "properties_metadata": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "id",
+                "provider",
+                "timestamp"
+            ]
+        },
+        "DocumentClear": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "field": {
+                            "type": "string",
+                            "minimum": 1
+                        },
+                        "operator": {
+                            "type": "string",
+                            "enum": [
+                                "LIKE",
+                                "IN",
+                                "==",
+                                "!=",
+                                ">",
+                                ">=",
+                                "<",
+                                "<="
+                            ]
+                        },
+                        "value": {
+                            "type": [
+                                "string",
+                                "boolean",
+                                "integer",
+                                "array",
+                                "object"
+                            ],
+                            "minimum": 1
+                        }
+                    },
+                    "required": [
+                        "field",
+                        "operator",
+                        "value"
+                    ]
+                }
+            }
+        },
+        "DocumentPatch": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^([a-zA-Z0-9=._-]){1,}$",
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                },
+                "timestamp": {
+                    "type": "number"
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "properties_metadata": {
+                    "type": "object"
+                }
+            }
+        },
+        "DocumentPut": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "pattern": "^([a-zA-Z0-9=._-]){1,}$",
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                },
+                "timestamp": {
+                    "type": "number"
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "properties_metadata": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "id",
+                "provider",
+                "timestamp"
+            ]
+        },
+        "Edge": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                }
+            },
+            "required": [
+                "name"
+            ]
+        },
+        "EdgeClear": {
+            "type": "array",
+            "items": {
+                "type": "array",
+                "items": {
+                    "type": "object",
+                    "additionalProperties": false,
+                    "properties": {
+                        "field": {
+                            "type": "string",
+                            "minimum": 1
+                        },
+                        "operator": {
+                            "type": "string",
+                            "enum": [
+                                "LIKE",
+                                "IN",
+                                "==",
+                                "!=",
+                                ">",
+                                ">=",
+                                "<",
+                                "<="
+                            ]
+                        },
+                        "value": {
+                            "type": [
+                                "string",
+                                "boolean",
+                                "integer",
+                                "array",
+                                "object"
+                            ],
+                            "minimum": 1
+                        }
+                    },
+                    "required": [
+                        "field",
+                        "operator",
+                        "value"
+                    ]
+                }
+            }
+        },
+        "EdgePost": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "from": {
+                    "type": "string",
+                    "pattern": "^(([a-z_]){1,}/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
+                },
+                "to": {
+                    "type": "string",
+                    "pattern": "^(([a-z_]){1,}/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
+                },
+                "id": {
+                    "type": "string",
+                    "pattern": "^([a-zA-Z0-9=._-]){1,}$",
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                },
+                "timestamp": {
+                    "type": "number"
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "properties_metadata": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "id",
+                "provider",
+                "timestamp",
+                "from",
+                "to"
+            ]
+        },
+        "EdgePatch": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "from": {
+                    "type": "string",
+                    "pattern": "^(([a-z_]){1,}/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
+                },
+                "to": {
+                    "type": "string",
+                    "pattern": "^(([a-z_]){1,}/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
+                },
+                "id": {
+                    "type": "string",
+                    "pattern": "^([a-zA-Z0-9=._-]){1,}$",
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                },
+                "timestamp": {
+                    "type": "number"
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "properties_metadata": {
+                    "type": "object"
+                }
+            }
+        },
+        "EdgePut": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "from": {
+                    "type": "string",
+                    "pattern": "^(([a-z_]){1,}/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
+                },
+                "to": {
+                    "type": "string",
+                    "pattern": "^(([a-z_]){1,}/([a-z_]){1,}_([a-zA-Z0-9=._-]){1,})$"
+                },
+                "id": {
+                    "type": "string",
+                    "pattern": "^([a-zA-Z0-9=._-]){1,}$",
+                    "minimum": 1
+                },
+                "name": {
+                    "type": "string"
+                },
+                "provider": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$",
+                    "minimum": 1
+                },
+                "timestamp": {
+                    "type": "number"
+                },
+                "properties": {
+                    "type": "object"
+                },
+                "properties_metadata": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "id",
+                "provider",
+                "timestamp",
+                "from",
+                "to"
+            ]
+        },
+        "GraphPost": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "pattern": "^([a-z_]){1,}$"
+                },
+                "links": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "additionalProperties": false,
+                        "properties": {
+                            "edge": {
+                                "type": "string"
+                            },
+                            "from_collections": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minItems": 1
+                            },
+                            "to_collections": {
+                                "type": "array",
+                                "items": {
+                                    "type": "string"
+                                },
+                                "minItems": 1
+                            }
+                        },
+                        "required": [
+                            "edge",
+                            "from_collections",
+                            "to_collections"
+                        ]
+                    }
+                }
+            }
+        },
+        "QueryPost": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "params": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "name",
+                "description",
+                "query",
+                "params"
+            ]
+        },
+        "QueryPut": {
+            "type": "object",
+            "additionalProperties": false,
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "query": {
+                    "type": "string"
+                },
+                "params": {
+                    "type": "object"
+                }
+            },
+            "required": [
+                "name",
+                "description",
+                "query",
+                "params"
+            ]
+        }
+    },
+    "responses": {
+        "ParseError": {
+            "description": "When a mask can't be parsed"
+        },
+        "MaskError": {
+            "description": "When any error occurs on mask"
+        }
+    }
+}

@@ -33,6 +33,7 @@ def create_app():
     app.config['LOGGER_HANDLER_POLICY'] = 'default'
     app.config['LOGGER_NAME'] = 'api'
     app.config['BUNDLE_ERRORS'] = True
+    app.config['RESTPLUS_VALIDATE'] = True
 
     app.logger
     config.dictConfig(app_config.LOGGING)
