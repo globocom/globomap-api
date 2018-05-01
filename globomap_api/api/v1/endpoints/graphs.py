@@ -30,6 +30,7 @@ logger = logging.getLogger(__name__)
 ns = api.namespace('graphs', description='Operations related to graphs')
 
 
+@ns.deprecated
 @ns.route('/')
 class Graph(Resource):
 
@@ -57,6 +58,7 @@ class Graph(Resource):
             api.abort(400, errors=res)
 
 
+@ns.deprecated
 @ns.route('/<graph>/traversal/')
 @api.doc(params={'graph': 'Name Of Graph'})
 class GraphTraversal(Resource):

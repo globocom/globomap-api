@@ -28,6 +28,7 @@ def text(data, code, headers=None):
     return flask.make_response(six.text_type(data))
 
 
+@ns.deprecated
 @ns.route('/')
 class Healthcheck(Resource):
     representations = {
@@ -49,6 +50,7 @@ class Healthcheck(Resource):
         return 'WORKING', 200
 
 
+@ns.deprecated
 @ns.route('/deps/')
 class HealthcheckDeps(Resource):
 

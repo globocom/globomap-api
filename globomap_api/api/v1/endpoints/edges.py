@@ -34,6 +34,7 @@ logger = logging.getLogger(__name__)
 ns = api.namespace('edges', description='Operations related to edges')
 
 
+@ns.deprecated
 @ns.route('/')
 class Edges(Resource):
 
@@ -66,6 +67,7 @@ class Edges(Resource):
             api.abort(404, errors=err.message)
 
 
+@ns.deprecated
 @ns.route('/search/')
 class Search(Resource):
 
@@ -102,6 +104,7 @@ class Search(Resource):
             api.abort(400, errors=res)
 
 
+@ns.deprecated
 @ns.route('/<edge>/clear/')
 @api.doc(params={'edge': 'Name Of Edge(Collection)'})
 class EdgeClear(Resource):
@@ -128,6 +131,7 @@ class EdgeClear(Resource):
             api.abort(400, errors=res)
 
 
+@ns.deprecated
 @ns.route('/<edge>/')
 @api.doc(params={'edge': 'Name Of Edge(Collection)'})
 class Edge(Resource):
@@ -191,6 +195,7 @@ class Edge(Resource):
             api.abort(400, errors=res)
 
 
+@ns.deprecated
 @ns.route('/<edge>/<key>/')
 @api.doc(params={
     'edge': 'Name Of Edge(Collection)',

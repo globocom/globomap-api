@@ -26,6 +26,7 @@ ns = api.namespace(
     'queries', description='Operations related to queries')
 
 
+@ns.deprecated
 @ns.route('/')
 class Query(Resource):
 
@@ -47,6 +48,7 @@ class Query(Resource):
         return queries, 200
 
 
+@ns.deprecated
 @ns.route('/<key>/')
 @api.doc(params={
     'key': 'Key Of Query'
@@ -89,6 +91,7 @@ class DocumentQuery(Resource):
             api.abort(404, errors=error.message)
 
 
+@ns.deprecated
 @ns.route('/<key>/execute')
 @api.doc(params={
     'key': 'Key Of Query'

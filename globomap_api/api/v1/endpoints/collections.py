@@ -34,6 +34,7 @@ ns = api.namespace(
     'collections', description='Operations related to collections')
 
 
+@ns.deprecated
 @ns.route('/')
 class Collections(Resource):
 
@@ -66,6 +67,7 @@ class Collections(Resource):
             api.abort(404, errors=err.message)
 
 
+@ns.deprecated
 @ns.route('/search/')
 class Search(Resource):
 
@@ -103,6 +105,7 @@ class Search(Resource):
             api.abort(400, errors=res)
 
 
+@ns.deprecated
 @ns.route('/<collection>/')
 @api.doc(params={'collection': 'Name Of Collection'})
 class Collection(Resource):
@@ -166,6 +169,7 @@ class Collection(Resource):
             api.abort(400, errors=res)
 
 
+@ns.deprecated
 @ns.route('/<collection>/clear/')
 @api.doc(params={'collection': 'Name Of Collection'})
 class CollectionClear(Resource):
@@ -192,6 +196,7 @@ class CollectionClear(Resource):
             api.abort(400, errors=res)
 
 
+@ns.deprecated
 @ns.route('/<collection>/<key>/')
 @api.doc(params={
     'collection': 'Name Of Collection',

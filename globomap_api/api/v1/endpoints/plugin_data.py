@@ -29,6 +29,7 @@ log = logging.getLogger(__name__)
 ns = api.namespace('plugin_data', description='Plugins')
 
 
+@ns.deprecated
 @ns.route('/<plugin_name>/')
 @api.doc(params={'plugin_name': 'Name Of Plugin'})
 class PluginData(Resource):
