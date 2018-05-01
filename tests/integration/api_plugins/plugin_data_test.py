@@ -14,21 +14,24 @@
    limitations under the License.
 """
 import json
+from unittest.mock import Mock
+from unittest.mock import patch
 
 import unittest2
-from unittest.mock import patch, Mock
+
 from globomap_api.app import create_app
 
 
 class TestPluginData(unittest2.TestCase):
 
     def setUp(self):
-        patch('globomap_api.api_plugins.zabbix.os.getenv').start()
+        patch('globomap_api.api_plugins.zabbix.config').start()
         self.app = create_app('tests.config')
         self.client = self.app.test_client()
 
         self.hosts = {'result': [{'hostid': 1}]}
-        self.triggers = {'result': [{'triggerid': 1, 'description': 'CPU 99%', 'value': 1}]}
+        self.triggers = {'result': [
+            {'triggerid': 1, 'description': 'CPU 99%', 'value': 1}]}
 
     def test_get_zabbix_data(self):
         self._mock_zabbix_api(self.hosts, self.triggers)
@@ -59,7 +62,8 @@ class TestPluginData(unittest2.TestCase):
         return self.client.get(uri, follow_redirects=True)
 
     def _mock_zabbix_api(self, hosts, triggers=None):
-        py_zabbix_mock = patch('globomap_api.api_plugins.zabbix.ZabbixAPI').start()
+        py_zabbix_mock = patch(
+            'globomap_api.api_plugins.zabbix.ZabbixAPI').start()
         do_request_mock = Mock()
         do_request_mock.do_request.side_effect = [hosts, triggers]
         py_zabbix_mock.return_value = do_request_mock

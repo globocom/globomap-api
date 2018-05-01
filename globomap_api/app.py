@@ -25,10 +25,10 @@ from globomap_api.api.v1.api import blueprint as api_v1
 from globomap_api.api.v2.api import blueprint as api_v2
 
 
-def create_app():
+def create_app(config_module=None):
     app = Flask(__name__)
     app.secret_key = binascii.hexlify(os.urandom(24))
-    app.config.from_object(os.environ.get('FLASK_CONFIG') or
+    app.config.from_object(config_module or os.environ.get('FLASK_CONFIG') or
                            'globomap_api.config')
     app.config['LOGGER_HANDLER_POLICY'] = 'default'
     app.config['LOGGER_NAME'] = 'api'

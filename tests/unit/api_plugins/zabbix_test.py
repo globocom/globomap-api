@@ -13,17 +13,21 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from unittest.mock import Mock
+from unittest.mock import patch
+
 import unittest2
-from unittest.mock import patch, Mock
+
 from globomap_api.api_plugins.zabbix import ZabbixPlugin
 
 
 class TestZabbix(unittest2.TestCase):
 
     def setUp(self):
-        patch('globomap_api.api_plugins.zabbix.os.getenv').start()
-        self.hosts = {'result':[{'hostid': 1}]}
-        self.triggers = {'result':[{'triggerid': 1, 'description': 'CPU 99%', 'value': 1}]}
+        patch('globomap_api.api_plugins.zabbix.config').start()
+        self.hosts = {'result': [{'hostid': 1}]}
+        self.triggers = {'result': [
+            {'triggerid': 1, 'description': 'CPU 99%', 'value': 1}]}
 
     def test_get_triggers(self):
         self._mock_py_zabbix(self.hosts, self.triggers)
@@ -38,14 +42,16 @@ class TestZabbix(unittest2.TestCase):
         try:
             ZabbixPlugin().get_data({})
         except Exception as e:
-            self.assertEquals("The field 'ips' is required", str(e))
+            self.assertEquals(
+                "The field 'ips' or 'graphid' is required", str(e))
 
     def test_get_triggers_given_host_not_found(self):
         try:
-            self._mock_py_zabbix({'result':[]})
+            self._mock_py_zabbix({'result': []})
             ZabbixPlugin().get_data({'ips': '10.0.0.1'})
         except Exception as e:
-            self.assertEquals("No hosts were found for IPs ['10.0.0.1']", str(e))
+            self.assertEquals(
+                "No hosts were found for IPs ['10.0.0.1']", str(e))
 
     def test_get_triggers_given_triggers_not_found(self):
         self._mock_py_zabbix(self.hosts, {'result': []})
@@ -59,7 +65,8 @@ class TestZabbix(unittest2.TestCase):
             ZabbixPlugin().get_data({'ips': '10.0.0.1'})
 
     def _mock_py_zabbix(self, hosts, triggers=None):
-        py_zabbix_mock = patch('globomap_api.api_plugins.zabbix.ZabbixAPI').start()
+        py_zabbix_mock = patch(
+            'globomap_api.api_plugins.zabbix.ZabbixAPI').start()
         do_request_mock = Mock()
         do_request_mock.do_request.side_effect = [hosts, triggers]
         py_zabbix_mock.return_value = do_request_mock

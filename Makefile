@@ -18,10 +18,9 @@ clean: ## Clear *.pyc files, etc
 	@find . \( -name '*.pyc' -o  -name '__pycache__' -o -name '**/*.pyc' -o -name '*~' \) -delete
 
 exec_tests: clean ## Run all tests with coverage
-	@python3.6 -m unittest discover -s tests/
-	#@run --source=globomap_api -m unittest2 discover -s tests/; coverage report -m
+	@nosetests --verbose --rednose  --nocapture --cover-package=globomap_api --with-coverage; coverage report -m
 
-tests: ## Run tests
+test: ## Run tests
 	@docker exec -it globomap_api make exec_tests
 
 run: ## Run a development web server
