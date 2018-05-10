@@ -20,7 +20,7 @@ clean: ## Clear *.pyc files, etc
 exec_tests: clean ## Run all tests with coverage
 	@nosetests --verbose --rednose  --nocapture --cover-package=globomap_api --with-coverage; coverage report -m
 
-test: ## Run tests
+tests: ## Run tests
 	@docker exec -it globomap_api make exec_tests
 
 run: ## Run a development web server
