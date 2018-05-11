@@ -65,8 +65,6 @@ class Graph(Resource):
     def post(self):
         """Create graph in DB."""
 
-        graphs_parsers.post_graph_parser.parse_args(request)
-
         try:
             data = request.get_json()
             app.logger.debug('Receive Data: %s', data)
