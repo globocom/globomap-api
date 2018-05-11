@@ -38,7 +38,7 @@ def validate_token(token):
         return auth_inst
 
     except exceptions.InvalidToken:
-        app.logger.error('Invalid Token')
+        app.logger.warning('Invalid Token')
         api.abort(401, errors='Invalid Token')
 
     except exceptions.AuthException:
