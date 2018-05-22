@@ -54,6 +54,10 @@ COLLECTION = 'globomap_collection'
 EDGE = 'globomap_edge'
 GRAPH = 'globomap_graph'
 
+META_COLLECTION = 'meta_collection'
+META_GRAPH = 'meta_graph'
+META_QUERY = 'meta_query'
+
 # Logging
 SENTRY_DSN = os.getenv('SENTRY_DSN')
 LOGGING = {

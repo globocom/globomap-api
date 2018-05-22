@@ -17,44 +17,25 @@ import math
 
 from arango.exceptions import GraphTraverseError
 
+from globomap_api import config
 from globomap_api import exceptions as gmap_exceptions
-from globomap_api import util
+from globomap_api.api.v2 import util
 from globomap_api.errors import GRAPH_TRAVERSE as traverse_err
 from globomap_api.models.constructor import Constructor
 from globomap_api.models.db import DB
 from globomap_api.models.document import Document
 
 
+#########
+# GRAPH #
+#########
 def create_graph(data):
     """Create graph in Database"""
 
     constructor = Constructor()
     name = data.get('name')
     links = data.get('links')
-    constructor.factory(
-        kind='Graph', create=True, name=name, links=links)
-
-    return True
-
-
-def create_collection_document(data):
-    """Create collection in Database"""
-
-    constructor = Constructor()
-    name = data.get('name')
-    constructor.factory(
-        kind='Collection', create=True, name=name)
-
-    return True
-
-
-def create_collection_edge(data):
-    """Create edge in Database"""
-
-    constructor = Constructor()
-    name = data.get('name')
-    constructor.factory(
-        kind='Edges', create=True, name=name)
+    constructor.factory(kind='Graph', create=True, name=name, links=links)
 
     return True
 
@@ -69,16 +50,83 @@ def list_graphs():
 
     return graphs
 
+##############
+# COLLECTION #
+##############
 
-def list_collections(kind):
+
+def create_meta_collection_doc(data, kind):
+    """Create document in meta_collection"""
+
+    constructor = Constructor()
+    inst_coll = constructor.factory(
+        kind='Collection', name=config.META_COLLECTION)
+
+    inst_doc = Document(inst_coll)
+    document = {
+        '_key': data.get('name'),
+        'name': data.get('name'),
+        'alias': data.get('alias'),
+        'kind': kind,
+        'icon': data.get('icon'),
+    }
+    doc = inst_doc.create_document(document)
+
+    return doc
+
+
+def create_collection_document(data):
+    """Create collection in Database"""
+
+    constructor = Constructor()
+    name = data.get('name')
+    constructor.factory(kind='document', create=True, name=name)
+    create_meta_collection_doc(data, 'Collection')
+
+    return True
+
+
+def create_collection_edge(data):
+    """Create edge in Database"""
+
+    constructor = Constructor()
+    name = data.get('name')
+    constructor.factory(kind='edge', create=True, name=name)
+    create_meta_collection_doc(data, 'Edges')
+
+    return True
+
+
+def list_collections(kind, page, per_page):
     """Return all collections or edges from Database"""
 
     db_inst = DB()
     db_inst.get_database()
-    collections = db_inst.database.collections()
-    collections = util.filter_collections(collections, kind)
+    data = [[{
+        'field': 'kind',
+        'operator': '==',
+        'value': kind,
+    }]]
+    cursor = db_inst.search_in_collection(
+        config.META_COLLECTION, data, page, per_page)
 
-    return collections
+    total_pages = int(math.ceil(cursor.statistics()[
+                      'fullCount'] / (per_page * 1.0)))
+    total_collections = cursor.statistics()['fullCount']
+
+    collections = util.filter_collections(cursor)
+    res = {
+        'total_pages': total_pages,
+        'total': len(collections),
+        'total_collections': total_collections,
+        'collections': collections
+    }
+
+    return res
+
+############
+# DOCUMENT #
+############
 
 
 def create_document(name, data):
@@ -104,29 +152,6 @@ def create_document(name, data):
     return doc
 
 
-def create_edge(name, data):
-    """Create document-edge in Database"""
-
-    constructor = Constructor()
-    inst_edge = constructor.factory(kind='Edges', name=name)
-    edge = {
-        '_key': util.make_key(data),
-        '_from': data['from'],
-        '_to': data['to'],
-        'id': data['id'],
-        'name': data.get('name', ''),
-        'provider': data['provider'],
-        'timestamp': data['timestamp'],
-        'properties': data.get('properties'),
-        'properties_metadata': data.get('properties_metadata')
-    }
-
-    inst_doc = Document(inst_edge)
-    doc = inst_doc.create_document(edge)
-
-    return doc
-
-
 def get_document(name, key):
     """Get document from Database"""
 
@@ -135,43 +160,6 @@ def get_document(name, key):
 
     inst_doc = Document(inst_coll)
     doc = inst_doc.get_document(key)
-
-    return doc
-
-
-def get_edge(name, key):
-    """Get edge from Database"""
-
-    constructor = Constructor()
-    inst_edge = constructor.factory(kind='Edges', name=name)
-
-    inst_doc = Document(inst_edge)
-    doc = inst_doc.get_document(key)
-
-    return doc
-
-
-def update_edge(name, key, data):
-    """Update edge from Database"""
-
-    get_edge(name, key)
-    edge = {
-        '_key': key,
-        '_from': data['from'],
-        '_to': data['to'],
-        'id': data['id'],
-        'name': data.get('name', ''),
-        'provider': data['provider'],
-        'timestamp': data['timestamp'],
-        'properties': data.get('properties'),
-        'properties_metadata': data.get('properties_metadata')
-    }
-
-    constructor = Constructor()
-    inst_edge = constructor.factory(kind='Edges', name=name)
-
-    inst_doc = Document(inst_edge)
-    doc = inst_doc.update_document(edge)
 
     return doc
 
@@ -195,36 +183,6 @@ def update_document(name, key, data):
 
     inst_doc = Document(inst_coll)
     doc = inst_doc.update_document(document)
-
-    return doc
-
-
-def patch_edge(name, key, data):
-    """Partial update edge from Database"""
-
-    edge = get_edge(name, key)
-    for key in data:
-        if key == 'from':
-            edge['_from'] = data[key]
-        elif key == 'to':
-            edge['_to'] = data[key]
-        elif key == 'properties':
-            for idx in data[key]:
-                edge['properties'][idx] = data[key][idx]
-        elif key == 'properties_metadata':
-            for idx in data[key]:
-                edge['properties_metadata'][idx] = data[key][idx]
-        elif key == 'name':
-            if data[key]:
-                edge[key] = data[key]
-        else:
-            edge[key] = data[key]
-
-    constructor = Constructor()
-    inst_edge = constructor.factory(kind='Edges', name=name)
-
-    inst_doc = Document(inst_edge)
-    doc = inst_doc.update_document(edge)
 
     return doc
 
@@ -268,6 +226,99 @@ def delete_document(name, key):
     return True
 
 
+########
+# EDGE #
+########
+def create_edge(name, data):
+    """Create document-edge in Database"""
+
+    constructor = Constructor()
+    inst_edge = constructor.factory(kind='Edges', name=name)
+    edge = {
+        '_key': util.make_key(data),
+        '_from': data['from'],
+        '_to': data['to'],
+        'id': data['id'],
+        'name': data.get('name', ''),
+        'provider': data['provider'],
+        'timestamp': data['timestamp'],
+        'properties': data.get('properties'),
+        'properties_metadata': data.get('properties_metadata')
+    }
+
+    inst_doc = Document(inst_edge)
+    doc = inst_doc.create_document(edge)
+
+    return doc
+
+
+def get_edge(name, key):
+    """Get edge from Database"""
+
+    constructor = Constructor()
+    inst_edge = constructor.factory(kind='Edges', name=name)
+
+    inst_doc = Document(inst_edge)
+    doc = inst_doc.get_document(key)
+
+    return doc
+
+
+def update_edge(name, key, data):
+    """Update edge from Database"""
+
+    get_edge(name, key)
+    edge = {
+        '_key': key,
+        '_from': data['from'],
+        '_to': data['to'],
+        'id': data['id'],
+        'name': data.get('name', ''),
+        'provider': data['provider'],
+        'timestamp': data['timestamp'],
+        'properties': data.get('properties'),
+        'properties_metadata': data.get('properties_metadata')
+    }
+
+    constructor = Constructor()
+    inst_edge = constructor.factory(kind='Edges', name=name)
+
+    inst_doc = Document(inst_edge)
+    doc = inst_doc.update_document(edge)
+
+    return doc
+
+
+def patch_edge(name, key, data):
+    """Partial update edge from Database"""
+
+    edge = get_edge(name, key)
+    for key in data:
+        if key == 'from':
+            edge['_from'] = data[key]
+        elif key == 'to':
+            edge['_to'] = data[key]
+        elif key == 'properties':
+            for idx in data[key]:
+                edge['properties'][idx] = data[key][idx]
+        elif key == 'properties_metadata':
+            for idx in data[key]:
+                edge['properties_metadata'][idx] = data[key][idx]
+        elif key == 'name':
+            if data[key]:
+                edge[key] = data[key]
+        else:
+            edge[key] = data[key]
+
+    constructor = Constructor()
+    inst_edge = constructor.factory(kind='Edges', name=name)
+
+    inst_doc = Document(inst_edge)
+    doc = inst_doc.update_document(edge)
+
+    return doc
+
+
 def delete_edge(name, key):
     """Get edge from Database"""
 
@@ -278,6 +329,10 @@ def delete_edge(name, key):
     inst_doc.delete_document(key)
 
     return True
+
+##########
+# SEARCH #
+##########
 
 
 def search_traversal(**kwargs):
@@ -387,7 +442,7 @@ def search_collections(collections, data, page, per_page):
     return res
 
 ###########
-# Queries #
+# QUERIES #
 ###########
 
 

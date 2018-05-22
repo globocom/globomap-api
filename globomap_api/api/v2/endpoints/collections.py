@@ -27,9 +27,10 @@ from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import collections as coll_parsers
+from globomap_api.api.v2.parsers.base import search_parser
+from globomap_api.api.v2.util import get_dict
+from globomap_api.api.v2.util import validate
 from globomap_api.config import SPECS
-from globomap_api.util import get_dict
-from globomap_api.util import validate
 
 ns = api.namespace(
     'collections', description='Operations related to collections')
@@ -49,12 +50,21 @@ class Collections(Resource):
         401: 'Unauthorized',
         403: 'Forbidden',
     })
+    @api.expect(search_parser)
     @permission_classes((permissions.Read, permissions.Collection))
     def get(self):
         """List all collections of kind document from DB."""
 
-        collections = facade.list_collections(kind='document')
-        return collections, 200
+        args = search_parser.parse_args(request)
+
+        try:
+            page = args.get('page')
+            per_page = args.get('per_page')
+            res = facade.list_collections('document', page, per_page)
+        except JSONDecodeError:
+            raise gmap_exc.SearchException('Parameter query is invalid')
+        else:
+            return res, 200
 
     @api.doc(responses={
         200: 'Success',

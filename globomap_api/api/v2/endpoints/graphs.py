@@ -24,9 +24,9 @@ from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import graphs as graphs_parsers
+from globomap_api.api.v2.util import get_dict
+from globomap_api.api.v2.util import validate
 from globomap_api.config import SPECS
-from globomap_api.util import get_dict
-from globomap_api.util import validate
 
 ns = api.namespace('graphs', description='Operations related to graphs')
 

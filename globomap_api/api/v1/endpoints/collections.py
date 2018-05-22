@@ -35,39 +35,6 @@ ns = api.namespace(
 
 
 @ns.deprecated
-@ns.route('/')
-class Collections(Resource):
-
-    @api.doc(responses={200: 'Success'})
-    def get(self):
-        """List all collections of kind document from DB."""
-
-        collections = facade.list_collections(kind='document')
-        return collections, 200
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
-    def post(self):
-        """Create collection of kind document in DB."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            facade.create_collection_document(data)
-            return {}, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-
-@ns.deprecated
 @ns.route('/search/')
 class Search(Resource):
 

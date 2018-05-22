@@ -6,9 +6,21 @@
       "type": "string",
       "pattern": "^([a-z_]){1,}$",
       "minimum": 1
+    },
+    "alias": {
+      "type": "string",
+      "pattern": "^([a-zA-Z_ -]){1,}$",
+      "minimum": 1
+    },
+    "icon": {
+      "type": "string",
+      "pattern": "^([a-z_-]){1,}$",
+      "minimum": 1
     }
   },
   "required": [
-    "name"
+    "name",
+    "alias",
+    "icon"
   ]
 }
