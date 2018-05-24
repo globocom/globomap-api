@@ -80,8 +80,8 @@ def create_collection_document(data):
 
     constructor = Constructor()
     name = data.get('name')
-    constructor.factory(kind='document', create=True, name=name)
-    create_meta_collection_doc(data, 'Collection')
+    constructor.factory(kind='Collection', create=True, name=name)
+    create_meta_collection_doc(data, 'document')
 
     return True
 
@@ -91,8 +91,8 @@ def create_collection_edge(data):
 
     constructor = Constructor()
     name = data.get('name')
-    constructor.factory(kind='edge', create=True, name=name)
-    create_meta_collection_doc(data, 'Edges')
+    constructor.factory(kind='Edges', create=True, name=name)
+    create_meta_collection_doc(data, 'edge')
 
     return True
 
