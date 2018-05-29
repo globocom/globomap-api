@@ -73,23 +73,6 @@ class DocumentQuery(Resource):
             app.logger.warning(error.message)
             api.abort(404, errors=error.message)
 
-    @api.doc(responses={
-        200: 'Success',
-        401: 'Unauthorized',
-        403: 'Forbidden',
-        404: 'Not Found'
-    })
-    def delete(self, key):
-        """Delete query by key."""
-
-        try:
-            res = facade.delete_query(key)
-            return res, 200
-
-        except gmap_exc.DocumentNotExist as error:
-            app.logger.warning(error.message)
-            api.abort(404, errors=error.message)
-
 
 @ns.deprecated
 @ns.route('/<key>/execute')
