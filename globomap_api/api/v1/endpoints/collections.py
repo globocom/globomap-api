@@ -80,34 +80,6 @@ class Collection(Resource):
     @api.doc(responses={
         200: 'Success',
         400: 'Validation Error',
-        404: 'Not Found',
-        409: 'Document Already Exists'
-    })
-    def post(self, collection):
-        """Insert document in DB."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.create_document(collection, data)
-            return res, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentAlreadyExist as err:
-            api.abort(409, errors=err.message)
-
-        except gmap_exc.DocumentException as err:
-            api.abort(404, errors=err.message)
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
         404: 'Not Found'
     })
     @api.expect(pagination_arguments)
@@ -137,33 +109,6 @@ class Collection(Resource):
 
 
 @ns.deprecated
-@ns.route('/<collection>/clear/')
-@api.doc(params={'collection': 'Name Of Collection'})
-class CollectionClear(Resource):
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
-    def post(self, collection):
-        """Clear documents in collection."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.clear_collection(collection, data)
-            return res, 200
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-
-@ns.deprecated
 @ns.route('/<collection>/<key>/')
 @api.doc(params={
     'collection': 'Name Of Collection',
@@ -176,77 +121,12 @@ class Document(Resource):
         400: 'Validation Error',
         404: 'Not Found'
     })
-    def put(self, collection, key):
-        """Update document."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.update_document(collection, key, data)
-            return res, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentNotExist as err:
-            api.abort(404, errors=err.message)
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
-    def patch(self, collection, key):
-        """Partial update document."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.patch_document(collection, key, data)
-            return res, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentNotExist as err:
-            api.abort(404, errors=err.message)
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
     def get(self, collection, key):
         """Get document by key."""
 
         try:
             res = facade.get_document(collection, key)
             return res, 200
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentNotExist as err:
-            api.abort(404, errors=err.message)
-
-    @api.doc(responses={
-        200: 'Success',
-        404: 'Not Found'
-    })
-    def delete(self, collection, key):
-        """Delete document by key."""
-
-        try:
-            facade.delete_document(collection, key)
-            return {}, 200
 
         except gmap_exc.CollectionNotExist as err:
             api.abort(404, errors=err.message)

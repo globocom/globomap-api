@@ -17,13 +17,11 @@ import logging
 
 from flask import request
 from flask_restplus import Resource
-from jsonspec.validators.exceptions import ValidationError
 
 from globomap_api import exceptions as gmap_exc
 from globomap_api.api import facade
 from globomap_api.api.parsers import traversal_arguments
 from globomap_api.api.v1 import api
-from globomap_api.util import validate
 
 
 logger = logging.getLogger(__name__)
@@ -39,23 +37,6 @@ class Graph(Resource):
 
         graphs = facade.list_graphs()
         return graphs, 200
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-    })
-    def post(self):
-        """Create graph in DB."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            facade.create_graph(data)
-            return {}, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
 
 
 @ns.deprecated

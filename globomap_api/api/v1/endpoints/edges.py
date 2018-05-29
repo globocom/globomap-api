@@ -72,64 +72,9 @@ class Search(Resource):
 
 
 @ns.deprecated
-@ns.route('/<edge>/clear/')
-@api.doc(params={'edge': 'Name Of Edge(Collection)'})
-class EdgeClear(Resource):
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
-    def post(self, edge):
-        """Clear documents in edge."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.clear_collection(edge, data)
-            return res, 200
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-
-@ns.deprecated
 @ns.route('/<edge>/')
 @api.doc(params={'edge': 'Name Of Edge(Collection)'})
 class Edge(Resource):
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found',
-        409: 'Document Already Exists'
-    })
-    def post(self, edge):
-        """Insert edge in DB."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.create_edge(edge, data)
-            return res, 200
-
-        except gmap_exc.EdgeNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentAlreadyExist as err:
-            api.abort(409, errors=err.message)
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-        except gmap_exc.DocumentException as err:
-            api.abort(400, errors=err.message)
 
     @api.doc(responses={
         200: 'Success',
@@ -175,77 +120,12 @@ class Document(Resource):
         400: 'Validation Error',
         404: 'Not Found'
     })
-    def put(self, edge, key):
-        """Update edge."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.update_edge(edge, key, data)
-            return res, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-        except gmap_exc.EdgeNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentNotExist as err:
-            api.abort(404, errors=err.message)
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
-    def patch(self, edge, key):
-        """Partial update edge."""
-
-        try:
-            data = request.get_json()
-            logger.debug('Receive Data: %s', data)
-            res = facade.patch_edge(edge, key, data)
-            return res, 200
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
-
-        except gmap_exc.EdgeNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentNotExist as err:
-            api.abort(404, errors=err.message)
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
     def get(self, edge, key):
         """Get edge by key."""
 
         try:
             res = facade.get_edge(edge, key)
             return res, 200
-
-        except gmap_exc.EdgeNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentNotExist as err:
-            api.abort(404, errors=err.message)
-
-    @api.doc(responses={
-        200: 'Success',
-        404: 'Not Found'
-    })
-    def delete(self, edge, key):
-        """Delete edge by key."""
-
-        try:
-            facade.delete_edge(edge, key)
-            return {}, 200
 
         except gmap_exc.EdgeNotExist as err:
             api.abort(404, errors=err.message)
