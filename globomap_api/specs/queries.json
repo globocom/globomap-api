@@ -1,5 +1,4 @@
 {
-
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -14,12 +13,16 @@
     },
     "params": {
       "type": "object"
+    },
+    "collection": {
+      "type": "string"
     }
   },
   "required": [
     "name",
     "description",
     "query",
-    "params"
+    "params",
+    "collection"
   ]
 }

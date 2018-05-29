@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import json
+
 from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
@@ -55,8 +57,10 @@ class Query(Resource):
 
         page = args.get('page')
         per_page = args.get('per_page')
+        query = args.get('query')
+        data = json.loads(query)
 
-        queries = facade.list_query(page, per_page)
+        queries = facade.list_query(data, page, per_page)
         return queries, 200
 
     @api.doc(responses={

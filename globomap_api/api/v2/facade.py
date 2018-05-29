@@ -50,11 +50,10 @@ def list_graphs():
 
     return graphs
 
+
 ##############
 # COLLECTION #
 ##############
-
-
 def create_meta_collection_doc(data, kind):
     """Create document in meta_collection"""
 
@@ -124,11 +123,10 @@ def list_collections(kind, page, per_page):
 
     return res
 
+
 ############
 # DOCUMENT #
 ############
-
-
 def create_document(name, data):
     """Create document in Database"""
 
@@ -330,11 +328,10 @@ def delete_edge(name, key):
 
     return True
 
+
 ##########
 # SEARCH #
 ##########
-
-
 def search_traversal(**kwargs):
     """Search Traversal in Database"""
 
@@ -441,11 +438,10 @@ def search_collections(collections, data, page, per_page):
 
     return res
 
+
 ###########
 # QUERIES #
 ###########
-
-
 def make_query(data):
     """Validate query and make document"""
 
@@ -456,7 +452,8 @@ def make_query(data):
         'name': data.get('name'),
         'description': data['description'],
         'query': data['query'],
-        'params': data.get('params')
+        'params': data.get('params'),
+        'collection': data.get('collection')
     }
 
     db_inst = DB()
@@ -473,7 +470,7 @@ def create_query(data):
 
     constructor = Constructor()
     inst_coll = constructor.factory(kind='Collection',
-                                    name='internal_metadata')
+                                    name=config.META_QUERY)
 
     inst_doc = Document(inst_coll)
     doc = inst_doc.create_document(query)
@@ -488,7 +485,7 @@ def update_query(key, data):
 
     constructor = Constructor()
     inst_coll = constructor.factory(kind='Collection',
-                                    name='internal_metadata')
+                                    name=config.META_QUERY)
 
     inst_doc = Document(inst_coll)
     doc = inst_doc.update_document(query)
@@ -500,26 +497,20 @@ def get_query(key):
     """Get query from Database"""
 
     # TODO: validate key
-    return get_document('internal_metadata', key)
+    return get_document(config.META_QUERY, key)
 
 
 def delete_query(key):
     """Delete query in Database"""
 
     # TODO: validate key
-    return delete_document('internal_metadata', key)
+    return delete_document(config.META_QUERY, key)
 
 
-def list_query(page, per_page):
+def list_query(data, page, per_page):
     """List query in Database"""
 
-    data = [[{
-        'value': 'query_',
-        'operator': 'LIKE',
-        'field': '_key'
-    }]]
-
-    return search('internal_metadata', data, page, per_page)
+    return search(config.META_QUERY, data, page, per_page)
 
 
 def execute_query(key, variable):

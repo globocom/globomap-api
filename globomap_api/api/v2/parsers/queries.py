@@ -30,14 +30,13 @@ search_query_parser.add_argument(
     default=10,
     help='Items number per page'
 )
-# TODO
-# search_query_parser.add_argument(
-#     'query',
-#     type=str,
-#     required=False,
-#     default='[[{"field":"name","operator":"LIKE","value":""}]]',
-#     help='Query'
-# )
+search_query_parser.add_argument(
+    'query',
+    type=str,
+    required=False,
+    default='[[{"field":"name","operator":"LIKE","value":""}]]',
+    help='Query'
+)
 
 execute_query_parser = reqparse.RequestParser()
 execute_query_parser.add_argument(
