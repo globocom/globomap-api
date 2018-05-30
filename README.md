@@ -40,6 +40,13 @@ All of the environment variables below must be set for the application to work p
 
 [globomap-auth-manager](https://github.com/globocom/globomap-auth-manager)
 
+### Requirements:
+#### Collections:
+meta_collection <br>
+meta_graph <br>
+meta_query <br>
+
+
 ## Licensing
 
 Globo Map API is under [Apache 2 License](./LICENSE)
