@@ -70,6 +70,9 @@ To create meta collections in ArangoDB<br>
 To create roles in Keystone<br>
 `make keystone_config`
 
+## Simple Example
+Complete flow with [python](https://github.com/edersonbrilhante/globomap-hands-on)
+
 ## Licensing
 
 Globo Map API is under [Apache 2 License](./LICENSE)
