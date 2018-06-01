@@ -4,11 +4,20 @@ Application responsible for reading and writing in ARANGODB. This application ha
 
 ## Starting Project:
 
-` make docker `
+` make containers_build ` (Build images.) <br>
+` make containers_start ` (Up containers) <br>
+
+## Running local with docker:
+
+` make containers_build ` (When project not started yet.) <br>
+` make containers_start ` (When project not started yet.) <br>
+` make create_meta_collections ` (Create meta collections in ArangoDB) <br>
+` make keystone_config ` (Create roles in Keystone) <br>
 
 ## Running Tests:
 
-` make docker ` (When project not started yet.)<br>
+` make containers_build ` (When project not started yet.) <br>
+` make containers_start ` (When project not started yet.) <br>
 ` make tests `
 
 ## Plugin environment variables configuration
@@ -41,11 +50,25 @@ All of the environment variables below must be set for the application to work p
 [globomap-auth-manager](https://github.com/globocom/globomap-auth-manager)
 
 ### Requirements:
-#### Collections:
+#### Collections in ArangoDB:
 meta_collection <br>
 meta_graph <br>
 meta_query <br>
 
+#### Roles in Keystone:
+globomap_admin <br>
+globomap_read <br>
+globomap_write <br>
+globomap_collection <br>
+globomap_edge <br>
+globomap_graph <br>
+
+#### Using makefile
+To create meta collections in ArangoDB<br>
+`make create_meta_collections`
+
+To create roles in Keystone<br>
+`make keystone_config`
 
 ## Licensing
 

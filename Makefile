@@ -26,6 +26,9 @@ tests: ## Run tests
 run: ## Run a development web server
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
 
+create_meta_collections: ## Create meta collections
+	@docker exec globomap_api "/home/meta_collections.sh"
+
 containers_start:## Start containers
 	docker-compose up -d
 

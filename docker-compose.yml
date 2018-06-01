@@ -24,6 +24,7 @@ services:
             - scripts/docker/globomap.env
         volumes:
             - .:/app
+            - ./scripts/docker/meta_collections.sh:/home/meta_collections.sh:ro
         networks:
             - globomap_net
         command: make run
