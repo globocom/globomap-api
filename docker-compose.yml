@@ -5,7 +5,7 @@ services:
         container_name: globomap_db
         image: arangodb:3.3.4
         ports:
-            - "8529:8529"
+            - "${GMAP_DB_PORT}:8529"
         environment:
             - ARANGO_NO_AUTH=1
         volumes:
@@ -18,8 +18,8 @@ services:
             context: ./
             dockerfile: scripts/docker/Dockerfile
         ports:
-            - "5000:5000"
-            - "5001:5001"
+            - "${GMAP_API_PORT}:5000"
+            - "${GMAP_API_DEBUG_PORT}:5001"
         env_file:
             - scripts/docker/globomap.env
         volumes:
@@ -39,15 +39,14 @@ services:
         container_name: globomap_keystone
         image: krystism/openstack-keystone
         ports:
-            - "35357:35357"
-            - "5009:5000"
+            - "${GMAP_KS_ADM_PORT}:35357"
+            - "${GMAP_KS_PORT}:5000"
         restart: always
         environment:
             OS_TENANT_NAME: admin
             OS_USERNAME: admin
             # OS_PASSWORD: secret_admin_pass
-        command:
-             - /home/keystone.sh
+        command:  ["/home/keystone.sh"]
         volumes:
             - ./scripts/docker/keystone.sh:/home/keystone.sh:ro
         networks:
@@ -58,7 +57,7 @@ services:
         image: redis:4.0.5-alpine
         command: ["redis-server", "--appendonly", "yes", "--requirepass", "password"]
         ports:
-            - "6379:6379"
+            - "${GMAP_REDIS_PORT}:6379"
         networks:
             - globomap_net
         volumes:

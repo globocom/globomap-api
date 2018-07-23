@@ -3,6 +3,8 @@ VERSION=$(shell python -c 'import globomap_api; print globomap_api.VERSION')
 
 PROJECT_HOME = "`pwd`"
 
+DOCKER_COMPOSE_FILE=$(shell make docker_file)
+
 help:
 	@echo
 	@echo "Please use 'make <target>' where <target> is one of"
@@ -24,19 +26,27 @@ tests: ## Run tests
 	@docker exec -it globomap_api make exec_tests
 
 run: ## Run a development web server
+	@/home/meta_collections.sh
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
 
-create_meta_collections: ## Create meta collections
-	@docker exec globomap_api "/home/meta_collections.sh"
-
 containers_start:## Start containers
-	docker-compose up -d
-
-keystone_config: ## Config keystone
-	@docker exec globomap_keystone "/home/keystone.sh"
+	docker-compose --file $(DOCKER_COMPOSE_FILE) up -d
 
 containers_build: ## Build containers
-	docker-compose build
+	docker-compose --file $(make docker_file) build --no-cache
 
-deploy: ## Deploy in Tsuru
-	@tsuru app-deploy -a $(project) globomap_api .python-version Procfile requirements.txt api_plugins
+containers_stop: ## Stop containers
+	docker-compose --file $(make docker_file) stop 
+
+containers_clean: ## Destroy containers
+	docker-compose --file $(make docker_file) rm -s -v -f
+
+dynamic_ports: ## Set ports to services
+	./scripts/docker/ports.sh
+
+docker_file:
+	@if [[ -f "docker-compose-temp.yml" ]]; then \
+		echo "docker-compose-temp.yml"; 		 \
+	else                                         \
+		echo "docker-compose.yml";               \
+    fi

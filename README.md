@@ -4,15 +4,15 @@ Application responsible for reading and writing in ARANGODB. This application ha
 
 ## Starting Project:
 
+` make dynamic_ports` <br>
 ` make containers_build ` (Build images.) <br>
 ` make containers_start ` (Up containers) <br>
 
 ## Running local with docker:
 
+` make dynamic_ports` <br>
 ` make containers_build ` (When project not started yet.) <br>
 ` make containers_start ` (When project not started yet.) <br>
-` make create_meta_collections ` (Create meta collections in ArangoDB) <br>
-` make keystone_config ` (Create roles in Keystone) <br>
 
 ## Running Tests:
 
@@ -63,16 +63,8 @@ globomap_collection <br>
 globomap_edge <br>
 globomap_graph <br>
 
-#### Using makefile
-To create meta collections in ArangoDB<br>
-`make create_meta_collections`
-
-To create roles in Keystone<br>
-`make keystone_config`
-
 ## Simple Example
 Complete flow with [python](https://github.com/edersonbrilhante/globomap-hands-on)
 
 ## Licensing
-
 Globo Map API is under [Apache 2 License](./LICENSE)

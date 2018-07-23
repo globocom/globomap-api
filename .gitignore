@@ -104,3 +104,5 @@ ENV/
 
 # VSCode
 .vscode/
+
+.docker-compose-temp.yml
