@@ -33,13 +33,13 @@ containers_start:## Start containers
 	docker-compose --file $(DOCKER_COMPOSE_FILE) up -d
 
 containers_build: ## Build containers
-	docker-compose --file $(make docker_file) build --no-cache
+	docker-compose --file $(DOCKER_COMPOSE_FILE) build --no-cache
 
 containers_stop: ## Stop containers
-	docker-compose --file $(make docker_file) stop 
+	docker-compose --file $(DOCKER_COMPOSE_FILE) stop
 
 containers_clean: ## Destroy containers
-	docker-compose --file $(make docker_file) rm -s -v -f
+	docker-compose --file $(DOCKER_COMPOSE_FILE) rm -s -v -f
 
 dynamic_ports: ## Set ports to services
 	./scripts/docker/ports.sh
