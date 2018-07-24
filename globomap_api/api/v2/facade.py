@@ -36,19 +36,52 @@ def create_graph(data):
     name = data.get('name')
     links = data.get('links')
     constructor.factory(kind='Graph', create=True, name=name, links=links)
+    create_meta_graph_doc(data)
 
     return True
 
 
-def list_graphs():
+def create_meta_graph_doc(data):
+    """Create document in meta_graph"""
+
+    constructor = Constructor()
+    inst_coll = constructor.factory(
+        kind='Collection', name=config.META_GRAPH)
+
+    inst_doc = Document(inst_coll)
+    document = {
+        '_key': data.get('name'),
+        'name': data.get('name'),
+        'links': data.get('links'),
+        'alias': data.get('alias'),
+        'icon': data.get('icon'),
+    }
+    doc = inst_doc.create_document(document)
+
+    return doc
+
+
+def list_graphs(page, per_page):
     """Return all graph from Database"""
 
     db_inst = DB()
     db_inst.get_database()
-    graphs = db_inst.database.graphs()
-    graphs = util.filter_graphs(graphs)
+    cursor = db_inst.search_in_collection(
+        config.META_GRAPH, None, page, per_page)
 
-    return graphs
+    total_pages = int(math.ceil(cursor.statistics()[
+                      'fullCount'] / (per_page * 1.0)))
+    total_graphs = cursor.statistics()['fullCount']
+
+    graphs = util.filter_graphs(cursor)
+    res = {
+        'total_pages': total_pages,
+        'total': len(graphs),
+        'total_graphs': total_graphs,
+        'graphs': graphs
+    }
+
+    return res
 
 
 ##############

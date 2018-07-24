@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from json.decoder import JSONDecodeError
+
 from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
@@ -24,6 +26,7 @@ from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import graphs as graphs_parsers
+from globomap_api.api.v2.parsers.base import search_parser
 from globomap_api.api.v2.util import get_dict
 from globomap_api.api.v2.util import validate
 from globomap_api.config import SPECS
@@ -45,12 +48,21 @@ class Graph(Resource):
         401: 'Unauthorized',
         403: 'Forbidden'
     })
+    @api.expect(search_parser)
     @permission_classes((permissions.Read, permissions.Graph))
     def get(self):
         """List all graphs from DB."""
 
-        graphs = facade.list_graphs()
-        return graphs, 200
+        args = search_parser.parse_args(request)
+
+        try:
+            page = args.get('page')
+            per_page = args.get('per_page')
+            res = facade.list_graphs(page, per_page)
+        except JSONDecodeError:
+            raise gmap_exc.SearchException('Parameter query is invalid')
+        else:
+            return res, 200
 
     @api.doc(responses={
         200: 'Success',

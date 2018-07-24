@@ -75,15 +75,10 @@ def filter_graphs(data):
     for graph in data:
         gra = {
             'name': graph['name'],
-            'links': []
+            'alias': graph['alias'],
+            'icon': graph['icon'],
+            'links': graph['links']
         }
-        for edge_definition in graph['edge_definitions']:
-            edge = {
-                'edge': edge_definition['collection'],
-                'from_collections': edge_definition['from'],
-                'to_collections': edge_definition['to']
-            }
-            gra['links'].append(edge)
         graphs.append(gra)
     return graphs
 
