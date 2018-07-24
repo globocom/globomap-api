@@ -46,7 +46,6 @@ services:
             OS_TENANT_NAME: admin
             OS_USERNAME: admin
             # OS_PASSWORD: secret_admin_pass
-        command:  ["/home/keystone.sh"]
         volumes:
             - ./scripts/docker/keystone.sh:/home/keystone.sh:ro
         networks:

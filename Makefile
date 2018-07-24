@@ -31,6 +31,7 @@ run: ## Run a development web server
 
 containers_start:## Start containers
 	docker-compose --file $(DOCKER_COMPOSE_FILE) up -d
+	./scripts/docker/keystone_setup.sh
 
 containers_build: ## Build containers
 	docker-compose --file $(DOCKER_COMPOSE_FILE) build --no-cache
