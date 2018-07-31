@@ -63,7 +63,7 @@ META_QUERY = 'meta_query'
 SENTRY_DSN = os.getenv('SENTRY_DSN')
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': True,
+    'disable_existing_loggers': False,
     'formatters': {
         'verbose': {
             'format': 'level=%(levelname)s timestamp=%(asctime)s module=%(module)s line=%(lineno)d' +
