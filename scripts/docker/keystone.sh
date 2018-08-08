@@ -5,7 +5,7 @@ MAX_ATTEMPTS=10
 CHECK_COMMAND="curl -sL -w "%{http_code}" http://0.0.0.0:35357 -o /dev/null"
 ATTEMPTS=1
 HTTP_RET_CODE=`${CHECK_COMMAND}`
-while [ "000" = "${HTTP_RET_CODE}" ] && [ ${ATTEMPTS} -le ${MAX_ATTEMPTS} ]; do 
+while [ "000" = "${HTTP_RET_CODE}" ] && [ ${ATTEMPTS} -le ${MAX_ATTEMPTS} ]; do
     echo "Error connecting to keystone. Attempt ${ATTEMPTS}. Retrying in ${INTERVAL} seconds ..."
     sleep ${INTERVAL}
     ATTEMPTS=$((ATTEMPTS+1))
@@ -17,6 +17,10 @@ if [ "000" = "${HTTP_RET_CODE}" ]; then
         exit 2
 fi
 
+while [ ! -f /root/openrc ]
+do
+  sleep 2
+done
 cd /root
 source openrc
 
@@ -66,7 +70,7 @@ done
 
 ## Creating Users
 create_user()
-{   
+{
     user=$1
     echo "User $user"
     while : ; do
@@ -87,7 +91,7 @@ create_user u_globomap_api
 
 ## Creating Roles
 create_role()
-{   
+{
     role=$1
     echo "Role $role"
     while : ; do
@@ -114,7 +118,7 @@ create_role globomap_loader_update
 
 ## Associating Roles
 create_assoc_role()
-{   
+{
     user=$1
     role=$2
     while : ; do
