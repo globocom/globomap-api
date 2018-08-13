@@ -61,7 +61,7 @@ def create_meta_graph_doc(data):
     return doc
 
 
-def list_graphs(page, per_page):
+def list_graphs(page=1, per_page=10):
     """Return all graph from Database"""
 
     db_inst = DB()
@@ -129,7 +129,7 @@ def create_collection_edge(data):
     return True
 
 
-def list_collections(kind, page, per_page):
+def list_collections(kind, page=1, per_page=10):
     """Return all collections or edges from Database"""
 
     db_inst = DB()

@@ -1,0 +1,4 @@
+healthcheck:
+  path: /v2/healthcheck/
+  status: 200
+  match: WORKING
