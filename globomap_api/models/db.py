@@ -374,8 +374,6 @@ class DB(object):
         try:
             collection = self.database.collection(name)
             res = collection.properties().get('edge') is edge
-            # import pdb; pdb.Pdb().set_trace()
-            # if res is edge:
             return res
         except exceptions.CollectionPropertiesError as err:
             app.logger.error(err)
