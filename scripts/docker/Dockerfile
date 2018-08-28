@@ -8,6 +8,7 @@ RUN apt-get update
 RUN apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv
 RUN apt-get install -y git
 RUN apt-get install -y telnet
+RUN apt-get install -y curl
 
 # update pip
 RUN python3.6 -m pip install pip --upgrade
@@ -18,3 +19,7 @@ ADD . /app
 WORKDIR /app
 
 RUN pip install -r requirements_test.txt
+
+RUN ["chmod", "+x", "./scripts/docker/wait_keystone_start.sh"]
+
+ENTRYPOINT [ "./scripts/docker/wait_keystone_start.sh" ]
