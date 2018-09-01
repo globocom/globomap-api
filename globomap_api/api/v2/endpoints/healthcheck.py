@@ -21,7 +21,7 @@ from flask_restplus import Resource
 from globomap_api.api.v2 import api
 from globomap_api.api.v2 import facade
 from globomap_api.api.v2.auth.facade import Auth
-from globomap_api.models.db import DB
+
 
 ns = api.namespace('healthcheck', description='Healthcheck')
 
@@ -73,7 +73,7 @@ def _list_deps():
 
 def _is_arango_ok():
     try:
-        db = DB()
+        db = app.config['ARANGO_CONN']
         db.get_database()
         graphs = facade.list_graphs()
         collections = facade.list_collections('document')

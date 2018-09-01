@@ -16,13 +16,12 @@
 import math
 
 from arango.exceptions import GraphTraverseError
+from flask import current_app as app
 
-from globomap_api import config
 from globomap_api import exceptions as gmap_exceptions
 from globomap_api.api.v2 import util
 from globomap_api.errors import GRAPH_TRAVERSE as traverse_err
 from globomap_api.models.constructor import Constructor
-from globomap_api.models.db import DB
 from globomap_api.models.document import Document
 
 
@@ -46,7 +45,7 @@ def create_meta_graph_doc(data):
 
     constructor = Constructor()
     inst_coll = constructor.factory(
-        kind='Collection', name=config.META_GRAPH)
+        kind='Collection', name=app.config['META_GRAPH'])
 
     inst_doc = Document(inst_coll)
     document = {
@@ -64,10 +63,10 @@ def create_meta_graph_doc(data):
 def list_graphs(page=1, per_page=10):
     """Return all graph from Database"""
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
     db_inst.get_database()
     cursor = db_inst.search_in_collection(
-        config.META_GRAPH, None, page, per_page)
+        app.config['META_GRAPH'], None, page, per_page)
 
     total_pages = int(math.ceil(cursor.statistics()[
                       'fullCount'] / (per_page * 1.0)))
@@ -92,7 +91,7 @@ def create_meta_collection_doc(data, kind):
 
     constructor = Constructor()
     inst_coll = constructor.factory(
-        kind='Collection', name=config.META_COLLECTION)
+        kind='Collection', name=app.config['META_COLLECTION'])
 
     inst_doc = Document(inst_coll)
     document = {
@@ -132,7 +131,7 @@ def create_collection_edge(data):
 def list_collections(kind, page=1, per_page=10):
     """Return all collections or edges from Database"""
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
     db_inst.get_database()
     data = [[{
         'field': 'kind',
@@ -140,7 +139,7 @@ def list_collections(kind, page=1, per_page=10):
         'value': kind,
     }]]
     cursor = db_inst.search_in_collection(
-        config.META_COLLECTION, data, page, per_page)
+        app.config['META_COLLECTION'], data, page, per_page)
 
     total_pages = int(math.ceil(cursor.statistics()[
                       'fullCount'] / (per_page * 1.0)))
@@ -368,7 +367,7 @@ def delete_edge(name, key):
 def search_traversal(**kwargs):
     """Search Traversal in Database"""
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
     db_inst.get_database()
     graph = db_inst.get_graph(kwargs.get('graph_name'))
     try:
@@ -416,7 +415,7 @@ def search_traversal(**kwargs):
 def search(name, data, page, per_page):
     """Search in Database"""
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
 
     db_inst.get_database()
     cursor = db_inst.search_in_collection(name, data, page, per_page)
@@ -440,7 +439,7 @@ def search(name, data, page, per_page):
 def clear_collection(name, data):
     """Clear document in Collection"""
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
 
     db_inst.get_database()
     db_inst.clear_collection(name, data)
@@ -451,7 +450,7 @@ def clear_collection(name, data):
 def search_collections(collections, data, page, per_page):
     """Search in Database"""
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
 
     db_inst.get_database()
     cursor = db_inst.search_in_collections(collections, data, page, per_page)
@@ -489,7 +488,7 @@ def make_query(data):
         'collection': data.get('collection')
     }
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
     db_inst.get_database()
     db_inst.validate_aql(data['query'])
 
@@ -503,7 +502,7 @@ def create_query(data):
 
     constructor = Constructor()
     inst_coll = constructor.factory(kind='Collection',
-                                    name=config.META_QUERY)
+                                    name=app.config['META_QUERY'])
 
     inst_doc = Document(inst_coll)
     doc = inst_doc.create_document(query)
@@ -518,7 +517,7 @@ def update_query(key, data):
 
     constructor = Constructor()
     inst_coll = constructor.factory(kind='Collection',
-                                    name=config.META_QUERY)
+                                    name=app.config['META_QUERY'])
 
     inst_doc = Document(inst_coll)
     doc = inst_doc.update_document(query)
@@ -530,27 +529,27 @@ def get_query(key):
     """Get query from Database"""
 
     # TODO: validate key
-    return get_document(config.META_QUERY, key)
+    return get_document(app.config['META_QUERY'], key)
 
 
 def delete_query(key):
     """Delete query in Database"""
 
     # TODO: validate key
-    return delete_document(config.META_QUERY, key)
+    return delete_document(app.config['META_QUERY'], key)
 
 
 def list_query(data, page, per_page):
     """List query in Database"""
 
-    return search(config.META_QUERY, data, page, per_page)
+    return search(app.config['META_QUERY'], data, page, per_page)
 
 
 def execute_query(key, variable):
     query = get_query(key)
     query['params']['variable'] = variable
 
-    db_inst = DB()
+    db_inst = app.config['ARANGO_CONN']
 
     db_inst.get_database()
     cursor = db_inst.execute_aql(query['query'], query['params'])

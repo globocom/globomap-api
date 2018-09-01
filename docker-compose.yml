@@ -27,7 +27,6 @@ services:
             - ./scripts/docker/meta_collections.sh:/home/meta_collections.sh:ro
         networks:
             - globomap_net
-        # command: make run
         external_links:
             - db:globomap_db
             - keystone:globomap_keystone

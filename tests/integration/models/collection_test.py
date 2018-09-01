@@ -26,7 +26,7 @@ class TestCollection(unittest2.TestCase):
         self.app = create_app('tests.config')
         self.db_name = self.app.config['ARANGO_DB']
         with self.app.app_context():
-            self.db_inst = DB()
+            self.db_inst = DB(self.app.config)
             self._cleanup()
             self.db_inst.get_database()
 

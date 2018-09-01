@@ -13,7 +13,9 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from .db import DB
+# from .db import DB
+from flask import current_app as app
+
 from globomap_api.exceptions import ConstructorException
 
 
@@ -46,7 +48,7 @@ class Constructor(object):
 
     def _class_collection_factory(self):
 
-        db_inst = DB()
+        db_inst = app.config['ARANGO_CONN']
         db_inst.get_database()
         if self.create:
             col = db_inst.create_collection(name=self.name)
@@ -56,7 +58,7 @@ class Constructor(object):
 
     def _class_edge_factory(self):
 
-        db_inst = DB()
+        db_inst = app.config['ARANGO_CONN']
         db_inst.get_database()
         if self.create:
             col = db_inst.create_edge(name=self.name)
@@ -66,7 +68,7 @@ class Constructor(object):
 
     def _class_graph_factory(self):
 
-        db_inst = DB()
+        db_inst = app.config['ARANGO_CONN']
         db_inst.get_database()
         if self.create and self.links:
             graph = db_inst.create_graph(self.name, self.links)

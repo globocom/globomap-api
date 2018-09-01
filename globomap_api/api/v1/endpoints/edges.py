@@ -23,7 +23,6 @@ from jsonspec.validators.exceptions import ValidationError
 
 from globomap_api import exceptions as gmap_exc
 from globomap_api.api import facade
-from globomap_api.api.parsers import pag_collections_arguments
 from globomap_api.api.parsers import pagination_arguments
 from globomap_api.api.v1 import api
 from globomap_api.util import validate
@@ -32,43 +31,6 @@ from globomap_api.util import validate
 logger = logging.getLogger(__name__)
 
 ns = api.namespace('edges', description='Operations related to edges')
-
-
-@ns.deprecated
-@ns.route('/search/')
-class Search(Resource):
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
-    @api.expect(pag_collections_arguments)
-    def get(self):
-        """Search edge in collections of kind edge from DB."""
-
-        args = pag_collections_arguments.parse_args(request)
-
-        try:
-            try:
-                page = args.get('page')
-                query = args.get('query') or '[]'
-                per_page = args.get('per_page')
-                collections = args.get('collections').split(',')
-                data = json.loads(query)
-            except JSONDecodeError:
-                raise gmap_exc.SearchException('Parameter query is invalid')
-            else:
-                res = facade.search_collections(
-                    collections, data, page, per_page)
-                return res, 200
-
-        except gmap_exc.CollectionNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except ValidationError as error:
-            res = validate(error)
-            api.abort(400, errors=res)
 
 
 @ns.deprecated
@@ -105,30 +67,3 @@ class Edge(Resource):
         except ValidationError as error:
             res = validate(error)
             api.abort(400, errors=res)
-
-
-@ns.deprecated
-@ns.route('/<edge>/<key>/')
-@api.doc(params={
-    'edge': 'Name Of Edge(Collection)',
-    'key': 'Key Of Document'
-})
-class Document(Resource):
-
-    @api.doc(responses={
-        200: 'Success',
-        400: 'Validation Error',
-        404: 'Not Found'
-    })
-    def get(self, edge, key):
-        """Get edge by key."""
-
-        try:
-            res = facade.get_edge(edge, key)
-            return res, 200
-
-        except gmap_exc.EdgeNotExist as err:
-            api.abort(404, errors=err.message)
-
-        except gmap_exc.DocumentNotExist as err:
-            api.abort(404, errors=err.message)
