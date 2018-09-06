@@ -547,7 +547,6 @@ def list_query(data, page, per_page):
 
 def execute_query(key, variable):
     query = get_query(key)
-    query['params'] = {}
     if variable:
         query['params']['variable'] = variable
 
