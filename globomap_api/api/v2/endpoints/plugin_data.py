@@ -17,10 +17,10 @@ from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
 
-from globomap_api.api.parsers import plugin_arguments
 from globomap_api.api.v2 import api
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
+from globomap_api.api.v2.parsers.plugins import plugin_arguments
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 from globomap_api.api_plugins.plugin_loader import ApiPluginLoader
 
