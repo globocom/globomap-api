@@ -42,6 +42,6 @@ execute_query_parser = reqparse.RequestParser()
 execute_query_parser.add_argument(
     'variable',
     type=str,
-    required=True,
+    required=False,
     help='Variable'
 )

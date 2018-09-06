@@ -181,7 +181,7 @@ class DocumentQuery(Resource):
             api.abort(404, errors=error.message)
 
 
-@ns.route('/<key>/execute')
+@ns.route('/<key>/execute/')
 @api.doc(params={
     'key': 'Key Of Query'
 })
