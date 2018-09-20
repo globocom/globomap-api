@@ -308,8 +308,8 @@ class DB(object):
                             index += 1
 
                         if item['operator'] == 'LIKE':
-                            where_field = 'LOWER({}) {} LOWER(\'%{}%\')'.format(
-                                concat_field, item['operator'], item['value'])
+                            where_field = 'CONTAINS(LOWER({}), LOWER(\'{}\'))'.format(
+                                concat_field, item['value'])
                             # Example 'doc.@1.@2 LIKE '%value%'
                         elif item['operator'] == 'IN':
                             where_field = '\'{}\' {} {}'.format(
