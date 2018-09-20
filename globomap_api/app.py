@@ -21,7 +21,6 @@ from flask import Flask
 from flask_cors import CORS
 
 from globomap_api import config as app_config
-from globomap_api.api.v1.api import blueprint as api_v1
 from globomap_api.api.v2.api import blueprint as api_v2
 from globomap_api.models.db import DB
 
@@ -41,11 +40,9 @@ def create_app(config_module=None):
 
     app.config['ARANGO_CONN'] = DB(app_config)
 
-    app.register_blueprint(api_v1)
     app.register_blueprint(api_v2)
 
     CORS(app, resources={
-        r'/v1/*': {'origins': app_config.CORS},
         r'/v2/*': {'origins': app_config.CORS}})
 
     return app
