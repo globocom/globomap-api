@@ -47,9 +47,9 @@ class Document:
                     doc_err.get(0).format(document['_key'], err.message))
 
         except Exception as err:
-            app.logger.error(err.message)
+            app.logger.error(err)
             raise gmap_exceptions.DocumentException(
-                doc_err.get(0).format(document['_key'], err.message))
+                doc_err.get(0).format(document['_key'], str(err)))
 
     def update_document(self, document):
         """Update Document"""
@@ -67,7 +67,7 @@ class Document:
                     doc_err.get(0).format(document['_key'], err.message))
 
         except Exception as err:
-            app.logger.error(err.message)
+            app.logger.error(err)
             raise gmap_exceptions.DocumentException(
                 doc_err.get(0).format(document['_key'], str(err)))
 
@@ -88,9 +88,9 @@ class Document:
             document = self.collection.get(key)
 
         except Exception as err:
-            app.logger.error(err.message)
+            app.logger.error(err)
             raise gmap_exceptions.DocumentException(
-                doc_err.get(0).format(key, err.message))
+                doc_err.get(0).format(key, str(err)))
         else:
             if document is None:
                 msg = 'There no document with key {}'.format(key)
@@ -117,8 +117,8 @@ class Document:
                     doc_err.get(0).format(key, err.message))
 
         except Exception as err:
-            app.logger.error(err.message)
+            app.logger.error(err)
             raise gmap_exceptions.DocumentException(
-                doc_err.get(0).format(key, err.message))
+                doc_err.get(0).format(key, str(err)))
         else:
             return True
