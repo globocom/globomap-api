@@ -29,19 +29,22 @@ def create_meta_collections():
 
     try:
         constructor.factory(kind='Collection', create=True,
-                            name=app_config.META_COLLECTION)
+                            name=app_config.META_COLLECTION,
+                            create_indexes=False)
     except exceptions.CollectionAlreadyExist:
         pass
 
     try:
         constructor.factory(kind='Collection', create=True,
-                            name=app_config.META_GRAPH)
+                            name=app_config.META_GRAPH,
+                            create_indexes=False)
     except exceptions.CollectionAlreadyExist:
         pass
 
     try:
         constructor.factory(kind='Collection', create=True,
-                            name=app_config.META_QUERY)
+                            name=app_config.META_QUERY,
+                            create_indexes=False)
     except exceptions.CollectionAlreadyExist:
         pass
 

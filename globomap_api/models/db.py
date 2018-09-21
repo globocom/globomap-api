@@ -71,8 +71,8 @@ class DB(object):
         """Return True if there database"""
 
         try:
-            database = self.conn_database(name)
-            database.properties()
+            self.conn_database(name)
+            self.database.properties()
         except exceptions.DatabasePropertiesError as err:
             LOGGER.error(err)
             return False
@@ -524,9 +524,10 @@ class DB(object):
                 for edge in edge_definitions:
                     try:
                         self.graph.create_edge_definition(
-                            name=edge.get('edge'),
-                            from_collections=edge.get('from_collections'),
-                            to_collections=edge.get('to_collections')
+                            edge_collection=edge.get('edge'),
+                            from_vertex_collections=edge.get(
+                                'from_collections'),
+                            to_vertex_collections=edge.get('to_collections')
                         )
                     except Exception as err:
                         self.database.delete_graph(name)
