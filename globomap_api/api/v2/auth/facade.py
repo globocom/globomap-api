@@ -29,8 +29,28 @@ def create_token(username=None, password=None):
     return token
 
 
+def get_roles(token):
+    auth_inst = Auth()
+    try:
+        auth_inst.set_token(token)
+        auth_inst.validate_token()
+        token_data = auth_inst.get_token_data_details()
+
+    except exceptions.InvalidToken:
+        app.logger.warning('Invalid Token')
+        api.abort(401, errors='Invalid Token')
+
+    except exceptions.AuthException:
+        err_msg = 'Error to validate token'
+        app.logger.exception(err_msg)
+        api.abort(503)
+
+    return token_data
+
+
 def validate_token(token):
     auth_inst = Auth()
+
     try:
         auth_inst.set_token(token)
         auth_inst.validate_token()

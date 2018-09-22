@@ -65,3 +65,23 @@ class CreateAuth(Resource):
         except AuthException:
             app.logger.error('Auth Unavailable.')
             api.abort(503, 'Auth Unavailable.')
+
+
+@ns.route('/roles')
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
+class Roles(Resource):
+
+    @api.doc(responses={
+        200: 'Success',
+        401: 'Unauthorized',
+    })
+    def get(self):
+        """Create token"""
+        token = request.headers.get('Authorization')
+        token_data = facade.get_roles(token)
+        return token_data, 200
