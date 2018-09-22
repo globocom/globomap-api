@@ -67,7 +67,7 @@ class CreateAuth(Resource):
             api.abort(503, 'Auth Unavailable.')
 
 
-@ns.route('/roles')
+@ns.route('/roles/')
 @api.header(
     'Authorization',
     'Token Authorization',
