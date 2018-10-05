@@ -29,9 +29,10 @@ from globomap_api.api.v2.parsers import graphs as graphs_parsers
 from globomap_api.api.v2.parsers.base import search_parser
 from globomap_api.api.v2.util import get_dict
 from globomap_api.api.v2.util import validate
-from globomap_api.config import SPECS
 
 ns = api.namespace('graphs', description='Operations related to graphs')
+
+specs = app.config['SPECS']
 
 
 @ns.route('/')
@@ -70,8 +71,7 @@ class Graph(Resource):
         403: 'Forbidden',
         400: 'Validation Error',
     })
-    @api.expect(api.schema_model('GraphPost',
-                                 get_dict(SPECS.get('graphs'))))
+    @api.expect(api.schema_model('GraphPost', get_dict(specs.get('graphs'))))
     @permission_classes((
         permissions.Write, permissions.Graph, permissions.Admin))
     def post(self):

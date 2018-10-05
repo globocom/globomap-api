@@ -16,6 +16,7 @@
 from flask import Blueprint
 from flask_restplus import Api
 
+
 blueprint = Blueprint('APIv2', __name__, url_prefix='/v2')
 api = Api(blueprint, version='2.0', title='GloboMap API',
           description='GloboMap API')

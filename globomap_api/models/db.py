@@ -30,28 +30,25 @@ LOGGER = logging.getLogger(__name__)
 
 
 class DB(object):
-
     """DB"""
 
-    collection = None
-    database = None
-    graph = None
-    conn = None
-    edge = None
-
     def __init__(self, config):
+        self.collection = None
+        self.database = None
+        self.graph = None
+        self.edge = None
+
         self.config = config
         self._connection()
 
     def _connection(self):
+        self.username = self.config['ARANGO_USERNAME']
+        self.password = self.config['ARANGO_PASSWORD']
+        self.arango_protocol = self.config['ARANGO_PROTOCOL']
+        self.arango_host = self.config['ARANGO_HOST']
+        self.arango_port = self.config['ARANGO_PORT']
 
-        self.username = self.config.ARANGO_USERNAME
-        self.password = self.config.ARANGO_PASSWORD
-        self.arango_protocol = self.config.ARANGO_PROTOCOL
-        self.arango_host = self.config.ARANGO_HOST
-        self.arango_port = self.config.ARANGO_PORT
-
-        self._conn = ArangoClient(
+        self.conn = ArangoClient(
             protocol=self.arango_protocol,
             host=self.arango_host,
             port=self.arango_port
@@ -62,9 +59,9 @@ class DB(object):
     ############
     def conn_database(self, name=''):
         """Make a connection with a database"""
-        self.database = self._conn.db(name,
-                                      username=self.username,
-                                      password=self.password)
+        self.database = self.conn.db(name,
+                                     username=self.username,
+                                     password=self.password)
 
     ############
     def has_database(self, name=''):
@@ -87,7 +84,8 @@ class DB(object):
         """Return database"""
 
         if not name:
-            name = self.config.ARANGO_DB
+            name = self.config['ARANGO_DB']
+
         if self.has_database(name):
             return self.database
         else:

@@ -25,7 +25,7 @@ from globomap_api.app import create_app
 class TestPluginData(unittest2.TestCase):
 
     def setUp(self):
-        patch('globomap_api.api_plugins.zabbix.config').start()
+        # patch('globomap_api.api_plugins.zabbix.config').start()
         self.app = create_app('tests.config')
         self.client = self.app.test_client()
 
@@ -35,7 +35,8 @@ class TestPluginData(unittest2.TestCase):
 
     def test_get_zabbix_data(self):
         self._mock_zabbix_api(self.hosts, self.triggers)
-        response = self._get('/v1/plugin_data/zabbix?ips=10.132.41.183')
+        self._mock_token()
+        response = self._get('/v2/plugin_data/zabbix?ips=10.132.41.183')
         json_response = json.loads(response.data)
 
         self.assertEqual(200, response.status_code)
@@ -45,14 +46,16 @@ class TestPluginData(unittest2.TestCase):
 
     def test_error_response(self):
         self._mock_zabbix_api(Exception('Error'))
-        response = self._get('/v1/plugin_data/zabbix?ips=10.132.41.183')
+        self._mock_token()
+        response = self._get('/v2/plugin_data/zabbix?ips=10.132.41.183')
         json_response = json.loads(response.data)
 
         self.assertEqual(500, response.status_code)
-        self.assertEqual('Error', json_response['errors'])
+        self.assertEqual('Error in plugin', json_response['errors'])
 
     def test_get_data_from_invalid_plugin(self):
-        response = self._get('/v1/plugin_data/UNKNOW?ips=10.132.41.183')
+        self._mock_token()
+        response = self._get('/v2/plugin_data/UNKNOW?ips=10.132.41.183')
         json_response = json.loads(response.data)
 
         self.assertEqual(404, response.status_code)
@@ -68,3 +71,9 @@ class TestPluginData(unittest2.TestCase):
         do_request_mock.do_request.side_effect = [hosts, triggers]
         py_zabbix_mock.return_value = do_request_mock
         return py_zabbix_mock
+
+    def _mock_token(self):
+        validate_token = patch(
+            'globomap_api.api.v2.auth.decorators.validate_token').start()
+        validate_token.return_value.get_token_data_details.return_value = {
+            'roles': [{'name': self.app.config['READ']}]}

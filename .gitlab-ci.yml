@@ -1,6 +1,8 @@
 test:
   image: python:3.6
   before_script:
-    - make setup
+    - make dynamic_ports
+    - make containers_build
+    - make containers_start
   script:
     - make tests_ci

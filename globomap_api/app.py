@@ -18,11 +18,6 @@ import os
 from logging import config
 
 from flask import Flask
-from flask_cors import CORS
-
-from globomap_api import config as app_config
-from globomap_api.api.v2.api import blueprint as api_v2
-from globomap_api.models.db import DB
 
 
 def create_app(config_module=None):
@@ -36,13 +31,15 @@ def create_app(config_module=None):
     app.config['RESTPLUS_VALIDATE'] = True
 
     app.logger
-    config.dictConfig(app_config.LOGGING)
 
-    app.config['ARANGO_CONN'] = DB(app_config)
+    with app.app_context():
+        from globomap_api.api.v2.api import blueprint as api_v2
+        from globomap_api.models.db import DB
 
-    app.register_blueprint(api_v2)
+        config.dictConfig(app.config['LOGGING'])
 
-    CORS(app, resources={
-        r'/v2/*': {'origins': app_config.CORS}})
+        app.config['ARANGO_CONN'] = DB(app.config)
+
+        app.register_blueprint(api_v2)
 
     return app
