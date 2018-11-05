@@ -24,19 +24,27 @@ class TestCollection(unittest2.TestCase):
 
     def setUp(self):
         self.app = create_app('tests.config')
-        self.db_name = self.app.config['ARANGO_DB']
-        with self.app.app_context():
-            self.db_inst = DB(self.app.config)
-            self._cleanup()
-            self.db_inst.get_database()
+        self.db_inst = DB(self.app.config)
 
-    def _cleanup(self):
+        self.conn_db()
+        self.cleanup()
+        self.db_inst.database.create_database('test')
+
+        self.db_inst.conn_database('test')
+
+    def tearDown(self):
+        self.conn_db()
+        self.cleanup()
+
+    def conn_db(self):
+        db_name = self.app.config['ARANGO_DB']
+        self.db_inst.conn_database(db_name)
+
+    def cleanup(self):
         try:
-            self.db_inst.delete_database(self.db_name)
-        except Exception:
+            self.db_inst.database.delete_database('test')
+        except:
             pass
-        finally:
-            self.db_inst.create_database(self.db_name)
 
     ##############
     # COLLECTION #
@@ -151,7 +159,3 @@ class TestCollection(unittest2.TestCase):
             col_name = 'edge_not_exist'
             with self.assertRaises(gmap_exceptions.EdgeNotExist):
                 self.db_inst.delete_edge(col_name)
-
-
-if __name__ == '__main__':
-    unittest2.main()

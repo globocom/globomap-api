@@ -30,10 +30,10 @@ from globomap_api.api.v2.parsers import edges as edges_parsers
 from globomap_api.api.v2.parsers.base import search_parser
 from globomap_api.api.v2.util import get_dict
 from globomap_api.api.v2.util import validate
-from globomap_api.config import SPECS
-
 
 ns = api.namespace('edges', description='Operations related to edges')
+
+specs = app.config['SPECS']
 
 
 @ns.route('/')
@@ -73,7 +73,7 @@ class Edges(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(api.schema_model('Edge', get_dict(SPECS.get('collections'))))
+    @api.expect(api.schema_model('Edge', get_dict(specs.get('collections'))))
     @permission_classes((
         permissions.Write, permissions.Edge, permissions.Admin))
     def post(self):
@@ -159,7 +159,7 @@ class EdgeClear(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(api.schema_model('EdgeClear', get_dict(SPECS.get('clear'))))
+    @api.expect(api.schema_model('EdgeClear', get_dict(specs.get('clear'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def post(self, edge):
         """Clear documents in edge."""
@@ -198,7 +198,7 @@ class Edge(Resource):
         404: 'Not Found',
         409: 'Document Already Exists'
     })
-    @api.expect(api.schema_model('EdgePost', get_dict(SPECS.get('edges'))))
+    @api.expect(api.schema_model('EdgePost', get_dict(specs.get('edges'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def post(self, edge):
         """Insert edge in DB."""
@@ -281,7 +281,7 @@ class DocumentEdge(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(api.schema_model('EdgePut', get_dict(SPECS.get('edges'))))
+    @api.expect(api.schema_model('EdgePut', get_dict(specs.get('edges'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def put(self, edge, key):
         """Update edge."""
@@ -313,7 +313,7 @@ class DocumentEdge(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('EdgePatch',
-                                 get_dict(SPECS.get('edges_partial'))))
+                                 get_dict(specs.get('edges_partial'))))
     @permission_classes((permissions.Write, permissions.Edge))
     def patch(self, edge, key):
         """Partial update edge."""

@@ -28,10 +28,11 @@ from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers import queries as query_parsers
 from globomap_api.api.v2.util import get_dict
 from globomap_api.api.v2.util import validate
-from globomap_api.config import SPECS
 
 ns = api.namespace(
     'queries', description='Operations related to queries')
+
+specs = app.config['SPECS']
 
 
 @ns.route('/')
@@ -71,7 +72,7 @@ class Query(Resource):
         409: 'Document Already Exists'
     })
     @api.expect(api.schema_model('QueryPost',
-                                 get_dict(SPECS.get('queries'))))
+                                 get_dict(specs.get('queries'))))
     @permission_classes((
         permissions.Write, permissions.Collection, permissions.Admin))
     def post(self):
@@ -119,7 +120,7 @@ class DocumentQuery(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('QueryPut',
-                                 get_dict(SPECS.get('queries'))))
+                                 get_dict(specs.get('queries'))))
     @permission_classes((permissions.Write, permissions.Collection, permissions.Admin))
     def put(self, key):
         """Update query in DB."""

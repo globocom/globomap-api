@@ -20,11 +20,12 @@ from os import remove
 from time import time
 
 import requests
+from flask import current_app as app
 from flask import send_file
 from pyzabbix import ZabbixAPI
 
-from globomap_api import config
 from globomap_api.api_plugins.abstract_plugin import AbstractPlugin
+from globomap_api.api_plugins.abstract_plugin import PluginError
 
 
 class ZabbixPlugin(AbstractPlugin):
@@ -32,22 +33,22 @@ class ZabbixPlugin(AbstractPlugin):
     logger = logging.getLogger(__name__)
 
     def __init__(self):
-        url = config.ZABBIX_API_URL
+        url = app.config['ZABBIX_API_URL']
         if not url:
             self.logger.error('Zabbix endpoint is not set')
             raise Exception('Invalid plugin configuration')
 
-        user = config.ZABBIX_API_USER
+        user = app.config['ZABBIX_API_USER']
         if not user:
             self.logger.error('Zabbix user is not set')
             raise Exception('Invalid plugin configuration')
 
-        password = config.ZABBIX_API_PASSWORD
+        password = app.config['ZABBIX_API_PASSWORD']
         if not password:
             self.logger.error('Zabbix password is not set')
             raise Exception('Invalid plugin configuration')
 
-        if not config.ZABBIX_UI_URL:
+        if not app.config['ZABBIX_UI_URL']:
             self.logger.error('Zabbix Ui is not set')
             raise Exception('Invalid plugin configuration')
 
@@ -62,7 +63,7 @@ class ZabbixPlugin(AbstractPlugin):
         elif graphid:
             return self.get_graph(graphid, encoded)
         else:
-            raise Exception("The field 'ips' or 'graphid' is required")
+            raise PluginError("The field 'ips' or 'graphid' is required")
 
     def get_trigger(self, ips):
         try:
@@ -88,7 +89,7 @@ class ZabbixPlugin(AbstractPlugin):
                 else:
                     return []
             else:
-                raise Exception(
+                raise PluginError(
                     'No hosts were found for IPs {}'.format(ips)
                 )
         except:
@@ -110,13 +111,13 @@ class ZabbixPlugin(AbstractPlugin):
     def get_graph(self, graphid, encoded=False):
         with requests.Session() as s:
             data = {
-                'password': config.ZABBIX_API_PASSWORD,
-                'name': config.ZABBIX_API_USER,
+                'password': app.config['ZABBIX_API_PASSWORD'],
+                'name': app.config['ZABBIX_API_USER'],
                 'enter': 'Sign in'
             }
-            url = '{}/index.php'.format(config.ZABBIX_UI_URL)
+            url = '{}/index.php'.format(app.config['ZABBIX_UI_URL'])
             res = s.post(url, data=data, verify=False)
-            url = '{}/chart2.php?graphid={}'.format(config.ZABBIX_UI_URL,
+            url = '{}/chart2.php?graphid={}'.format(app.config['ZABBIX_UI_URL'],
                                                     graphid)
             res = s.get(url, verify=False, stream=True)
             if res.status_code == 200:
@@ -129,7 +130,7 @@ class ZabbixPlugin(AbstractPlugin):
                 else:
                     return self._get_image(name)
 
-            raise Exception('Cannot get graph')
+            raise PluginError('Cannot get graph')
 
     def _get_base64(self, name):
         with open(name, 'rb') as f:
@@ -140,7 +141,7 @@ class ZabbixPlugin(AbstractPlugin):
         try:
             data = send_file(name, mimetype='image/png')
         except:
-            raise Exception('Cannot get graph')
+            raise PluginError('Cannot get graph')
         finally:
             remove(name)
         return data

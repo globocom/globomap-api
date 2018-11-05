@@ -21,6 +21,7 @@ from globomap_api.api.v2 import api
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
 from globomap_api.api.v2.parsers.plugins import plugin_arguments
+from globomap_api.api_plugins.abstract_plugin import PluginError
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 from globomap_api.api_plugins.plugin_loader import ApiPluginLoader
 
@@ -56,7 +57,11 @@ class PluginData(Resource):
             app.logger.error(str(err))
             api.abort(404, errors=str(err))
             return data
-        except:
+        except PluginError as err:
+            app.logger.error(str(err))
+            api.abort(400, errors=str(err))
+            return data
+        except Exception:
             err_msg = 'Error in plugin'
             app.logger.exception(err_msg)
-            api.abort(400, errors=err_msg)
+            api.abort(500, errors=err_msg)

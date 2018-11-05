@@ -24,3 +24,11 @@ class AbstractPlugin(object):
 class PluginNotFoundException(Exception):
 
     pass
+
+
+class PluginError(Exception):
+
+    def __init__(self, message):
+        super(PluginError, self).__init__(message)
+
+        self.message = message

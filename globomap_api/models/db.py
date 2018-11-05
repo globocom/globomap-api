@@ -30,46 +30,46 @@ LOGGER = logging.getLogger(__name__)
 
 
 class DB(object):
-
     """DB"""
 
-    collection = None
-    database = None
-    graph = None
-    conn = None
-    edge = None
-
     def __init__(self, config):
+        self.collection = None
+        self.database = None
+        self.graph = None
+        self.edge = None
+
         self.config = config
         self._connection()
 
     def _connection(self):
+        self.username = self.config['ARANGO_USERNAME']
+        self.password = self.config['ARANGO_PASSWORD']
+        self.arango_protocol = self.config['ARANGO_PROTOCOL']
+        self.arango_host = self.config['ARANGO_HOST']
+        self.arango_port = self.config['ARANGO_PORT']
 
-        self.username = self.config.ARANGO_USERNAME
-        self.password = self.config.ARANGO_PASSWORD
-        self.arango_protocol = self.config.ARANGO_PROTOCOL
-        self.arango_host = self.config.ARANGO_HOST
-        self.arango_port = self.config.ARANGO_PORT
-
-        self._conn = ArangoClient(
+        self.conn = ArangoClient(
             protocol=self.arango_protocol,
             host=self.arango_host,
-            port=self.arango_port,
-            username=self.username,
-            password=self.password,
-            enable_logging=True,
-            use_session=True
+            port=self.arango_port
         )
 
     ############
     # DATABASE #
     ############
+    def conn_database(self, name=''):
+        """Make a connection with a database"""
+        self.database = self.conn.db(name,
+                                     username=self.username,
+                                     password=self.password)
+
+    ############
     def has_database(self, name=''):
         """Return True if there database"""
 
         try:
-            database = self._conn.database(name)
-            database.properties()
+            self.conn_database(name)
+            self.database.properties()
         except exceptions.DatabasePropertiesError as err:
             LOGGER.error(err)
             return False
@@ -84,61 +84,14 @@ class DB(object):
         """Return database"""
 
         if not name:
-            name = self.config.ARANGO_DB
+            name = self.config['ARANGO_DB']
 
         if self.has_database(name):
-            self.database = self._conn.database(name)
             return self.database
         else:
             msg = db_err.get(1228).format(name)
             LOGGER.error(msg)
             raise gmap_exceptions.DatabaseNotExist(msg)
-
-    def create_database(self, name=''):
-        """Create DB"""
-
-        try:
-            self.database = self._conn.create_database(name)
-            return self.database
-        except exceptions.DatabaseCreateError as err:
-
-            if err.error_code == 1207:
-                msg = db_err.get(1207).format(name)
-                LOGGER.error(msg)
-                raise gmap_exceptions.DatabaseAlreadyExist(msg)
-            else:
-                msg = db_err.get(0).format(name, err.message)
-                LOGGER.error(msg)
-                raise gmap_exceptions.DatabaseException(msg)
-
-        except Exception as err:
-            msg = db_err.get(0).forma(name, str(err))
-            LOGGER.error(msg)
-            raise gmap_exceptions.DatabaseException(msg)
-
-    def delete_database(self, name=''):
-        """Delete DB"""
-
-        try:
-            self._conn.delete_database(name)
-            self.database = None
-            return True
-        except exceptions.DatabaseDeleteError as err:
-
-            if err.error_code == 1228:
-                msg = db_err.get(1228).format(name)
-                LOGGER.error(msg)
-                raise gmap_exceptions.DatabaseNotExist(msg)
-
-            else:
-                msg = db_err.get(0).format(name, err.message)
-                LOGGER.error(msg)
-                raise gmap_exceptions.DatabaseException(msg)
-
-        except Exception as err:
-            msg = db_err.get(0).format(name, str(err))
-            LOGGER.error(msg)
-            raise gmap_exceptions.DatabaseException(msg)
 
     #######
     # AQL #
@@ -569,9 +522,10 @@ class DB(object):
                 for edge in edge_definitions:
                     try:
                         self.graph.create_edge_definition(
-                            name=edge.get('edge'),
-                            from_collections=edge.get('from_collections'),
-                            to_collections=edge.get('to_collections')
+                            edge_collection=edge.get('edge'),
+                            from_vertex_collections=edge.get(
+                                'from_collections'),
+                            to_vertex_collections=edge.get('to_collections')
                         )
                     except Exception as err:
                         self.database.delete_graph(name)

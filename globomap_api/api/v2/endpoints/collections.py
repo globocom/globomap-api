@@ -30,10 +30,11 @@ from globomap_api.api.v2.parsers import collections as coll_parsers
 from globomap_api.api.v2.parsers.base import search_parser
 from globomap_api.api.v2.util import get_dict
 from globomap_api.api.v2.util import validate
-from globomap_api.config import SPECS
 
 ns = api.namespace(
     'collections', description='Operations related to collections')
+
+specs = app.config['SPECS']
 
 
 @ns.route('/')
@@ -74,7 +75,7 @@ class Collections(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('Collections',
-                                 get_dict(SPECS.get('collections'))))
+                                 get_dict(specs.get('collections'))))
     @permission_classes((permissions.Write, permissions.Collection,
                          permissions.Admin))
     def post(self):
@@ -164,7 +165,7 @@ class Collection(Resource):
         409: 'Document Already Exists'
     })
     @api.expect(api.schema_model('DocumentPost',
-                                 get_dict(SPECS.get('documents'))))
+                                 get_dict(specs.get('documents'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def post(self, collection):
         """Insert document in DB."""
@@ -247,7 +248,7 @@ class CollectionClear(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('DocumentClear',
-                                 get_dict(SPECS.get('clear'))))
+                                 get_dict(specs.get('clear'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def post(self, collection):
         """Clear documents in collection."""
@@ -289,7 +290,7 @@ class Document(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('DocumentPut',
-                                 get_dict(SPECS.get('documents'))))
+                                 get_dict(specs.get('documents'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def put(self, collection, key):
         """Update document."""
@@ -321,7 +322,7 @@ class Document(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('DocumentPatch',
-                                 get_dict(SPECS.get('documents_partial'))))
+                                 get_dict(specs.get('documents_partial'))))
     @permission_classes((permissions.Write, permissions.Collection))
     def patch(self, collection, key):
         """Partial update document."""

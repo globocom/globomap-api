@@ -15,7 +15,6 @@
 """
 from flask import current_app as app
 
-from globomap_api import config
 from globomap_api.api.v2 import api
 
 
@@ -44,34 +43,34 @@ class BasePermission(object):
 class Admin(BasePermission):
 
     def has_permission(self, token):
-        return self.has_perm(token, config.ADMIN)
+        return self.has_perm(token, app.config['ADMIN'])
 
 
 class Read(BasePermission):
 
     def has_permission(self, token):
-        return self.has_perm(token, config.READ)
+        return self.has_perm(token, app.config['READ'])
 
 
 class Write(BasePermission):
 
     def has_permission(self, token):
-        return self.has_perm(token, config.WRITE)
+        return self.has_perm(token, app.config['WRITE'])
 
 
 class Collection(BasePermission):
 
     def has_permission(self, token):
-        return self.has_perm(token, config.COLLECTION)
+        return self.has_perm(token, app.config['COLLECTION'])
 
 
 class Edge(BasePermission):
 
     def has_permission(self, token):
-        return self.has_perm(token, config.EDGE)
+        return self.has_perm(token, app.config['EDGE'])
 
 
 class Graph(BasePermission):
 
     def has_permission(self, token):
-        return self.has_perm(token, config.GRAPH)
+        return self.has_perm(token, app.config['GRAPH'])

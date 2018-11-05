@@ -25,12 +25,29 @@ class TestDocument(unittest2.TestCase):
 
     def setUp(self):
         self.app = create_app('tests.config')
-        self.db_name = self.app.config['ARANGO_DB']
-        with self.app.app_context():
-            self.db_inst = DB(self.app.config)
-            self._cleanup()
-            self.db_inst.get_database()
-            self.db_inst.create_collection('test_collection_db')
+        self.db_inst = DB(self.app.config)
+
+        self.conn_db()
+        self.cleanup()
+        self.db_inst.database.create_database('test')
+
+        self.db_inst.conn_database('test')
+        self.db_inst.database.create_collection('test_collection_db')
+        self.db_inst.get_collection('test_collection_db')
+
+    def tearDown(self):
+        self.conn_db()
+        self.cleanup()
+
+    def conn_db(self):
+        db_name = self.app.config['ARANGO_DB']
+        self.db_inst.conn_database(db_name)
+
+    def cleanup(self):
+        try:
+            self.db_inst.database.delete_database('test')
+        except:
+            pass
 
     def test_search_document(self):
         """Test search document by property"""
@@ -38,8 +55,9 @@ class TestDocument(unittest2.TestCase):
         with self.app.app_context():
             col_name = 'test_collection_db'
             self._import_bulk(col_name)
-            docs = self.db_inst.ser('test_collection_db',
-                                    'value', '1')
+            search = [[{'field': 'value', 'operator': '==', 'value': 1}]]
+            docs = self.db_inst.search_in_collection(
+                'test_collection_db', search)
             docs = (set(sorted([d['_key'] for d in docs])))
 
             self.assertEqual(docs, {'doc04', 'doc05'})
@@ -56,11 +74,10 @@ class TestDocument(unittest2.TestCase):
             self.assertDictEqual(doc, {'_key': 'doc04', 'value': 1})
 
     def test_create_document(self):
-        """Test get document"""
+        """Test create document"""
 
         with self.app.app_context():
             inst_doc = Document(self.db_inst.collection)
-
             doc = inst_doc.create_document({'_key': 'doc04', 'value': 1})
             doc = {'_key': doc['_key'], '_id': doc['_id'], }
 
@@ -68,7 +85,7 @@ class TestDocument(unittest2.TestCase):
                 doc, {'_key': 'doc04', '_id': 'test_collection_db/doc04', })
 
     def test_get_document_not_exist(self):
-        """Test get document"""
+        """Test get document not existing"""
 
         with self.app.app_context():
             inst_doc = Document(self.db_inst.collection)
@@ -77,7 +94,7 @@ class TestDocument(unittest2.TestCase):
                 inst_doc.get_document('doc04')
 
     def test_delete_document(self):
-        """Test get document"""
+        """Test delete document"""
 
         with self.app.app_context():
             col_name = 'test_collection_db'
@@ -90,7 +107,7 @@ class TestDocument(unittest2.TestCase):
                 inst_doc.get_document('doc04')
 
     def test_delete_document_not_exist(self):
-        """Test get document"""
+        """Test delee document not existing"""
 
         with self.app.app_context():
             inst_doc = Document(self.db_inst.collection)
@@ -99,20 +116,9 @@ class TestDocument(unittest2.TestCase):
                 inst_doc.delete_document('doc04')
 
     def _import_bulk(self, col_name):
-        self.db_inst.database.collection(col_name).import_bulk([
+        collection = self.db_inst.database.collection(col_name)
+        collection.import_bulk([
             {'_key': 'doc04', 'value': 1},
             {'_key': 'doc05', 'value': 1},
             {'_key': 'doc06', 'value': 3},
         ])
-
-    def _cleanup(self):
-        try:
-            self.db_inst.delete_database(self.db_name)
-        except Exception:
-            pass
-        finally:
-            self.db_inst.create_database(self.db_name)
-
-
-if __name__ == '__main__':
-    unittest2.main()

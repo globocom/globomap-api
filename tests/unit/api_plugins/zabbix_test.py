@@ -19,50 +19,56 @@ from unittest.mock import patch
 import unittest2
 
 from globomap_api.api_plugins.zabbix import ZabbixPlugin
+from globomap_api.app import create_app
 
 
 class TestZabbix(unittest2.TestCase):
 
     def setUp(self):
-        patch('globomap_api.api_plugins.zabbix.config').start()
+        self.app = create_app('tests.config')
         self.hosts = {'result': [{'hostid': 1}]}
         self.triggers = {'result': [
             {'triggerid': 1, 'description': 'CPU 99%', 'value': 1}]}
 
     def test_get_triggers(self):
-        self._mock_py_zabbix(self.hosts, self.triggers)
-        response = ZabbixPlugin().get_data({'ips': '10.0.0.1'})
+        with self.app.app_context():
+            self._mock_py_zabbix(self.hosts, self.triggers)
+            response = ZabbixPlugin().get_data({'ips': '10.0.0.1'})
 
-        self.assertEqual(1, len(response))
-        self.assertEqual('CPU 99%', response[0]['key'])
-        self.assertEqual(1, response[0]['value'])
-        self.assertIsNotNone(response[0]['properties'])
+            self.assertEqual(1, len(response))
+            self.assertEqual('CPU 99%', response[0]['key'])
+            self.assertEqual(1, response[0]['value'])
+            self.assertIsNotNone(response[0]['properties'])
 
     def test_get_triggers_given_no_ips_provided(self):
-        try:
-            ZabbixPlugin().get_data({})
-        except Exception as e:
-            self.assertEquals(
-                "The field 'ips' or 'graphid' is required", str(e))
+        with self.app.app_context():
+            try:
+                ZabbixPlugin().get_data({})
+            except Exception as e:
+                self.assertEquals(
+                    "The field 'ips' or 'graphid' is required", str(e))
 
     def test_get_triggers_given_host_not_found(self):
-        try:
-            self._mock_py_zabbix({'result': []})
-            ZabbixPlugin().get_data({'ips': '10.0.0.1'})
-        except Exception as e:
-            self.assertEquals(
-                "No hosts were found for IPs ['10.0.0.1']", str(e))
+        with self.app.app_context():
+            try:
+                self._mock_py_zabbix({'result': []})
+                ZabbixPlugin().get_data({'ips': '10.0.0.1'})
+            except Exception as e:
+                self.assertEquals(
+                    "No hosts were found for IPs ['10.0.0.1']", str(e))
 
     def test_get_triggers_given_triggers_not_found(self):
-        self._mock_py_zabbix(self.hosts, {'result': []})
-        response = ZabbixPlugin().get_data({'ips': '10.0.0.1'})
+        with self.app.app_context():
+            self._mock_py_zabbix(self.hosts, {'result': []})
+            response = ZabbixPlugin().get_data({'ips': '10.0.0.1'})
 
-        self.assertEqual(0, len(response))
+            self.assertEqual(0, len(response))
 
     def test_get_triggers_given_api_error(self):
-        with self.assertRaises(ConnectionError):
-            self._mock_py_zabbix(ConnectionError())
-            ZabbixPlugin().get_data({'ips': '10.0.0.1'})
+        with self.app.app_context():
+            with self.assertRaises(ConnectionError):
+                self._mock_py_zabbix(ConnectionError())
+                ZabbixPlugin().get_data({'ips': '10.0.0.1'})
 
     def _mock_py_zabbix(self, hosts, triggers=None):
         py_zabbix_mock = patch(

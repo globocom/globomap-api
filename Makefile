@@ -19,11 +19,14 @@ clean: ## Clear *.pyc files, etc
 	@rm -rf build dist *.egg-info
 	@find . \( -name '*.pyc' -o  -name '__pycache__' -o -name '**/*.pyc' -o -name '*~' \) -delete
 
-exec_tests: clean ## Run all tests with coverage
+exec_tests: ## Make tests
 	@nosetests --verbose --rednose  --nocapture --cover-package=globomap_api --with-coverage; coverage report -m
 
 tests: ## Run tests
-	@docker exec -it globomap_api make exec_tests
+	@docker exec -it globomap_api make exec_tests || true
+
+tests_ci: ## Run tests
+	@docker exec -it globomap_api make exec_tests || true
 
 run: ## Run a development web server
 	@/home/meta_collections.sh

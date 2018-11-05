@@ -27,6 +27,7 @@ class Constructor(object):
     kind = None
     links = None
     create = False
+    create_indexes = True
 
     def _treat_param(self, kwargs):
         for key in kwargs:
@@ -52,6 +53,8 @@ class Constructor(object):
         db_inst.get_database()
         if self.create:
             col = db_inst.create_collection(name=self.name)
+            if self.create_indexes:
+                self._create_indexes(col)
         else:
             col = db_inst.get_collection(name=self.name)
         return col
@@ -62,6 +65,8 @@ class Constructor(object):
         db_inst.get_database()
         if self.create:
             col = db_inst.create_edge(name=self.name)
+            if self.create_indexes:
+                self._create_indexes(col)
         else:
             col = db_inst.get_edge(name=self.name)
         return col
@@ -75,3 +80,10 @@ class Constructor(object):
         else:
             graph = db_inst.get_graph(self.name)
         return graph
+
+    def _create_indexes(self, col):
+        col.add_hash_index(fields=['name'])
+        col.add_hash_index(fields=['id'])
+        col.add_hash_index(fields=['properties'])
+        col.add_skiplist_index(fields=['timestamp'])
+        col.add_skiplist_index(fields=['provider'])

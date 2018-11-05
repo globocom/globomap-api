@@ -3,7 +3,7 @@ services:
 
     db:
         container_name: globomap_db
-        image: arangodb:3.3.4
+        image: arangodb:3.3.15
         ports:
             - "${GMAP_DB_PORT}:8529"
         environment:
