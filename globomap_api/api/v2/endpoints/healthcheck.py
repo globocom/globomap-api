@@ -75,9 +75,9 @@ def _is_arango_ok():
     try:
         db = app.config['ARANGO_CONN']
         db.get_database()
-        graphs = facade.list_graphs()
-        collections = facade.list_collections('document')
-        edges = facade.list_collections('edge')
+        graphs = get_graphs()
+        collections = get_collections('document')
+        edges = get_collections('edge')
     except:
         app.logger.error('Failed to healthcheck arango.')
         deps = {'status': False}
@@ -90,6 +90,30 @@ def _is_arango_ok():
         }
 
     return deps
+
+
+def get_graphs():
+    page = 1
+    graphs = []
+    while True:
+        partial_graphs = facade.list_graphs(page=page, per_page=2)
+        graphs += partial_graphs['graphs']
+        if page == partial_graphs['total_pages']:
+            break
+        page += 1
+    return graphs
+
+
+def get_collections(kind):
+    page = 1
+    collections = []
+    while True:
+        partial_coll = facade.list_collections(kind, page=page, per_page=2)
+        collections += partial_coll['collections']
+        if page == partial_coll['total_pages']:
+            break
+        page += 1
+    return collections
 
 
 def _is_auth_ok():
