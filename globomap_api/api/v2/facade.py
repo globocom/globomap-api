@@ -54,6 +54,7 @@ def create_meta_graph_doc(data):
         'links': data.get('links'),
         'alias': data.get('alias'),
         'icon': data.get('icon'),
+        'description': data.get('description'),
     }
     doc = inst_doc.create_document(document)
 
@@ -100,6 +101,7 @@ def create_meta_collection_doc(data, kind):
         'alias': data.get('alias'),
         'kind': kind,
         'icon': data.get('icon'),
+        'description': data.get('description'),
     }
     doc = inst_doc.create_document(document)
 

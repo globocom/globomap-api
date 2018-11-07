@@ -77,7 +77,8 @@ def filter_graphs(data):
             'name': graph['name'],
             'alias': graph['alias'],
             'icon': graph['icon'],
-            'links': graph['links']
+            'description': graph['description'],
+            'links': graph['links'],
         }
         graphs.append(gra)
     return graphs
@@ -90,7 +91,8 @@ def filter_collections(colls):
             'alias': coll['alias'],
             'name': coll['name'],
             'kind': coll['kind'],
-            'icon': coll['icon']
+            'icon': coll['icon'],
+            'description': coll['description'],
         })
     return collections
 

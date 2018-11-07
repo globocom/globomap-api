@@ -16,11 +16,17 @@
       "type": "string",
       "pattern": "^([a-z_-]){1,}$",
       "minimum": 1
+    },
+    "description": {
+      "type": "string",
+      "pattern": "^([a-z_-]){1,}$",
+      "minimum": 1
     }
   },
   "required": [
     "name",
     "alias",
-    "icon"
+    "icon",
+    "description"
   ]
 }
