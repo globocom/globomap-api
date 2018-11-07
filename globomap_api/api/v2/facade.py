@@ -484,15 +484,15 @@ def make_query(data):
     query = {
         '_key': key,
         'name': data.get('name'),
-        'description': data['description'],
-        'query': data['query'],
+        'description': data.get('description'),
+        'query': data.get('query'),
         'params': data.get('params'),
         'collection': data.get('collection')
     }
 
     db_inst = app.config['ARANGO_CONN']
     db_inst.get_database()
-    db_inst.validate_aql(data['query'])
+    db_inst.validate_aql(data.get('query'))
 
     return query
 

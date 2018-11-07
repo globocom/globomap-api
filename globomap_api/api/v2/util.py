@@ -74,11 +74,11 @@ def filter_graphs(data):
     graphs = []
     for graph in data:
         gra = {
-            'name': graph['name'],
-            'alias': graph['alias'],
-            'icon': graph['icon'],
-            'description': graph['description'],
-            'links': graph['links'],
+            'name': graph.get('name'),
+            'alias': graph.get('alias'),
+            'icon': graph.get('icon'),
+            'description': graph.get('description'),
+            'links': graph.get('links'),
         }
         graphs.append(gra)
     return graphs
@@ -88,11 +88,11 @@ def filter_collections(colls):
     collections = []
     for coll in colls:
         collections.append({
-            'alias': coll['alias'],
-            'name': coll['name'],
-            'kind': coll['kind'],
-            'icon': coll['icon'],
-            'description': coll['description'],
+            'alias': coll.get('alias'),
+            'name': coll.get('name'),
+            'kind': coll.get('kind'),
+            'icon': coll.get('icon'),
+            'description': coll.get('description'),
         })
     return collections
 
