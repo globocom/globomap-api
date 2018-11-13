@@ -41,7 +41,10 @@ class Healthcheck(Resource):
         503: 'Service Unavailable',
     })
     def get(self):
-        deps = _list_deps()
+        deps = {
+            'auth': _is_auth_ok(),
+            'arango': _is_arango_ok()
+        }
         problems = {}
         for key in deps:
             if deps[key].get('status') is False:
@@ -58,27 +61,21 @@ class HealthcheckDeps(Resource):
 
     @api.doc(responses={200: 'Success'})
     def get(self):
-        deps = _list_deps()
+        deps = {
+            'auth': _is_auth_ok(),
+            'arango': _is_arango_ok_details()
+        }
         return deps, 200
 
 
-def _list_deps():
-    deps = {
-        'auth': _is_auth_ok(),
-        'arango': _is_arango_ok()
-    }
-
-    return deps
-
-
-def _is_arango_ok():
+def _is_arango_ok_details():
     try:
         db = app.config['ARANGO_CONN']
         db.get_database()
         graphs = get_graphs()
         collections = get_collections('document')
         edges = get_collections('edge')
-    except:
+    except Exception:
         app.logger.error('Failed to healthcheck arango.')
         deps = {'status': False}
     else:
@@ -92,11 +89,29 @@ def _is_arango_ok():
     return deps
 
 
+def _is_arango_ok():
+    try:
+        db = app.config['ARANGO_CONN']
+        db.get_database()
+        facade.list_graphs()
+        facade.list_collections('document')
+        facade.list_collections('edge')
+    except Exception:
+        app.logger.error('Failed to healthcheck arango.')
+        deps = {'status': False}
+    else:
+        deps = {
+            'status': True
+        }
+
+    return deps
+
+
 def get_graphs():
     page = 1
     graphs = []
     while True:
-        partial_graphs = facade.list_graphs(page=page, per_page=2)
+        partial_graphs = facade.list_graphs(page=page, per_page=100)
         graphs += partial_graphs['graphs']
         if page == partial_graphs['total_pages']:
             break
@@ -108,7 +123,7 @@ def get_collections(kind):
     page = 1
     collections = []
     while True:
-        partial_coll = facade.list_collections(kind, page=page, per_page=2)
+        partial_coll = facade.list_collections(kind, page=page, per_page=100)
         collections += partial_coll['collections']
         if page == partial_coll['total_pages']:
             break
