@@ -1,9 +1,4 @@
-# Version package
-VERSION=$(shell python -c 'import globomap_api; print globomap_api.VERSION')
-
 PROJECT_HOME = "`pwd`"
-
-DOCKER_COMPOSE_FILE=$(shell make docker_file)
 
 help:
 	@echo
@@ -29,28 +24,20 @@ tests_ci: ## Run tests
 	@docker exec -it globomap_api make exec_tests || true
 
 run: ## Run a development web server
-	@/home/meta_collections.sh
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
 
-containers_start:## Start containers
-	docker-compose --file $(DOCKER_COMPOSE_FILE) up -d
-	./scripts/docker/keystone_setup.sh
+containers_start: dynamic_ports ## Start containers
+	docker-compose up -d
+	./scripts/docker/keystone/setup.sh
 
-containers_build: ## Build containers
-	docker-compose --file $(DOCKER_COMPOSE_FILE) build --no-cache
+containers_build: dynamic_ports ## Build containers
+	docker-compose build --no-cache
 
 containers_stop: ## Stop containers
-	docker-compose --file $(DOCKER_COMPOSE_FILE) stop
+	docker-compose stop
 
 containers_clean: ## Destroy containers
-	docker-compose --file $(DOCKER_COMPOSE_FILE) rm -s -v -f
+	docker-compose rm -s -v -f
 
 dynamic_ports: ## Set ports to services
-	./scripts/docker/ports.sh
-
-docker_file:
-	@if [[ -f "docker-compose-temp.yml" ]]; then \
-		echo "docker-compose-temp.yml"; 		 \
-	else                                         \
-		echo "docker-compose.yml";               \
-    fi
+	./scripts/docker/expose_ports.sh

@@ -18,5 +18,5 @@ if [ "000" = "${HTTP_RET_CODE}" ]; then
 fi
 
 
-./scripts/docker/meta_collections.sh
-PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
+./scripts/docker/api/meta_collections.sh
+make run

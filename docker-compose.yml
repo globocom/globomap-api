@@ -16,15 +16,13 @@ services:
         container_name: globomap_api
         build:
             context: ./
-            dockerfile: scripts/docker/Dockerfile
+            dockerfile: scripts/docker/api/Dockerfile
         ports:
             - "${GMAP_API_PORT}:5000"
             - "${GMAP_API_DEBUG_PORT}:5001"
         env_file:
             - scripts/docker/globomap.env
-        volumes:
-            - .:/app
-            - ./scripts/docker/meta_collections.sh:/home/meta_collections.sh:ro
+        command: "sh ./scripts/docker/api/wait_keystone_start.sh"
         networks:
             - globomap_net
         external_links:
@@ -33,7 +31,9 @@ services:
 
     keystone:
         container_name: globomap_keystone
-        image: krystism/openstack-keystone
+        build:
+            context: ./
+            dockerfile: scripts/docker/keystone/Dockerfile
         ports:
             - "${GMAP_KS_ADM_PORT}:35357"
             - "${GMAP_KS_PORT}:5000"
@@ -41,9 +41,6 @@ services:
         environment:
             OS_TENANT_NAME: admin
             OS_USERNAME: admin
-            # OS_PASSWORD: secret_admin_pass
-        volumes:
-            - ./scripts/docker/keystone.sh:/home/keystone.sh:ro
         networks:
             - globomap_net
 

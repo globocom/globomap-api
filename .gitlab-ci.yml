@@ -1,6 +1,11 @@
 test:
-  image: python:3.6
+  image: docker
   before_script:
+    - apk add make
+    - apk add bash
+    - apk add python3
+    - apk --update add 'py-pip' && pip install 'docker-compose'
+    - make containers_clean
     - make dynamic_ports
     - make containers_build
     - make containers_start

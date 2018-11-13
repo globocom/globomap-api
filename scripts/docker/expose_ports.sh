@@ -35,10 +35,9 @@ if [ -z "${GMAP_REDIS_PORT}" ]; then
     GMAP_REDIS_PORT=7006
 fi
 
-cp -R docker-compose.yml docker-compose-temp.yml
-sed -i '' "s/\${GMAP_DB_PORT}/$GMAP_DB_PORT/g" docker-compose-temp.yml
-sed -i '' "s/\${GMAP_API_PORT}/$GMAP_API_PORT/g" docker-compose-temp.yml
-sed -i '' "s/\${GMAP_API_DEBUG_PORT}/$GMAP_API_DEBUG_PORT/g" docker-compose-temp.yml
-sed -i '' "s/\${GMAP_KS_ADM_PORT}/$GMAP_KS_ADM_PORT/g" docker-compose-temp.yml
-sed -i '' "s/\${GMAP_KS_PORT}/$GMAP_KS_PORT/g" docker-compose-temp.yml
-sed -i '' "s/\${GMAP_REDIS_PORT}/$GMAP_REDIS_PORT/g" docker-compose-temp.yml
+echo "GMAP_DB_PORT=$GMAP_DB_PORT" > .env
+echo "GMAP_API_PORT=$GMAP_API_PORT" >> .env
+echo "GMAP_API_DEBUG_PORT=$GMAP_API_DEBUG_PORT" >> .env
+echo "GMAP_KS_ADM_PORT=$GMAP_KS_ADM_PORT" >> .env
+echo "GMAP_KS_PORT=$GMAP_KS_PORT" >> .env
+echo "GMAP_REDIS_PORT=$GMAP_REDIS_PORT" >> .env
