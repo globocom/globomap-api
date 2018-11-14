@@ -7,4 +7,4 @@ while : ; do
         sleep 1;
     fi
 done
-docker exec -it globomap_keystone "/home/keystone.sh"
+docker exec globomap_keystone "/home/keystone.sh"
