@@ -26,17 +26,18 @@ FLASK_DEBUG = os.getenv('FLASK_DEBUG', False)
 
 API_PLUGINS_CONFIG_FILE = 'api_plugins'
 
+PROJECT_ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 SPECS = {
-    'auth': 'globomap_api/specs/auth.json',
-    'documents': 'globomap_api/specs/documents.json',
-    'edges': 'globomap_api/specs/edges.json',
-    'documents_partial': 'globomap_api/specs/documents_partial.json',
-    'edges_partial': 'globomap_api/specs/edges_partial.json',
-    'collections': 'globomap_api/specs/collections.json',
-    'graphs': 'globomap_api/specs/graphs.json',
-    'search': 'globomap_api/specs/search.json',
-    'clear': 'globomap_api/specs/clear.json',
-    'queries': 'globomap_api/specs/queries.json',
+    'auth': os.path.join(PROJECT_ROOT_PATH, 'specs/auth.json'),
+    'documents': os.path.join(PROJECT_ROOT_PATH, 'specs/documents.json'),
+    'edges': os.path.join(PROJECT_ROOT_PATH, 'specs/edges.json'),
+    'documents_partial': os.path.join(PROJECT_ROOT_PATH, 'specs/documents_partial.json'),
+    'edges_partial': os.path.join(PROJECT_ROOT_PATH, 'specs/edges_partial.json'),
+    'collections': os.path.join(PROJECT_ROOT_PATH, 'specs/collections.json'),
+    'graphs': os.path.join(PROJECT_ROOT_PATH, 'specs/graphs.json'),
+    'search': os.path.join(PROJECT_ROOT_PATH, 'specs/search.json'),
+    'clear': os.path.join(PROJECT_ROOT_PATH, 'specs/clear.json'),
+    'queries': os.path.join(PROJECT_ROOT_PATH, 'specs/queries.json'),
 }
 
 ZABBIX_UI_URL = os.getenv('ZABBIX_UI_URL')

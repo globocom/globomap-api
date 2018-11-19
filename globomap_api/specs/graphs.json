@@ -1,5 +1,5 @@
 {
-
+  "$schema": "http://json-schema.org/draft-04/schema#",
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -10,7 +10,6 @@
     },
     "alias": {
       "type": "string",
-      "pattern": "^([a-zA-Z_ -]){1,}$",
       "minimum": 1
     },
     "icon": {
@@ -20,7 +19,6 @@
     },
     "description": {
       "type": "string",
-      "pattern": "^([a-z_-]){1,}$",
       "minimum": 1
     },
     "links": {

@@ -17,6 +17,8 @@ services:
         build:
             context: ./
             dockerfile: scripts/docker/api/Dockerfile
+        volumes:
+            - ".:/app"
         ports:
             - "${GMAP_API_PORT}:5000"
             - "${GMAP_API_DEBUG_PORT}:5001"
