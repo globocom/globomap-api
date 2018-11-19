@@ -106,7 +106,8 @@ class CollectionsTestCase(unittest2.TestCase):
                 'name': 'coll',
                 'kind': 'document',
                 'icon': 'coll_icon',
-                'description': 'Test Coll'
+                'description': 'Test Coll',
+                'users': ['user_abc']
             }
         ]
         self.assertListEqual(data['collections'], collections)
