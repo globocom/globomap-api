@@ -102,6 +102,7 @@ def create_meta_collection_doc(data, kind):
         'kind': kind,
         'icon': data.get('icon'),
         'description': data.get('description'),
+        'users': data.get('users'),
     }
     doc = inst_doc.create_document(document)
 

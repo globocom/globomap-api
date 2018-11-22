@@ -74,10 +74,10 @@ class Collections(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(api.schema_model('Collections',
-                                 get_dict(specs.get('collections'))))
     @permission_classes((permissions.Write, permissions.Collection,
                          permissions.Admin))
+    @api.expect(api.schema_model('Collections',
+                                 get_dict(specs.get('collections'))))
     def post(self):
         """Create collection of kind document in DB."""
 

@@ -13,3 +13,20 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+from globomap_api.app import create_app
+from globomap_api.models.db import DB
+
+
+def cleanup():
+    app = create_app('tests.config')
+    db_inst = DB(app.config)
+    db_name = app.config['ARANGO_DB']
+    db_inst.conn_database(db_name)
+    for col in db_inst.database.collections():
+        if 'meta' not in col['name'] and col['system'] is False:
+            db_inst.database.delete_collection(col['name'])
+    db_inst.database.collection('meta_collection').truncate()
+
+
+if __name__ == '__main__':
+    cleanup()

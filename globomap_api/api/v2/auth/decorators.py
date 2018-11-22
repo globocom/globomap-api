@@ -24,7 +24,6 @@ def permission_classes(permission_classes):
     def outer(func):
         @functools.wraps(func)
         def inner(self, *args, **kwargs):
-
             token = request.headers.get('Authorization')
             auth_inst = validate_token(token)
             if auth_inst:

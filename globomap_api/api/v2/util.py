@@ -93,6 +93,7 @@ def filter_collections(colls):
             'kind': coll.get('kind'),
             'icon': coll.get('icon'),
             'description': coll.get('description'),
+            'users': coll.get('users'),
         })
     return collections
 
