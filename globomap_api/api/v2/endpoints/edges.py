@@ -51,7 +51,7 @@ class Edges(Resource):
         403: 'Forbidden',
     })
     @api.expect(search_parser)
-    @permission_classes((permissions.Read, permissions.Edge))
+    @permission_classes((permissions.Read,))
     def get(self):
         """List all collections of kind edge from DB."""
 
@@ -74,8 +74,7 @@ class Edges(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('Edge', get_dict(specs.get('collections'))))
-    @permission_classes((
-        permissions.Write, permissions.Edge, permissions.Admin))
+    @permission_classes((permissions.Admin,))
     def post(self):
         """Create collection of kind edge in DB."""
 
@@ -112,7 +111,7 @@ class EdgeSearch(Resource):
         404: 'Not Found'
     })
     @api.expect(edges_parsers.search_all_parser)
-    @permission_classes((permissions.Read, permissions.Edge))
+    @permission_classes((permissions.Read,))
     def get(self):
         """Search edge in collections of kind edge from DB."""
 
@@ -160,7 +159,7 @@ class EdgeClear(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('EdgeClear', get_dict(specs.get('clear'))))
-    @permission_classes((permissions.Write, permissions.Edge))
+    @permission_classes((permissions.Write,))
     def post(self, edge):
         """Clear documents in edge."""
 
@@ -199,7 +198,7 @@ class Edge(Resource):
         409: 'Document Already Exists'
     })
     @api.expect(api.schema_model('EdgePost', get_dict(specs.get('edges'))))
-    @permission_classes((permissions.Write, permissions.Edge))
+    @permission_classes((permissions.Write,))
     def post(self, edge):
         """Insert edge in DB."""
 
@@ -233,7 +232,7 @@ class Edge(Resource):
         404: 'Not Found'
     })
     @api.expect(edges_parsers.search_parser)
-    @permission_classes((permissions.Read, permissions.Edge))
+    @permission_classes((permissions.Read,))
     def get(self, edge):
         """Search documents from collection."""
 
@@ -282,7 +281,7 @@ class DocumentEdge(Resource):
         404: 'Not Found'
     })
     @api.expect(api.schema_model('EdgePut', get_dict(specs.get('edges'))))
-    @permission_classes((permissions.Write, permissions.Edge))
+    @permission_classes((permissions.Write,))
     def put(self, edge, key):
         """Update edge."""
 
@@ -314,7 +313,7 @@ class DocumentEdge(Resource):
     })
     @api.expect(api.schema_model('EdgePatch',
                                  get_dict(specs.get('edges_partial'))))
-    @permission_classes((permissions.Write, permissions.Edge))
+    @permission_classes((permissions.Write,))
     def patch(self, edge, key):
         """Partial update edge."""
 
@@ -344,7 +343,7 @@ class DocumentEdge(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @permission_classes((permissions.Read, permissions.Edge))
+    @permission_classes((permissions.Read,))
     def get(self, edge, key):
         """Get edge by key."""
 
@@ -366,7 +365,7 @@ class DocumentEdge(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @permission_classes((permissions.Write, permissions.Edge))
+    @permission_classes((permissions.Write,))
     def delete(self, edge, key):
         """Delete edge by key."""
 

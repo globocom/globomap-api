@@ -50,7 +50,7 @@ class Query(Resource):
         403: 'Forbidden',
     })
     @api.expect(query_parsers.search_query_parser)
-    @permission_classes((permissions.Read, permissions.Collection))
+    @permission_classes((permissions.Read,))
     def get(self):
         """List all queries from DB."""
 
@@ -73,8 +73,7 @@ class Query(Resource):
     })
     @api.expect(api.schema_model('QueryPost',
                                  get_dict(specs.get('queries'))))
-    @permission_classes((
-        permissions.Write, permissions.Collection, permissions.Admin))
+    @permission_classes((permissions.Write,))
     def post(self):
         """Create queries in DB."""
 
@@ -121,7 +120,7 @@ class DocumentQuery(Resource):
     })
     @api.expect(api.schema_model('QueryPut',
                                  get_dict(specs.get('queries'))))
-    @permission_classes((permissions.Write, permissions.Collection, permissions.Admin))
+    @permission_classes((permissions.Write,))
     def put(self, key):
         """Update query in DB."""
 
@@ -151,7 +150,7 @@ class DocumentQuery(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @permission_classes((permissions.Read, permissions.Collection))
+    @permission_classes((permissions.Read,))
     def get(self, key):
         """Get query by key."""
 
@@ -169,7 +168,7 @@ class DocumentQuery(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @permission_classes((permissions.Write, permissions.Collection, permissions.Admin))
+    @permission_classes((permissions.Write,))
     def delete(self, key):
         """Delete query by key."""
 
@@ -202,7 +201,7 @@ class ExecuteQuery(Resource):
         404: 'Not Found'
     })
     @api.expect(query_parsers.execute_query_parser)
-    @permission_classes((permissions.Read, permissions.Collection))
+    @permission_classes((permissions.Read,))
     def get(self, key):
         """Get query by key."""
 

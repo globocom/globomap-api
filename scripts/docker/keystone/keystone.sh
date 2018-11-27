@@ -111,9 +111,6 @@ create_role()
 create_role globomap_admin
 create_role globomap_read
 create_role globomap_write
-create_role globomap_collection
-create_role globomap_edge
-create_role globomap_graph
 create_role globomap_loader_update
 
 ## Associating Roles
@@ -138,7 +135,4 @@ create_assoc_role u_globomap_api admin
 create_assoc_role u_globomap_api globomap_admin
 create_assoc_role u_globomap_api globomap_read
 create_assoc_role u_globomap_api globomap_write
-create_assoc_role u_globomap_api globomap_collection
-create_assoc_role u_globomap_api globomap_edge
-create_assoc_role u_globomap_api globomap_graph
 create_assoc_role u_globomap_api globomap_loader_update

@@ -56,21 +56,3 @@ class Write(BasePermission):
 
     def has_permission(self, token):
         return self.has_perm(token, app.config['WRITE'])
-
-
-class Collection(BasePermission):
-
-    def has_permission(self, token):
-        return self.has_perm(token, app.config['COLLECTION'])
-
-
-class Edge(BasePermission):
-
-    def has_permission(self, token):
-        return self.has_perm(token, app.config['EDGE'])
-
-
-class Graph(BasePermission):
-
-    def has_permission(self, token):
-        return self.has_perm(token, app.config['GRAPH'])

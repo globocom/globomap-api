@@ -59,9 +59,6 @@ meta_query <br>
 globomap_admin <br>
 globomap_read <br>
 globomap_write <br>
-globomap_collection <br>
-globomap_edge <br>
-globomap_graph <br>
 
 ## Simple Example
 Complete flow with [python](https://github.com/edersonbrilhante/globomap-hands-on)

@@ -53,9 +53,6 @@ KEYSTONE_PASSWORD = os.getenv('KEYSTONE_PASSWORD')
 ADMIN = 'globomap_admin'
 READ = 'globomap_read'
 WRITE = 'globomap_write'
-COLLECTION = 'globomap_collection'
-EDGE = 'globomap_edge'
-GRAPH = 'globomap_graph'
 
 # Meta Collections
 META_COLLECTION = 'meta_collection'

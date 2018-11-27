@@ -52,7 +52,7 @@ class Collections(Resource):
         403: 'Forbidden',
     })
     @api.expect(search_parser)
-    @permission_classes((permissions.Read, permissions.Collection))
+    @permission_classes((permissions.Read,))
     def get(self):
         """List all collections of kind document from DB."""
 
@@ -74,8 +74,7 @@ class Collections(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @permission_classes((permissions.Write, permissions.Collection,
-                         permissions.Admin))
+    @permission_classes((permissions.Admin,))
     @api.expect(api.schema_model('Collections',
                                  get_dict(specs.get('collections'))))
     def post(self):
@@ -115,7 +114,7 @@ class Search(Resource):
         404: 'Not Found'
     })
     @api.expect(coll_parsers.search_all_parser)
-    @permission_classes((permissions.Read, permissions.Collection))
+    @permission_classes((permissions.Read,))
     def get(self):
         """Search document in collections of kind document from DB."""
 
@@ -166,7 +165,7 @@ class Collection(Resource):
     })
     @api.expect(api.schema_model('DocumentPost',
                                  get_dict(specs.get('documents'))))
-    @permission_classes((permissions.Write, permissions.Collection))
+    @permission_classes((permissions.Write,))
     def post(self, collection):
         """Insert document in DB."""
 
@@ -202,7 +201,7 @@ class Collection(Resource):
         409: 'Document Already Exists'
     })
     @api.expect(coll_parsers.search_parser)
-    @permission_classes((permissions.Read, permissions.Collection))
+    @permission_classes((permissions.Read,))
     def get(self, collection):
         """Search documents from collection."""
 
@@ -249,7 +248,7 @@ class CollectionClear(Resource):
     })
     @api.expect(api.schema_model('DocumentClear',
                                  get_dict(specs.get('clear'))))
-    @permission_classes((permissions.Write, permissions.Collection))
+    @permission_classes((permissions.Write,))
     def post(self, collection):
         """Clear documents in collection."""
 
@@ -291,7 +290,7 @@ class Document(Resource):
     })
     @api.expect(api.schema_model('DocumentPut',
                                  get_dict(specs.get('documents'))))
-    @permission_classes((permissions.Write, permissions.Collection))
+    @permission_classes((permissions.Write,))
     def put(self, collection, key):
         """Update document."""
 
@@ -323,7 +322,7 @@ class Document(Resource):
     })
     @api.expect(api.schema_model('DocumentPatch',
                                  get_dict(specs.get('documents_partial'))))
-    @permission_classes((permissions.Write, permissions.Collection))
+    @permission_classes((permissions.Write,))
     def patch(self, collection, key):
         """Partial update document."""
 
@@ -353,7 +352,7 @@ class Document(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @permission_classes((permissions.Read, permissions.Collection))
+    @permission_classes((permissions.Read,))
     def get(self, collection, key):
         """Get document by key."""
 
@@ -375,7 +374,7 @@ class Document(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @permission_classes((permissions.Write, permissions.Collection))
+    @permission_classes((permissions.Write,))
     def delete(self, collection, key):
         """Delete document by key."""
 

@@ -50,7 +50,7 @@ class Graph(Resource):
         403: 'Forbidden'
     })
     @api.expect(search_parser)
-    @permission_classes((permissions.Read, permissions.Graph))
+    @permission_classes((permissions.Read,))
     def get(self):
         """List all graphs from DB."""
 
@@ -72,8 +72,7 @@ class Graph(Resource):
         400: 'Validation Error',
     })
     @api.expect(api.schema_model('GraphPost', get_dict(specs.get('graphs'))))
-    @permission_classes((
-        permissions.Write, permissions.Graph, permissions.Admin))
+    @permission_classes((permissions.Admin,))
     def post(self):
         """Create graph in DB."""
 
@@ -106,7 +105,7 @@ class GraphTraversal(Resource):
         404: 'Not Found'
     })
     @api.expect(graphs_parsers.traversal_parser)
-    @permission_classes((permissions.Read, permissions.Graph))
+    @permission_classes((permissions.Read,))
     def get(self, graph):
         """Search traversal."""
 
