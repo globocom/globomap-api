@@ -33,7 +33,7 @@
       "minimum": 1
     },
     "users": {
-      "$ref": "#definitions/Collections/definitions/user"
+      "$ref": "#/definitions/Collections/definitions/user"
     }
   },
   "required": [
