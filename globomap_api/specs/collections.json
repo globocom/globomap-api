@@ -1,16 +1,5 @@
 {
   "$schema": "http://json-schema.org/draft-04/schema#",
-  "definitions": {
-    "user": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "pattern": "^([a-z_]){1,}$",
-        "minimum": 1
-      },
-      "minItems": 1
-    }
-  },
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -33,7 +22,13 @@
       "minimum": 1
     },
     "users": {
-      "$ref": "#/definitions/Collections/definitions/user"
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^([a-z_]){1,}$",
+        "minimum": 1
+      },
+      "minItems": 1
     }
   },
   "required": [

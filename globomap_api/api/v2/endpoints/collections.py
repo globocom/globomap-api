@@ -59,9 +59,11 @@ class Collections(Resource):
         args = search_parser.parse_args(request)
 
         try:
+            query = args.get('query') or '[]'
             page = args.get('page')
             per_page = args.get('per_page')
-            res = facade.list_collections('document', page, per_page)
+            data = json.loads(query)
+            res = facade.list_collections('document', data, page, per_page)
         except JSONDecodeError:
             raise gmap_exc.SearchException('Parameter query is invalid')
         else:
