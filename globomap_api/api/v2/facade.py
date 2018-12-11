@@ -131,7 +131,7 @@ def create_collection_edge(data):
     return True
 
 
-def list_collections(kind, data, page=1, per_page=10):
+def list_collections(kind, data=[], page=1, per_page=10):
     """Return all collections or edges from Database"""
 
     db_inst = app.config['ARANGO_CONN']
