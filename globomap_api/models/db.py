@@ -192,29 +192,45 @@ class DB(object):
     def search_in_collections(self, collections, search, page=1, per_page=10):
         """Search Document"""
         try:
-
             offset = (page - 1) * per_page
             per_page = per_page if per_page <= 100 else 100
+            union = ['a','b','c','e','f','g','h','i','j','k','l','m']
+            search_name = search[0]
+            partial_query = []
 
-            where, bind_vars = self.prepare_search(search)
-            bind_vars['offset'] = offset
-            bind_vars['count'] = per_page
+            for index_name, name in enumerate(search_name):
+                where, bind_vars = self.prepare_search([[name]])
+                bind_vars['offset'] = offset
+                bind_vars['count'] = per_page
 
-            queries = []
-            for index, collection in enumerate(collections):
-                idx = '@cl_{}'.format(index)
-                bind_vars[idx] = collection
-                query = 'FOR doc IN @{} {} RETURN doc'.format(idx, where)
-                queries.append(query)
+                queries = []
+                for index_coll, collection in enumerate(collections):
+                    idx = '@cl_{}'.format(index_coll)
+                    bind_vars[idx] = collection
+                    query = 'FOR doc IN @{} {} RETURN doc'.format(idx, where)
+                    queries.append(query)
 
-            colls = '({})'.format(','.join(queries))
-            if len(queries) > 1:
-                colls = 'UNION{}'.format(colls)
+                colls = '({})'.format(','.join(queries))
+                if len(queries) > 1:
+                    colls = 'UNION{}'.format(colls)
 
-            full_query = 'FOR x IN {} ' \
-                'SORT x.name LIMIT @offset, @count RETURN x'.format(colls)
+                union_item = union[index_name]
+                partial_query.append('FOR {} IN {} ' \
+                    'SORT {}.name LIMIT @offset, @count RETURN {}'.format(
+                        union_item,
+                        colls,
+                        union_item,
+                        union_item
+                    )
+                )
+
+            if len(partial_query) > 1:
+                full_query = 'FOR full IN UNION({}) RETURN full'.format(','.join(partial_query))
+            else:
+                full_query = partial_query[0]
 
             LOGGER.debug('Full Query: %s' % full_query)
+
             cursor = self.database.aql.execute(
                 full_query,
                 bind_vars=bind_vars,
@@ -272,6 +288,10 @@ class DB(object):
                             where_field = '\'{}\' NOT IN {}'.format(
                                 item['value'], concat_field)
                             # Example 'value' NOT IN 'doc.@1.@2
+                        elif item['operator'] == 'REGEXP':
+                            where_field = 'LOWER({}) =~ LOWER(CONCAT(\'{}\', \'{}\'))'.format(
+                                concat_field, item['comparison'], item['value'])
+                            # Example 'doc.@1.@2 =~ '(?!^)value'
                         else:
                             where_field = 'LOWER({}) {} LOWER(\'{}\')'.format(
                                 concat_field, item['operator'], item['value'])
