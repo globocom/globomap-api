@@ -4,7 +4,8 @@ test:
     - apk add make
     - apk add bash
     - apk add python3
-    - apk --update add 'py-pip' && pip install 'docker-compose'
+    - apk --update add 'py-pip'
+    - pip install 'docker-compose'
   script:
     - make dynamic_ports
     - make containers_clean
