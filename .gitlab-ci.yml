@@ -6,7 +6,7 @@ test:
     - apk add python3
     - apk add libffi-dev
     - apk add openssl-dev
-    - apk add --no-cache gcc
+    - apk add gcc
     - apk --update add 'py-pip'
     - pip install 'docker-compose'
   script:
