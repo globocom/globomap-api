@@ -4,6 +4,8 @@ test:
     - apk add make
     - apk add bash
     - apk add python3
+    - apk add libffi-dev
+    - apk add openssl-dev
     - apk --update add 'py-pip'
     - pip install 'docker-compose'
   script:
