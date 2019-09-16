@@ -1141,7 +1141,7 @@
                 ]
             }
         },
-        "/plugin_data/{plugin_name}/": {
+        "/plugins/{name}/": {
             "parameters": [
                 {
                     "required": true,
@@ -1153,7 +1153,7 @@
                 },
                 {
                     "description": "Name Of Plugin",
-                    "name": "plugin_name",
+                    "name": "name",
                     "in": "path",
                     "required": true,
                     "type": "string"
@@ -1177,7 +1177,7 @@
                         "description": "Not Found"
                     }
                 },
-                "operationId": "get_plugin_data",
+                "operationId": "get_plugin",
                 "parameters": [
                     {
                         "name": "ips",
@@ -1199,7 +1199,7 @@
                     }
                 ],
                 "tags": [
-                    "plugin_data"
+                    "plugins"
                 ]
             }
         },
@@ -1475,7 +1475,7 @@
             "description": "Healthcheck"
         },
         {
-            "name": "plugin_data",
+            "name": "plugins",
             "description": "Plugins"
         }
     ],

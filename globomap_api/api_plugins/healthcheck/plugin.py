@@ -13,22 +13,16 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-import base64
 import logging
-import shutil
-from os import remove
-from time import time
 
-import requests
 from flask import current_app as app
-from flask import send_file
 from pyzabbix import ZabbixAPI
 
 from globomap_api.api_plugins.abstract_plugin import AbstractPlugin
 from globomap_api.api_plugins.abstract_plugin import PluginError
 
 
-class ZabbixPlugin(AbstractPlugin):
+class HealthcheckPlugin(AbstractPlugin):
 
     logger = logging.getLogger(__name__)
 
@@ -56,14 +50,27 @@ class ZabbixPlugin(AbstractPlugin):
 
     def get_data(self, params):
         ips = params.get('ips')
-        graphid = params.get('graphid')
-        encoded = params.get('encoded')
+        status = 'failed'
+
         if ips:
-            return self.get_trigger(ips)
-        elif graphid:
-            return self.get_graph(graphid, encoded)
+            trigger = self.get_trigger(ips)
+            nok = 0
+            ok = 0
+
+            for item in trigger:
+                if not bool(int(item['value'])):
+                    ok += 1
+                else:
+                    nok += 1
+
+            if ok == len(trigger):
+                status = 'success'
+            elif ok > len(trigger) / 2:
+                status = 'warning'
+
+            return {"healthcheck": status}
         else:
-            raise PluginError("The field 'ips' or 'graphid' is required")
+            raise PluginError("The field 'ips' is required")
 
     def get_trigger(self, ips):
         try:
@@ -90,7 +97,7 @@ class ZabbixPlugin(AbstractPlugin):
                     return []
             else:
                 raise PluginError(
-                    'No hosts were found for IPs {}'.format(ips)
+                    'No hosts were found for IP {}'.format(ips)
                 )
         except:
             logging.exception('Zabbix API error')
@@ -107,41 +114,3 @@ class ZabbixPlugin(AbstractPlugin):
                 }
             )
         return response
-
-    def get_graph(self, graphid, encoded=False):
-        with requests.Session() as s:
-            data = {
-                'password': app.config['ZABBIX_API_PASSWORD'],
-                'name': app.config['ZABBIX_API_USER'],
-                'enter': 'Sign in'
-            }
-            url = '{}/index.php'.format(app.config['ZABBIX_UI_URL'])
-            res = s.post(url, data=data, verify=False)
-            url = '{}/chart2.php?graphid={}'.format(app.config['ZABBIX_UI_URL'],
-                                                    graphid)
-            res = s.get(url, verify=False, stream=True)
-            if res.status_code == 200:
-                name = '/tmp/{}_{}.png'.format(graphid, time())
-                with open(name, 'wb') as out_file:
-                    shutil.copyfileobj(res.raw, out_file)
-
-                if encoded:
-                    return self._get_base64(name)
-                else:
-                    return self._get_image(name)
-
-            raise PluginError('Cannot get graph')
-
-    def _get_base64(self, name):
-        with open(name, 'rb') as f:
-            encodedZip = base64.b64encode(f.read())
-            return encodedZip.decode()
-
-    def _get_image(self, name):
-        try:
-            data = send_file(name, mimetype='image/png')
-        except:
-            raise PluginError('Cannot get graph')
-        finally:
-            remove(name)
-        return data

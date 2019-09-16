@@ -13,6 +13,8 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
+import configparser
+
 from flask import current_app as app
 from flask import request
 from flask_restplus import Resource
@@ -20,12 +22,48 @@ from flask_restplus import Resource
 from globomap_api.api.v2 import api
 from globomap_api.api.v2.auth import permissions
 from globomap_api.api.v2.auth.decorators import permission_classes
-from globomap_api.api.v2.parsers.plugins import plugin_arguments
 from globomap_api.api_plugins.abstract_plugin import PluginError
 from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 from globomap_api.api_plugins.plugin_loader import ApiPluginLoader
 
-ns = api.namespace('plugin_data', description='Plugins')
+ns = api.namespace('plugins', description='Plugins')
+
+
+@ns.route('/')
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
+class Plugins(Resource):
+
+    @api.doc(responses={
+        200: 'Success',
+        401: 'Unauthorized',
+        403: 'Forbidden'
+    })
+    @permission_classes((permissions.Read,))
+    def get(self):
+        try:
+            plugins_config = configparser.ConfigParser()
+            plugins_config.read(app.config['API_PLUGINS_CONFIG_FILE'])
+            keys = plugins_config.sections()
+            plugins = {}
+
+            for key in keys:
+                plugins[key] = {
+                    'types': plugins_config.get(key, 'types'),
+                    'parameters': plugins_config.get(key, 'parameters'),
+                    'description': plugins_config.get(key, 'description'),
+                    'uri': '{}{}/{}/'.format(api.base_url, 'plugins', key)
+                }
+
+            return plugins
+        except Exception:
+            err_msg = 'Error in plugin'
+            app.logger.exception(err_msg)
+            api.abort(500, errors=err_msg)
 
 
 @ns.route('/<plugin_name>/')
@@ -45,11 +83,19 @@ class PluginData(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
-    @api.expect(plugin_arguments)
     @permission_classes((permissions.Read,))
     def get(self, plugin_name):
         try:
-            args = plugin_arguments.parse_args(request)
+            query_string = request.query_string.decode("utf-8")
+            query_list = []
+            if query_string:
+                query_list = query_string.split('&')
+            args = {}
+
+            for item in query_list:
+                item_list = item.split('=')
+                args[item_list[0]] = item_list[1]
+
             plugin_instance = ApiPluginLoader().load_plugin(plugin_name)
             data = plugin_instance.get_data(args)
             return data

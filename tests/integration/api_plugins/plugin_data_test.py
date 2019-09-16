@@ -36,7 +36,7 @@ class TestPluginData(unittest2.TestCase):
     def test_get_zabbix_data(self):
         self._mock_zabbix_api(self.hosts, self.triggers)
         self._mock_token()
-        response = self._get('/v2/plugin_data/zabbix?ips=10.132.41.183')
+        response = self._get('/v2/plugins/zabbix?ips=10.132.41.183')
         json_response = json.loads(response.data)
 
         self.assertEqual(200, response.status_code)
@@ -47,7 +47,7 @@ class TestPluginData(unittest2.TestCase):
     def test_error_response(self):
         self._mock_zabbix_api(Exception('Error'))
         self._mock_token()
-        response = self._get('/v2/plugin_data/zabbix?ips=10.132.41.183')
+        response = self._get('/v2/plugins/zabbix?ips=10.132.41.183')
         json_response = json.loads(response.data)
 
         self.assertEqual(500, response.status_code)
@@ -55,7 +55,7 @@ class TestPluginData(unittest2.TestCase):
 
     def test_get_data_from_invalid_plugin(self):
         self._mock_token()
-        response = self._get('/v2/plugin_data/UNKNOW?ips=10.132.41.183')
+        response = self._get('/v2/plugins/UNKNOW?ips=10.132.41.183')
         json_response = json.loads(response.data)
 
         self.assertEqual(404, response.status_code)

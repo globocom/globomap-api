@@ -24,6 +24,8 @@ from globomap_api.api_plugins.abstract_plugin import PluginNotFoundException
 
 class ApiPluginLoader(object):
 
+    logger = logging.getLogger(__name__)
+
     def load_plugin(self, plugin_name):
         plugins_config = configparser.ConfigParser()
         plugins_config.read(app.config['API_PLUGINS_CONFIG_FILE'])
@@ -47,8 +49,9 @@ class ApiPluginLoader(object):
     def create_plugin_instance(self, class_path):
         components = class_path.split('.')
         class_name = components[-1]
-        package_path = '.'.join(components[0:-1])
+        package_path = '{}.plugin'.format('.'.join(components[0:-1]))
         plugin_class = getattr(
-            importlib.import_module(package_path), class_name
+            importlib.import_module(package_path),
+            class_name
         )
         return plugin_class()

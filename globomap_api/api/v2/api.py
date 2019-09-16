@@ -22,7 +22,7 @@ from globomap_api.api.v2.endpoints.edges import ns as edges_ns
 from globomap_api.api.v2.endpoints.graphs import ns as graphs_ns
 from globomap_api.api.v2.endpoints.queries import ns as query_ns
 from globomap_api.api.v2.endpoints.healthcheck import ns as healthcheck_ns
-from globomap_api.api.v2.endpoints.plugin_data import ns as plugin_ns
+from globomap_api.api.v2.endpoints.plugins import ns as plugin_ns
 
 api.add_namespace(auth_ns)
 api.add_namespace(coll_ns)

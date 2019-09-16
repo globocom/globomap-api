@@ -13,24 +13,3 @@
    See the License for the specific language governing permissions and
    limitations under the License.
 """
-from flask_restplus import reqparse
-
-plugin_arguments = reqparse.RequestParser()
-plugin_arguments.add_argument(
-    'ips',
-    type=str,
-    required=False,
-    help='IPs'
-)
-plugin_arguments.add_argument(
-    'graphid',
-    type=int,
-    required=False,
-    help='Id of Graph'
-)
-plugin_arguments.add_argument(
-    'encoded',
-    type=int,
-    required=False,
-    default=0, help='Encode Image Base64'
-)
