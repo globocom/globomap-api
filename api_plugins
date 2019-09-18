@@ -2,10 +2,10 @@
 types=['comp_unit', 'zabbix_graph']
 parameters=['ips', 'graphid', 'encoded']
 description=Zabbix API trigger plugin
-module=globomap_api.api_plugins.zabbix.ZabbixPlugin
+module=globomap_plugin_zabbix.zabbix.ZabbixPlugin
 
 [healthcheck]
 types=['comp_unit']
 parameters=['ip']
 description=Healthcheck plugin
-module=globomap_api.api_plugins.healthcheck.HealthcheckPlugin
+module=globomap_plugin_healthcheck.healthcheck.HealthcheckPlugin

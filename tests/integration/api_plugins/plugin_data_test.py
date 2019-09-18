@@ -66,7 +66,7 @@ class TestPluginData(unittest2.TestCase):
 
     def _mock_zabbix_api(self, hosts, triggers=None):
         py_zabbix_mock = patch(
-            'globomap_api.api_plugins.zabbix.ZabbixAPI').start()
+            'globomap_plugin_zabbix.zabbix.ZabbixAPI').start()
         do_request_mock = Mock()
         do_request_mock.do_request.side_effect = [hosts, triggers]
         py_zabbix_mock.return_value = do_request_mock

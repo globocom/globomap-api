@@ -49,7 +49,7 @@ class ApiPluginLoader(object):
     def create_plugin_instance(self, class_path):
         components = class_path.split('.')
         class_name = components[-1]
-        package_path = '{}.plugin'.format('.'.join(components[0:-1]))
+        package_path = '.'.join(components[0:-1])
         plugin_class = getattr(
             importlib.import_module(package_path),
             class_name
