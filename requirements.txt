@@ -5,6 +5,7 @@ gevent==1.2.2
 globomap-auth-manager==0.0.17
 gunicorn==19.7.1
 json-spec==0.10.1
+py-zabbix==1.1.5
 python-arango==4.2.1
 raven==6.6.0
 globomap-plugin-zabbix==0.1.4
