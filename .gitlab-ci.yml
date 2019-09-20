@@ -1,5 +1,10 @@
 test:
-  image: docker:18.09.9
+  image: docker:stable
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST: tcp://docker:2375
+    DOCKER_DRIVER: overlay2
   before_script:
     - apk add make
     - apk add bash
