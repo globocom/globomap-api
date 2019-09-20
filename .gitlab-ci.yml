@@ -1,5 +1,7 @@
 test:
   image: docker:stable
+  variables:
+    DOCKER_HOST: tcp://docker:2375
   before_script:
     - apk add make
     - apk add bash
