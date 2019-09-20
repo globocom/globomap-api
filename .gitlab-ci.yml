@@ -1,5 +1,5 @@
 test:
-  image: docker:stable
+  image: docker:18.09.9-git
   before_script:
     - apk add make
     - apk add bash
