@@ -31,7 +31,7 @@ containers_start: dynamic_ports ## Start containers
 	./scripts/docker/keystone/setup.sh
 
 containers_build: dynamic_ports ## Build containers
-	docker-compose build --no-cache
+	sudo docker-compose build --no-cache
 
 containers_stop: ## Stop containers
 	docker-compose stop

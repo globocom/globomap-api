@@ -35,13 +35,9 @@ if [ -z "${GMAP_REDIS_PORT}" ]; then
     GMAP_REDIS_PORT=7006
 fi
 
-DOCKER_HOST=127.0.0.1:2375
-
 echo "GMAP_DB_PORT=$GMAP_DB_PORT" > .env
 echo "GMAP_API_PORT=$GMAP_API_PORT" >> .env
 echo "GMAP_API_DEBUG_PORT=$GMAP_API_DEBUG_PORT" >> .env
 echo "GMAP_KS_ADM_PORT=$GMAP_KS_ADM_PORT" >> .env
 echo "GMAP_KS_PORT=$GMAP_KS_PORT" >> .env
 echo "GMAP_REDIS_PORT=$GMAP_REDIS_PORT" >> .env
-
-echo "DOCKER_HOST=$DOCKER_HOST" >> .env
