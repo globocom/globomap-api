@@ -14,6 +14,7 @@
    limitations under the License.
 """
 import configparser
+import ast
 
 from flask import current_app as app
 from flask import request
@@ -53,8 +54,8 @@ class Plugins(Resource):
 
             for key in keys:
                 plugins[key] = {
-                    'types': plugins_config.get(key, 'types'),
-                    'parameters': plugins_config.get(key, 'parameters'),
+                    'types': ast.literal_eval(plugins_config.get(key, 'types')),
+                    'parameters': ast.literal_eval(plugins_config.get(key, 'parameters')),
                     'description': plugins_config.get(key, 'description'),
                     'uri': '{}{}/{}/'.format(api.base_url, 'plugins', key)
                 }
