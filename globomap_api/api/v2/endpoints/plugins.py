@@ -85,18 +85,9 @@ class PluginData(Resource):
         404: 'Not Found'
     })
     @permission_classes((permissions.Read,))
-    def get(self, plugin_name):
+    def post(self, plugin_name):
         try:
-            query_string = request.query_string.decode("utf-8")
-            query_list = []
-            if query_string:
-                query_list = query_string.split('&')
-            args = {}
-
-            for item in query_list:
-                item_list = item.split('=')
-                args[item_list[0]] = item_list[1]
-
+            args = request.get_json()
             plugin_instance = ApiPluginLoader().load_plugin(plugin_name)
             data = plugin_instance.get_data(args)
             return data
