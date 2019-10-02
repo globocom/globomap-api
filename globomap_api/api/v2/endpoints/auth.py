@@ -56,8 +56,8 @@ class CreateAuth(Resource):
             return token, 200
 
         except exceptions.Unauthorized:
-            app.logger.error('User %s not Unauthorized.', username)
-            api.abort(401, 'User not Unauthorized.')
+            app.logger.error('User %s not authorized.', username)
+            api.abort(401, 'User not authorized.')
 
         except exceptions.AuthException:
             app.logger.error('Auth Unavailable.')
