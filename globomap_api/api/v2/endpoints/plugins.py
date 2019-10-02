@@ -50,15 +50,16 @@ class Plugins(Resource):
             plugins_config = configparser.ConfigParser()
             plugins_config.read(app.config['API_PLUGINS_CONFIG_FILE'])
             keys = plugins_config.sections()
-            plugins = {}
+            plugins = []
 
             for key in keys:
-                plugins[key] = {
+                plugins.append({
+                    'name': key,
                     'types': ast.literal_eval(plugins_config.get(key, 'types')),
                     'parameters': ast.literal_eval(plugins_config.get(key, 'parameters')),
                     'description': plugins_config.get(key, 'description'),
                     'uri': '{}{}/{}/'.format(api.base_url, 'plugins', key)
-                }
+                })
 
             return plugins
         except Exception:
