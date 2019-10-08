@@ -6,6 +6,6 @@ module=globomap_plugin_zabbix.zabbix.ZabbixPlugin
 
 [healthcheck]
 types=['comp_unit']
-parameters=['ip']
+parameters=['ips']
 description=Healthcheck plugin
 module=globomap_plugin_healthcheck.healthcheck.HealthcheckPlugin
