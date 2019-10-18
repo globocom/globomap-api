@@ -1,7 +1,13 @@
-[zabbix]
-types=['comp_unit', 'zabbix_graph']
-parameters=['ips', 'graphid', 'encoded']
+[zabbix-triggers]
+types=['comp_unit']
+parameters=['ips']
 description=Zabbix API trigger plugin
+module=globomap_plugin_zabbix.zabbix.ZabbixPlugin
+
+[zabbix-graph]
+types=['zabbix_graph']
+parameters=['graphid']
+description=Zabbix API graph plugin
 module=globomap_plugin_zabbix.zabbix.ZabbixPlugin
 
 [healthcheck]
