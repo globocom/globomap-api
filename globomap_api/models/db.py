@@ -54,6 +54,8 @@ class DB(object):
             port=self.arango_port
         )
 
+        self.conn_database(self.config['ARANGO_DB'])
+
     ############
     # DATABASE #
     ############
@@ -68,9 +70,9 @@ class DB(object):
         """Return True if there database"""
 
         try:
-            self.conn_database(name)
             self.database.properties()
         except exceptions.DatabasePropertiesError as err:
+            self.conn_database(name)
             LOGGER.error(err)
             return False
         except Exception as err:
