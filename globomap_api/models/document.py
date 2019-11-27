@@ -47,9 +47,13 @@ class Document:
                     doc_err.get(0).format(document['_key'], err.message))
 
         except Exception as err:
-            app.logger.error(err)
-            raise gmap_exceptions.DocumentException(
-                doc_err.get(0).format(document['_key'], str(err)))
+            if err.error_code == 1200:
+                msg = 'There is a conflict in document create with key {}'.format(document['_key'])
+                app.logger.warning(msg)
+            else:
+                app.logger.error(err)
+                raise gmap_exceptions.DocumentException(
+                    doc_err.get(0).format(document['_key'], str(err)))
 
     def update_document(self, document):
         """Update Document"""
@@ -61,15 +65,22 @@ class Document:
                 msg = 'There no document with key {}'.format(document['_key'])
                 app.logger.warning(msg)
                 raise gmap_exceptions.DocumentNotExist(msg)
+            elif err.error_code == 1210:
+                msg = 'Unique constraint violated in index primary with key {}'.format(document['_key'])
+                app.logger.warning(msg)
             else:
                 app.logger.error(err.message)
                 raise gmap_exceptions.DocumentException(
                     doc_err.get(0).format(document['_key'], err.message))
 
         except Exception as err:
-            app.logger.error(err)
-            raise gmap_exceptions.DocumentException(
-                doc_err.get(0).format(document['_key'], str(err)))
+            if err.error_code == 1200:
+                msg = 'There is a conflict in document update with key {}'.format(document['_key'])
+                app.logger.warning(msg)
+            else:
+                app.logger.error(err)
+                raise gmap_exceptions.DocumentException(
+                    doc_err.get(0).format(document['_key'], str(err)))
 
     def upsert_document(self, document):
         """Create/Update Document"""

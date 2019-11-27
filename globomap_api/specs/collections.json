@@ -8,6 +8,10 @@
       "pattern": "^([a-z_]){1,}$",
       "minimum": 1
     },
+    "replicationFactor": {
+      "type": "integer",
+      "default": 2
+    },
     "alias": {
       "type": "string",
       "minimum": 1

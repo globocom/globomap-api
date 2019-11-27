@@ -54,6 +54,7 @@ All of the environment variables below must be set for the application to work p
 meta_collection <br>
 meta_graph <br>
 meta_query <br>
+internal_metadata <br>
 
 #### Roles in Keystone:
 globomap_admin <br>

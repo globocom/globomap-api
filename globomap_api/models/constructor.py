@@ -25,6 +25,7 @@ class Constructor(object):
 
     name = None
     kind = None
+    replication_factor = 1
     links = None
     create = False
     create_indexes = True
@@ -52,7 +53,7 @@ class Constructor(object):
         db_inst = app.config['ARANGO_CONN']
         db_inst.get_database()
         if self.create:
-            col = db_inst.create_collection(name=self.name)
+            col = db_inst.create_collection(name=self.name, replication_factor=self.replication_factor)
             if self.create_indexes:
                 self._create_indexes(col)
         else:
@@ -64,7 +65,7 @@ class Constructor(object):
         db_inst = app.config['ARANGO_CONN']
         db_inst.get_database()
         if self.create:
-            col = db_inst.create_edge(name=self.name)
+            col = db_inst.create_edge(name=self.name, replication_factor=self.replication_factor)
             if self.create_indexes:
                 self._create_indexes(col)
         else:

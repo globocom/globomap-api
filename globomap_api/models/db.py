@@ -377,12 +377,12 @@ class DB(object):
             LOGGER.error(msg)
             raise gmap_exceptions.CollectionNotExist(msg)
 
-    def create_collection(self, name='', edge=False):
+    def create_collection(self, name='', edge=False, replication_factor=1):
         """Create Collection"""
 
         try:
             self.collection = self.database.create_collection(
-                name=name, edge=False)
+                name=name, edge=False, replication_factor=replication_factor)
             return self.collection
         except exceptions.CollectionCreateError as err:
 
@@ -442,12 +442,12 @@ class DB(object):
             LOGGER.error(msg)
             raise gmap_exceptions.EdgeNotExist(msg)
 
-    def create_edge(self, name=''):
+    def create_edge(self, name='', replication_factor=1):
         """Create Edge"""
 
         try:
             self.edge = self.database.create_collection(
-                name=name, edge=True)
+                name=name, edge=True, replication_factor=replication_factor)
             return self.edge
         except exceptions.CollectionCreateError as err:
 

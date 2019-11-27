@@ -58,6 +58,7 @@ WRITE = 'globomap_write'
 META_COLLECTION = 'meta_collection'
 META_GRAPH = 'meta_graph'
 META_QUERY = 'meta_query'
+INTERNAL_METADATA = 'internal_metadata'
 
 # Logging
 SENTRY_DSN = os.getenv('SENTRY_DSN')

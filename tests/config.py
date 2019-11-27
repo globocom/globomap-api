@@ -26,6 +26,7 @@ from globomap_api.config import KEYSTONE_USERNAME
 from globomap_api.config import META_COLLECTION
 from globomap_api.config import META_GRAPH
 from globomap_api.config import META_QUERY
+from globomap_api.config import INTERNAL_METADATA
 from globomap_api.config import READ
 from globomap_api.config import SPECS
 from globomap_api.config import WRITE
@@ -35,7 +36,7 @@ __all__ = [
     'ADMIN', 'API_PLUGINS_CONFIG_FILE', 'ARANGO_DB', 'ARANGO_HOST',
     'ARANGO_PASSWORD', 'ARANGO_PORT', 'ARANGO_PROTOCOL', 'ARANGO_USERNAME',
     'KEYSTONE_PASSWORD', 'KEYSTONE_USERNAME',
-    'META_COLLECTION', 'META_GRAPH', 'META_QUERY', 'READ', 'SPECS', 'WRITE',
+    'META_COLLECTION', 'META_GRAPH', 'META_QUERY', 'INTERNAL_METADATA', 'READ', 'SPECS', 'WRITE',
     'ZABBIX_API_URL', 'ZABBIX_API_USER', 'ZABBIX_API_PASSWORD', 'ZABBIX_UI_URL',
     'LOGGING'
 ]

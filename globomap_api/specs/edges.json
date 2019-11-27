@@ -1,5 +1,4 @@
 {
-
   "type": "object",
   "additionalProperties": false,
   "properties": {
@@ -18,6 +17,10 @@
     },
     "name": {
       "type": "string"
+    },
+    "replicationFactor": {
+      "type": "integer",
+      "default": 2
     },
     "provider": {
       "type": "string",

@@ -48,5 +48,11 @@ def create_meta_collections():
     except exceptions.CollectionAlreadyExist:
         pass
 
+    try:
+        constructor.factory(kind='Collection', create=True,
+                            name=app_config.INTERNAL_METADATA,
+                            create_indexes=False)
+    except exceptions.CollectionAlreadyExist:
+        pass
 
 application.cli.add_command(meta_cli)

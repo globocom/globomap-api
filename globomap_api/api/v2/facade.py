@@ -114,7 +114,8 @@ def create_collection_document(data):
 
     constructor = Constructor()
     name = data.get('name')
-    constructor.factory(kind='Collection', create=True, name=name)
+    replication_factor = data.get('replicationFactor')
+    constructor.factory(kind='Collection', create=True, name=name, replication_factor=replication_factor)
     create_meta_collection_doc(data, 'document')
 
     return True
@@ -125,7 +126,8 @@ def create_collection_edge(data):
 
     constructor = Constructor()
     name = data.get('name')
-    constructor.factory(kind='Edges', create=True, name=name)
+    replication_factor = data.get('replicationFactor')
+    constructor.factory(kind='Edges', create=True, name=name, replication_factor=replication_factor)
     create_meta_collection_doc(data, 'edge')
 
     return True
