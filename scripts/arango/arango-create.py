@@ -52,7 +52,7 @@ def main():
         {"alias": "DNS", "name": "dns", "replicationFactor": 2, "icon": "dns", "description": "DNS", "users": ["u_globomap_driver_dns"]},
         {"alias": "DB", "name": "database", "replicationFactor": 2, "icon": "database", "description": "DB", "users": ["u_globomap_driver_dbaas"]},
         {"alias": "Pool do Galeb", "name": "galeb_pool", "replicationFactor": 2, "icon": "galeb_pool", "description": "Pool do Galeb", "users": ["u_globomap_driver_galeb"]},
-        {"alias": "Virtual Host(Galab)", "name": "galeb_virtual_host", "replicationFactor": 2, "icon": "galeb_virtual_host", "description": "Virtual Host(Galab)", "users": ["u_globomap_driver_galeb"]},
+        {"alias": "Virtual Host(Galeb)", "name": "galeb_virtual_host", "replicationFactor": 2, "icon": "galeb_virtual_host", "description": "Virtual Host(Galeb)", "users": ["u_globomap_driver_galeb"]},
         {"alias": "Export(Filer)", "name": "export", "replicationFactor": 2, "icon": "export", "description": "Export(Filer)", "users": ["u_globomap_driver_faas"]},
         {"alias": "Servico do Tsuru", "name": "tsuru_service", "replicationFactor": 2, "icon": "tsuru_service", "description": "Servico do Tsuru", "users": ["u_globomap_driver_tsuru"]},
         {"alias": "Keystone Project", "name": "ks_project", "replicationFactor": 2, "icon": "ks_project", "description": "Keystone Project", "users": ["u_globomap_driver_keystone"]},
