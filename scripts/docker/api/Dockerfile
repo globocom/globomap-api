@@ -1,14 +1,9 @@
-FROM ubuntu:16.04
+FROM python:3.6-stretch
 
 RUN apt-get update
 RUN apt-get install -y software-properties-common vim
-RUN add-apt-repository ppa:jonathonf/python-3.6
-RUN apt-get update
-
-RUN apt-get install -y build-essential python3.6 python3.6-dev python3-pip python3.6-venv
-RUN apt-get install -y git
-RUN apt-get install -y telnet
-RUN apt-get install -y curl
+RUN apt-get install -y build-essential python-dev python3-pip python3-venv
+RUN apt-get install -y git telnet curl
 
 # update pip
 RUN python3.6 -m pip install pip --upgrade

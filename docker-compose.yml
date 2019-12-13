@@ -24,7 +24,7 @@ services:
             - "${GMAP_API_DEBUG_PORT}:5001"
         env_file:
             - scripts/docker/globomap.env
-        command: "sh ./scripts/docker/api/wait_keystone_start.sh"
+        command: "./scripts/docker/api/wait_keystone_start.sh"
         networks:
             - globomap_net
         external_links:
