@@ -9,8 +9,8 @@ RUN apt-get install -y git telnet curl
 RUN python3.6 -m pip install pip --upgrade
 RUN python3.6 -m pip install wheel
 
-ADD . /app
-
 WORKDIR /app
+
+COPY . .
 
 RUN pip install -r requirements_test.txt

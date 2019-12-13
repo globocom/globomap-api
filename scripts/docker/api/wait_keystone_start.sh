@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Check keystone service
 INTERVAL=5
 MAX_ATTEMPTS=30
