@@ -24,6 +24,7 @@ from globomap_api.errors import COLLECTION as coll_err
 from globomap_api.errors import DATABASE as db_err
 from globomap_api.errors import EDGE as edge_err
 from globomap_api.errors import GRAPH as gph_err
+from globomap_api.config import MAX_PER_PAGE
 # from flask import current_app as app
 
 LOGGER = logging.getLogger(__name__)
@@ -151,7 +152,7 @@ class DB(object):
         try:
 
             offset = (page - 1) * per_page
-            per_page = per_page if per_page <= 100 else 100
+            per_page = per_page if per_page <= MAX_PER_PAGE else MAX_PER_PAGE
 
             where, bind_vars = self.prepare_search(search)
 
@@ -195,7 +196,7 @@ class DB(object):
         """Search Document"""
         try:
             offset = (page - 1) * per_page
-            per_page = per_page if per_page <= 100 else 100
+            per_page = per_page if per_page <= MAX_PER_PAGE else MAX_PER_PAGE
             union = ['a','b','c','e','f','g','h','i','j','k','l','m']
             search_name = search[0]
             partial_query = []

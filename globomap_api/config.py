@@ -22,6 +22,8 @@ ARANGO_PROTOCOL = os.getenv('ARANGO_PROTOCOL')
 ARANGO_HOST = os.getenv('ARANGO_HOST')
 ARANGO_PORT = os.getenv('ARANGO_PORT')
 
+MAX_PER_PAGE = int(os.getenv('MAX_PER_PAGE', 100))
+
 FLASK_DEBUG = os.getenv('FLASK_DEBUG', False)
 
 API_PLUGINS_CONFIG_FILE = 'api_plugins'
