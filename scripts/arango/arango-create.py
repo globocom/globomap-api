@@ -12,10 +12,10 @@ def main():
     try:
         response = session.request(
             'POST',
-            '{}/v2/auth/'.format(os.getenv('GLOBOMAP_API_URL')),
+            '{}/v2/auth/'.format(os.getenv('GLOBOMAP_API_URL', 'https://api.globomap.dev.globoi.com')),
             data=json.dumps({
-                "username": os.getenv('GLOBOMAP_API_USERNAME'),
-                "password": os.getenv('GLOBOMAP_API_PASSWORD')
+                "username": os.getenv('GLOBOMAP_API_USERNAME', 'u_globomap_api'),
+                "password": os.getenv('GLOBOMAP_API_PASSWORD', 'u_globomap_api')
             }),
             headers={'Content-Type': 'application/json'},
             verify=False
@@ -71,14 +71,15 @@ def main():
         {"alias": "Cliente", "name": "custeio_client", "replicationFactor": 2, "icon": "custeio_client", "description": "Cliente", "users": ["u_globomap_driver_dicionario"]},
         {"alias": "Time", "name": "custeio_team", "replicationFactor": 2, "icon": "custeio_team", "description": "Time", "users": ["u_globomap_driver_dicionario"]},
         {"alias": "Subcomponente", "name": "custeio_sub_component", "replicationFactor": 2, "icon": "custeio_sub_component", "description": "Subcomponente", "users": ["u_globomap_driver_dicionario"]},
-        {"alias": "Certificado", "name": "domain", "replicationFactor": 2, "icon": "domain", "description": "Certificado", "users": ["u_globomap_driver_domain"]}
+        {"alias": "Certificado", "name": "domain", "replicationFactor": 2, "icon": "domain", "description": "Certificado", "users": ["u_globomap_driver_domain"]},
+        {"alias": "Environment(Galeb)", "name": "galeb_environment", "replicationFactor": 2, "icon": "galeb_environment", "description": "Environment(Galeb)", "users": ["u_globomap_driver_galeb"]}
     ]
 
     for collection in collections:
         try:
             response = session.request(
                 'POST',
-                '{}/v2/collections/'.format(os.getenv('GLOBOMAP_API_URL')),
+                '{}/v2/collections/'.format(os.getenv('GLOBOMAP_API_URL', 'https://api.globomap.dev.globoi.com')),
                 data=json.dumps(collection),
                 headers={
                     'Content-Type': 'application/json',
@@ -145,14 +146,17 @@ def main():
         {"alias": "Link: Serviço de Negocio - Armazenamento", "name": "custeio_business_service_storage", "replicationFactor": 2, "icon": "custeio_business_service_storage", "description": "Link: Serviço de Negocio - Armazenamento", "users": ["u_globomap_driver_custeio"]},
         {"alias": "Link: Database - DNS", "name": "database_dns", "replicationFactor": 2, "icon": "database_dns", "description": "Link: Database - DNS", "users": ["u_globomap_driver_dbaas"]},
         {"alias": "Link: Produto - Equipamento", "name": "custeio_product_comp_unit", "replicationFactor": 2, "icon": "custeio_product_comp_unit", "description": "Link: Produto - Equipamento", "users": ["u_globomap_driver_cmdb", "u_globomap_driver_acs"]},
-        {"alias": "Link: Equipamento - DB", "name": "comp_unit_database", "replicationFactor": 2, "icon": "comp_unit_database", "description": "Link: Equipamento - DB", "users": ["u_globomap_driver_dbaas"]}
+        {"alias": "Link: Equipamento - DB", "name": "comp_unit_database", "replicationFactor": 2, "icon": "comp_unit_database", "description": "Link: Equipamento - DB", "users": ["u_globomap_driver_dbaas"]},
+        {"alias": "Link: Environment(Galeb) - VirtualHost(Galeb)", "name": "galeb_environment_virtual_host", "replicationFactor": 2, "icon": "galeb_environment_virtual_host", "description": "Link: Environment(Galeb) - VirtualHost(Galeb)", "users": ["u_globomap_driver_galeb"]},
+        {"alias": "Link: Environment(Galeb) - Vip", "name": "galeb_environment_vip", "replicationFactor": 2, "icon": "galeb_environment_vip", "description": "Link: Environment(Galeb) - Vip", "users": ["u_globomap_driver_galeb"]},
+        {"alias": "Link: Host - Environment(Galeb)", "name": "galeb_host_environment", "replicationFactor": 2, "icon": "galeb_host_environment", "description": "Link: Host - Environment(Galeb)", "users": ["u_globomap_driver_galeb"]}
     ]
 
     for edge in edges:
         try:
             response = session.request(
                 'POST',
-                '{}/v2/edges/'.format(os.getenv('GLOBOMAP_API_URL')),
+                '{}/v2/edges/'.format(os.getenv('GLOBOMAP_API_URL', 'https://api.globomap.dev.globoi.com')),
                 data=json.dumps(edge),
                 headers={
                     'Content-Type': 'application/json',
@@ -183,7 +187,7 @@ def main():
         {"name": "networking_topology", "alias": "Topologia de Rede", "icon": "networking_topology", "description": "", "links": [{"edge": "father_environment", "from_collections": ["environment"], "to_collections": ["environment"]}, {"edge": "environment_vlan", "from_collections": ["environment"], "to_collections": ["vlan"]}, {"edge": "vlan_network", "from_collections": ["vlan"], "to_collections": ["network"]}, {"edge": "network_comp_unit", "from_collections": ["network"], "to_collections": ["comp_unit"]}]},
         {"name": "permission", "alias": "Firewall", "icon": "permission", "description": "", "links": [{"edge": "ldap_group_user", "from_collections": ["ldap_group"], "to_collections": ["ldap_user"]}, {"edge": "team_access", "from_collections": ["ldap_group"], "to_collections": ["comp_unit", "network", "vip"]}, {"edge": "internet_access", "from_collections": ["comp_unit", "network"], "to_collections": ["tag_firewall"]}]},
         {"name": "load_balancing", "alias": "Balanceamento", "icon": "load_balancing", "description": "", "links": [{"edge": "port", "from_collections": ["vip"], "to_collections": ["pool"]}, {"edge": "pool_comp_unit", "from_collections": ["pool"], "to_collections": ["comp_unit"]}]},
-        {"name": "galeb", "alias": "Galeb", "icon": "galeb", "description": "", "links": [{"edge": "galeb_virtual_host_rule", "from_collections": ["galeb_virtual_host"], "to_collections": ["galeb_rule"]}, {"edge": "galeb_rule_pool", "from_collections": ["galeb_rule"], "to_collections": ["galeb_pool"]}, {"edge": "galeb_target", "from_collections": ["galeb_pool"], "to_collections": ["comp_unit", "vip"]}]},
+        {"name": "galeb", "alias": "Galeb", "icon": "galeb", "description": "", "links": [{"edge": "galeb_virtual_host_rule", "from_collections": ["galeb_virtual_host"], "to_collections": ["galeb_rule"]}, {"edge": "galeb_rule_pool", "from_collections": ["galeb_rule"], "to_collections": ["galeb_pool"]}, {"edge": "galeb_target", "from_collections": ["galeb_pool"], "to_collections": ["comp_unit", "vip"]}, {"edge": "galeb_host_environment", "from_collections": ["comp_unit"], "to_collections": ["galeb_environment"]}, {"edge": "galeb_environment_virtual_host", "from_collections": ["galeb_environment"], "to_collections": ["galeb_virtual_host"]}, {"edge": "galeb_environment_vip", "from_collections": ["galeb_environment"], "to_collections": ["vip"]}]},
         {"name": "zabbix", "alias": "Zabbix", "icon": "zabbix", "description": "", "links": [{"edge": "zabbix_link", "from_collections": ["comp_unit", "pool", "vip"], "to_collections": ["zabbix_graph"]}]},
         {"name": "faas", "alias": "FaaS", "icon": "faas", "description": "", "links": [{"edge": "filer_volume", "from_collections": ["comp_unit"], "to_collections": ["volume"]}, {"edge": "volume_export", "from_collections": ["volume"], "to_collections": ["export"]}, {"edge": "export_snapshot", "from_collections": ["export"], "to_collections": ["snapshot"]}]},
         {"name": "tsuru", "alias": "Tsuru", "icon": "tsuru", "description": "", "links": [{"edge": "tsuru_pool_app", "from_collections": ["tsuru_pool"], "to_collections": ["tsuru_app"]}, {"edge": "tsuru_pool_comp_unit", "from_collections": ["tsuru_pool"], "to_collections": ["comp_unit"]}, {"edge": "tsuru_app_service_instance", "from_collections": ["tsuru_app"], "to_collections": ["tsuru_service_instance"]}, {"edge": "tsuru_service_service_instance", "from_collections": ["tsuru_service"], "to_collections": ["tsuru_service_instance"]}]}
@@ -193,7 +197,7 @@ def main():
         try:
             response = session.request(
                 'POST',
-                '{}/v2/graphs/'.format(os.getenv('GLOBOMAP_API_URL')),
+                '{}/v2/graphs/'.format(os.getenv('GLOBOMAP_API_URL', 'https://api.globomap.dev.globoi.com')),
                 data=json.dumps(graph),
                 headers={
                     'Content-Type': 'application/json',
@@ -231,7 +235,7 @@ def main():
         try:
             response = session.request(
                 'POST',
-                '{}/v2/queries/'.format(os.getenv('GLOBOMAP_API_URL')),
+                '{}/v2/queries/'.format(os.getenv('GLOBOMAP_API_URL', 'https://api.globomap.dev.globoi.com')),
                 data=json.dumps(query),
                 headers={
                     'Content-Type': 'application/json',
