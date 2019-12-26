@@ -12,19 +12,18 @@ services:
             - globomap_db_vol:/var/lib/arangodb-apps/_db
         networks:
             - globomap_net
+
     api:
         container_name: globomap_api
         build:
             context: ./
             dockerfile: scripts/docker/api/Dockerfile
-        volumes:
-            - ".:/app"
         ports:
             - "${GMAP_API_PORT}:5000"
             - "${GMAP_API_DEBUG_PORT}:5001"
         env_file:
             - scripts/docker/globomap.env
-        command: ['./scripts/docker/api/wait_keystone_start.sh']
+        command: bash -c "/bin/bash /home/scripts/docker/api/wait_keystone_start.sh"
         networks:
             - globomap_net
         external_links:

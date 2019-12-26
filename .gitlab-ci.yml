@@ -12,5 +12,3 @@ test:
     - make containers_build
     - make containers_start
     - make tests_ci
-  after_script:
-    - make containers_build
