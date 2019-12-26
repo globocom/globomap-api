@@ -21,7 +21,7 @@ tests: ## Run tests
 	@docker exec -it globomap_api make exec_tests || true
 
 tests_ci: ## Run tests
-	@docker exec -it globomap_api make exec_tests || true
+	@docker exec globomap_api make exec_tests || true
 
 run: ## Run a development web server
 	@PYTHONPATH=`pwd`:$PYTHONPATH python3.6 globomap_api/run.py
