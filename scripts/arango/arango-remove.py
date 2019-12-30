@@ -97,7 +97,8 @@ def main():
         "custeio_business_service_storage",
         "database_dns",
         "custeio_product_comp_unit",
-        "comp_unit_database"
+        "comp_unit_database",
+        "bs_user_ldap_user"
     ]
 
     for edge in edges:
@@ -152,7 +153,8 @@ def main():
         "internal_metadata",
         "meta_collection",
         "meta_graph",
-        "meta_query"
+        "meta_query",
+        "bs_user"
     ]
 
     for collection in collections:

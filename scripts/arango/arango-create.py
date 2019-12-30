@@ -72,7 +72,8 @@ def main():
         {"alias": "Time", "name": "custeio_team", "replicationFactor": 2, "icon": "custeio_team", "description": "Time", "users": ["u_globomap_driver_dicionario"]},
         {"alias": "Subcomponente", "name": "custeio_sub_component", "replicationFactor": 2, "icon": "custeio_sub_component", "description": "Subcomponente", "users": ["u_globomap_driver_dicionario"]},
         {"alias": "Certificado", "name": "domain", "replicationFactor": 2, "icon": "domain", "description": "Certificado", "users": ["u_globomap_driver_domain"]},
-        {"alias": "Environment(Galeb)", "name": "galeb_environment", "replicationFactor": 2, "icon": "galeb_environment", "description": "Environment(Galeb)", "users": ["u_globomap_driver_galeb"]}
+        {"alias": "Environment(Galeb)", "name": "galeb_environment", "replicationFactor": 2, "icon": "galeb_environment", "description": "Environment(Galeb)", "users": ["u_globomap_driver_galeb"]},
+        {"alias": "User (Backstage)", "name": "bs_user", "replicationFactor": 2, "icon": "bs_user", "description": "User (Backstage)", "users": ["u_globomap_driver_accounts"]}
     ]
 
     for collection in collections:
@@ -149,7 +150,8 @@ def main():
         {"alias": "Link: Equipamento - DB", "name": "comp_unit_database", "replicationFactor": 2, "icon": "comp_unit_database", "description": "Link: Equipamento - DB", "users": ["u_globomap_driver_dbaas"]},
         {"alias": "Link: Environment(Galeb) - VirtualHost(Galeb)", "name": "galeb_environment_virtual_host", "replicationFactor": 2, "icon": "galeb_environment_virtual_host", "description": "Link: Environment(Galeb) - VirtualHost(Galeb)", "users": ["u_globomap_driver_galeb"]},
         {"alias": "Link: Environment(Galeb) - Vip", "name": "galeb_environment_vip", "replicationFactor": 2, "icon": "galeb_environment_vip", "description": "Link: Environment(Galeb) - Vip", "users": ["u_globomap_driver_galeb"]},
-        {"alias": "Link: Host - Environment(Galeb)", "name": "galeb_host_environment", "replicationFactor": 2, "icon": "galeb_host_environment", "description": "Link: Host - Environment(Galeb)", "users": ["u_globomap_driver_galeb"]}
+        {"alias": "Link: Host - Environment(Galeb)", "name": "galeb_host_environment", "replicationFactor": 2, "icon": "galeb_host_environment", "description": "Link: Host - Environment(Galeb)", "users": ["u_globomap_driver_galeb"]},
+        {"alias": "Link: Ldap - User (Backstage)", "name": "bs_user_ldap_user", "replicationFactor": 2, "icon": "bs_user_ldap_user", "description": "Link: Ldap - User (Backstage)", "users": ["u_globomap_driver_accounts"]}
     ]
 
     for edge in edges:
