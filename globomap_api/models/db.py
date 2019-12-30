@@ -147,7 +147,7 @@ class DB(object):
             LOGGER.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
-    def count_in_collection(self, name):
+    def count_in_document(self, name):
         """Get count from collection"""
 
         aql = "FOR doc IN {} COLLECT WITH COUNT INTO length RETURN length".format(name)

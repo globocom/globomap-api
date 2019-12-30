@@ -263,13 +263,13 @@ def delete_document(name, key):
     return True
 
 
-def count_collection(name):
-    """Get count from collection"""
+def count_document(name):
+    """Get count from document"""
 
     db_inst = app.config['ARANGO_CONN']
 
     db_inst.get_database()
-    cursor = db_inst.count_in_collection(name)
+    cursor = db_inst.count_in_document(name)
 
     count = 0
     docs = [doc for doc in cursor]

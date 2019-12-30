@@ -391,3 +391,39 @@ class Document(Resource):
         except gmap_exc.DocumentNotExist as err:
             app.logger.warning(err.message)
             api.abort(404, errors=err.message)
+
+
+@ns.route('/<collection>/count/')
+@api.doc(params={
+    'collection': 'Name Of Collection'
+})
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
+class DocumentCount(Resource):
+
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
+        404: 'Not Found'
+    })
+    @permission_classes((permissions.Read,))
+    def get(self, collection):
+        """Get count documents."""
+
+        try:
+            res = facade.count_document(collection)
+            return res, 200
+
+        except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
+            api.abort(404, errors=err.message)
+
+        except gmap_exc.DocumentNotExist as err:
+            app.logger.warning(err.message)
+            api.abort(404, errors=err.message)
