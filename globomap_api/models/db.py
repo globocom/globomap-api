@@ -147,6 +147,35 @@ class DB(object):
             LOGGER.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
+    def count_in_collection(self, name):
+        """Get count from collection"""
+
+        aql = "FOR doc IN {} COLLECT WITH COUNT INTO length RETURN length".format(name)
+        params = {}
+
+        try:
+            cursor = self.database.aql.execute(
+                aql,
+                bind_vars=params,
+                count=True,
+                full_count=True,
+                batch_size=1,
+                ttl=10,
+                optimizer_rules=['+all']
+            )
+            return cursor
+
+        except exceptions.AQLQueryExecuteError as err:
+
+            msg = db_err.get(1).format(err.message)
+            LOGGER.error(msg)
+            raise gmap_exceptions.DatabaseException(msg)
+
+        except Exception as err:
+            msg = db_err.get(1).format(str(err))
+            LOGGER.error(msg)
+            raise gmap_exceptions.DatabaseException(msg)
+
     def search_in_collection(self, collection, search, page=1, per_page=10):
         """Search Document"""
         try:
