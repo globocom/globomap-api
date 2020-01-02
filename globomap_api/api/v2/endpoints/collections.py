@@ -403,7 +403,7 @@ class Document(Resource):
     required=True,
     default='Token token='
 )
-class DocumentCount(Resource):
+class CollectionsCount(Resource):
 
     @api.doc(responses={
         200: 'Success',
@@ -412,12 +412,17 @@ class DocumentCount(Resource):
         403: 'Forbidden',
         404: 'Not Found'
     })
+    @api.expect(search_parser)
     @permission_classes((permissions.Read,))
     def get(self, collection):
         """Get count documents."""
 
+        args = search_parser.parse_args(request)
+
         try:
-            res = facade.count_document(collection)
+            query = args.get('query') or '[]'
+            data = json.loads(query)
+            res = facade.count_document(collection, data)
             return res, 200
 
         except gmap_exc.CollectionNotExist as err:

@@ -147,16 +147,24 @@ class DB(object):
             LOGGER.error(msg)
             raise gmap_exceptions.DatabaseException(msg)
 
-    def count_in_document(self, name):
+    def count_in_document(self, collection, search=[]):
         """Get count from collection"""
 
-        aql = "FOR doc IN {} COLLECT WITH COUNT INTO length RETURN length".format(name)
-        params = {}
+        bind_vars = {}
+        where = ''
+
+        if search:
+            where, bind_vars = self.prepare_search(search)
+
+        bind_vars['@collection'] = collection
+
+        full_query = 'FOR doc IN @@collection {} ' \
+            'COLLECT WITH COUNT INTO length RETURN length'.format(where)
 
         try:
             cursor = self.database.aql.execute(
-                aql,
-                bind_vars=params,
+                full_query,
+                bind_vars=bind_vars,
                 count=True,
                 full_count=True,
                 batch_size=1,

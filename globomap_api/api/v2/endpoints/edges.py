@@ -382,3 +382,44 @@ class DocumentEdge(Resource):
         except gmap_exc.DocumentNotExist as err:
             app.logger.warning(err.message)
             api.abort(404, errors=err.message)
+
+
+@ns.route('/<collection>/count/')
+@api.doc(params={
+    'collection': 'Name Of Collection'
+})
+@api.header(
+    'Authorization',
+    'Token Authorization',
+    required=True,
+    default='Token token='
+)
+class EdgesCount(Resource):
+
+    @api.doc(responses={
+        200: 'Success',
+        400: 'Validation Error',
+        401: 'Unauthorized',
+        403: 'Forbidden',
+        404: 'Not Found'
+    })
+    @api.expect(search_parser)
+    @permission_classes((permissions.Read,))
+    def get(self, collection):
+        """Get count documents."""
+
+        args = search_parser.parse_args(request)
+
+        try:
+            query = args.get('query') or '[]'
+            data = json.loads(query)
+            res = facade.count_document(collection, data)
+            return res, 200
+
+        except gmap_exc.CollectionNotExist as err:
+            app.logger.error(err.message)
+            api.abort(404, errors=err.message)
+
+        except gmap_exc.DocumentNotExist as err:
+            app.logger.warning(err.message)
+            api.abort(404, errors=err.message)
