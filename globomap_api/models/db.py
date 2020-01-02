@@ -187,9 +187,8 @@ class DB(object):
     def search_in_collection(self, collection, search, page=1, per_page=10):
         """Search Document"""
         try:
-
-            offset = (page - 1) * per_page
             per_page = per_page if per_page <= MAX_PER_PAGE else MAX_PER_PAGE
+            offset = (page - 1) * per_page
 
             where, bind_vars = self.prepare_search(search)
 
@@ -232,8 +231,8 @@ class DB(object):
     def search_in_collections(self, collections, search, page=1, per_page=10):
         """Search Document"""
         try:
-            offset = (page - 1) * per_page
             per_page = per_page if per_page <= MAX_PER_PAGE else MAX_PER_PAGE
+            offset = (page - 1) * per_page
             union = ['a','b','c','e','f','g','h','i','j','k','l','m']
             search_name = search[0]
             partial_query = []
