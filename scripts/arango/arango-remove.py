@@ -34,7 +34,8 @@ def main():
         "galeb",
         "zabbix",
         "faas",
-        "tsuru"
+        "tsuru",
+        "accounts"
     ]
 
     for graph in graphs:
