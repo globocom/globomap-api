@@ -10,3 +10,4 @@ python-arango==4.2.1
 raven==6.6.0
 globomap-plugin-zabbix==0.1.6
 globomap-plugin-healthcheck==0.1.4
+Werkzeug==0.16.1
