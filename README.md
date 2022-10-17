@@ -66,3 +66,4 @@ Complete flow with [python](https://github.com/edersonbrilhante/globomap-hands-o
 
 ## Licensing
 Globo Map API is under [Apache 2 License](./LICENSE)
+*This article can also be read in [Brazilian Portuguese](README-pt-BR.md).*
